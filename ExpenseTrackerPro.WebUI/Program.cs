@@ -3,6 +3,8 @@ using ExpenseTrackerPro.Application.Extensions;
 using ExpenseTrackerPro.Infrastructure.Extensions;
 using ExpenseTrackerPro.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
+using LazyCache;
+using Microsoft.Extensions.DependencyInjection;
 namespace ExpenseTrackerPro.WebUI
 {
     public class Program
@@ -20,17 +22,7 @@ namespace ExpenseTrackerPro.WebUI
             builder.Services.AddRazorComponents();
             builder.Services.AddApplicationLayer();
             builder.Services.AddInfrastructure(configuration);
-
-            //if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            //{
-            //    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            //             options.UseInMemoryDatabase("ExpenseTrackerPro"));
-            //}
-            //else
-            //{
-            //    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            //             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            //}
+            builder.Services.AddLazyCache();
 
             var app = builder.Build();
 

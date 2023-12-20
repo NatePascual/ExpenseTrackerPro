@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LazyCache" Version="2.4.0" />
+    <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -23,6 +25,17 @@
     <ProjectReference Include="..\ExpenseTrackerPro.Application\ExpenseTrackerPro.Application.csproj" />
     <ProjectReference Include="..\ExpenseTrackerPro.Infrastructure\ExpenseTrackerPro.Infrastructure.csproj" />
     <ProjectReference Include="..\ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Pages\Accounts\" />
+    <Folder Include="Components\Pages\DashBoards\" />
+    <Folder Include="Components\Pages\Expenses\" />
+    <Folder Include="Components\Pages\IncomeCategories\" />
+    <Folder Include="Components\Pages\Incomes\" />
+    <Folder Include="Components\Pages\Institutions\" />
+    <Folder Include="Components\Pages\UserProfiles\" />
+    <Folder Include="Components\Pages\Transfers\" />
   </ItemGroup>
 
 </Project>

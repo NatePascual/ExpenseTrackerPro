@@ -1,0 +1,44 @@
+﻿@page "/accounttypeoverview"
+@using ExpenseTrackerPro.Application.Features.AccountTypes
+@using MediatR
+@inject IMediator mediator
+<PageTitle>Account Type</PageTitle>
+
+<h1>Account Type Overview</h1>
+
+@if (applications?.AccountTypes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Classification</th>
+                <th>Account Type</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in applications.AccountTypes.Data)
+            {
+                <tr>
+                    <td>@application.ImageUrl</td>
+                    <td>@application.Classification</td>
+                    <td>@application.Name</td>                  
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private GetAccountTypeView? applications;
+    private string searchString = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        applications = await mediator.Send(new GetAccountTypeQuery(searchString));
+    }
+}

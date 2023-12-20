@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.WebUI", "ExpenseTrackerPro.WebUI\ExpenseTrackerPro.WebUI.csproj", "{AD5612E3-AE59-40FD-8C0C-089030B25306}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.WebUI", "ExpenseTrackerPro.WebUI\ExpenseTrackerPro.WebUI.csproj", "{AD5612E3-AE59-40FD-8C0C-089030B25306}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{EF97518B-AFA3-42D9-B95C-3F8A3A68EFCC}"
 EndProject
@@ -13,13 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F31B89EB-25FB-4F5F-B7B3-DCC64E362397}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Application", "ExpenseTrackerPro.Application\ExpenseTrackerPro.Application.csproj", "{9A36F517-503C-423C-B30F-9A86627FB066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Application", "ExpenseTrackerPro.Application\ExpenseTrackerPro.Application.csproj", "{9A36F517-503C-423C-B30F-9A86627FB066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Domain", "ExpenseTrackerPro.Domain\ExpenseTrackerPro.Domain.csproj", "{F957821F-8C68-41AF-ABA5-83D5EDC5D5EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Domain", "ExpenseTrackerPro.Domain\ExpenseTrackerPro.Domain.csproj", "{F957821F-8C68-41AF-ABA5-83D5EDC5D5EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Infrastructure", "ExpenseTrackerPro.Infrastructure\ExpenseTrackerPro.Infrastructure.csproj", "{B0EEE255-1BBA-48AD-83B9-3B484CAB493C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Infrastructure", "ExpenseTrackerPro.Infrastructure\ExpenseTrackerPro.Infrastructure.csproj", "{B0EEE255-1BBA-48AD-83B9-3B484CAB493C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Shared", "ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj", "{9426A1DF-B23B-4987-9BA9-497C8E05AE03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Shared", "ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj", "{9426A1DF-B23B-4987-9BA9-497C8E05AE03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

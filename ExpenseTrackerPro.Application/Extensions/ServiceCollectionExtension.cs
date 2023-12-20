@@ -3,6 +3,7 @@ using System.Reflection;
 using MediatR;
 using ExpenseTrackerPro.Application.Common.Behaviours;
 using FluentValidation;
+using ExpenseTrackerPro.Application.Common.Interfaces;
 
 
 namespace ExpenseTrackerPro.Application.Extensions;
