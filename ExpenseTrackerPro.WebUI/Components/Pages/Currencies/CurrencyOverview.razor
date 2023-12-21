@@ -15,7 +15,7 @@ else
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>Symbol</th>              
+                <th style="width:20px">Symbol</th>              
                 <th>Country & Currency</th>
                 <th>Currency Code</th>
             </tr>
@@ -24,7 +24,7 @@ else
             @foreach (var application in applications.Currencies.Data)
             {
                 <tr>
-                    <td><div class="p-2 m-2 border-2 rounded-2">@application.Symbol</div></td>
+                    <td><div class="p-2 m-2 border border-2 border-dark rounded-2 align-content-center">@application.Symbol</div></td>
                     <td>@application.CountryCurrency</td>
                     <td>@application.Code</td>                 
                 </tr>
