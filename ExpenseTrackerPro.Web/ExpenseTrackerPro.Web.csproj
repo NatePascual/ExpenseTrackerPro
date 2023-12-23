@@ -9,15 +9,6 @@
   <ItemGroup>
     <PackageReference Include="LazyCache" Version="2.4.0" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="MudBlazor" Version="6.11.2" />
   </ItemGroup>
@@ -35,9 +26,8 @@
     <Folder Include="Components\Pages\IncomeCategories\" />
     <Folder Include="Components\Pages\Incomes\" />
     <Folder Include="Components\Pages\Institutions\" />
-    <Folder Include="Components\Pages\UserProfiles\" />
     <Folder Include="Components\Pages\Transfers\" />
-    <Folder Include="Shared\Dialogs\" />
+    <Folder Include="Components\Pages\UserProfiles\" />
   </ItemGroup>
 
 </Project>

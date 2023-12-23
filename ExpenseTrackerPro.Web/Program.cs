@@ -1,13 +1,10 @@
-using ExpenseTrackerPro.WebUI.Components;
 using ExpenseTrackerPro.Application.Extensions;
 using ExpenseTrackerPro.Infrastructure.Extensions;
-using ExpenseTrackerPro.Infrastructure.Contexts;
-using Microsoft.EntityFrameworkCore;
-using LazyCache;
-using Microsoft.Extensions.DependencyInjection;
+using ExpenseTrackerPro.Web.Components;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using MudBlazor.Services;
-namespace ExpenseTrackerPro.WebUI
+
+namespace ExpenseTrackerPro.Web
 {
     public class Program
     {
@@ -27,7 +24,7 @@ namespace ExpenseTrackerPro.WebUI
             builder.Services.AddApplicationLayer();
             builder.Services.AddInfrastructure(configuration);
             builder.Services.AddLazyCache();
-
+            builder.Services.AddRazorComponents().AddInteractiveServerComponents();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -43,7 +40,8 @@ namespace ExpenseTrackerPro.WebUI
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapRazorComponents<App>();
+            
+            app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
             app.Run();
         }

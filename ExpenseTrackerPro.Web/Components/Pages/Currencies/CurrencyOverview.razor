@@ -1,0 +1,43 @@
+﻿@page "/currencyoverview"
+@using ExpenseTrackerPro.Application.Features.Currencies
+@using MediatR
+@inject IMediator mediator
+<PageTitle>Currency</PageTitle>
+
+<h1>Currency Overview</h1>
+
+@if (applications?.Currencies == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width:20px">Symbol</th>              
+                <th>Country & Currency</th>
+                <th>Currency Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in applications.Currencies.Data)
+            {
+                <tr>
+                    <td><div class="p-2 m-2 border border-2 border-dark rounded-2 align-content-center">@application.Symbol</div></td>
+                    <td>@application.CountryCurrency</td>
+                    <td>@application.Code</td>                 
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private GetCurrencyView? applications;
+    private string searchString = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        applications = await mediator.Send(new GetCurrencyQuery(searchString));
+    }
+}

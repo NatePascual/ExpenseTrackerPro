@@ -56,12 +56,12 @@ internal class GetAccountTypeQueryHandler : IRequestHandler<GetAccountTypeQuery,
         };
         var filterSpec = new AccountTypeSpecification(request.SearchString);
 
-        Func<Task<List<GetAccountTypeResponse>>> getAll = () => _unitOfWork.Repository<AccountType>().Entities
+        var getAll = () => _unitOfWork.Repository<AccountType>().Entities
                    .Specify(filterSpec)
                    .Select(expression)
                    .ToListAsync();
 
-        var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetAccountTypesCacheKey, getAll);
+       var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetAccountTypesCacheKey, getAll);
 
         var map = _mapper.Map<List<GetAccountTypeResponse>>(list);
 

@@ -1,7 +1,6 @@
 ﻿@page "/accountTypeOverview"
 @using MudBlazor
 @using ExpenseTrackerPro.Application.Features.AccountTypes
-@using ExpenseTrackerPro.WebUI.Shared.Components
 @using MediatR
 @inject IMediator mediator
 <PageTitle>Account Type Overview</PageTitle>
@@ -46,7 +45,7 @@
     /// </summary>
     private async Task<TableData<GetAccountTypeResponse>> ServerReload(TableState state)
     {
-        list = await mediator.Send(new GetAccountTypeQuery());
+        list = await mediator.Send(new GetAccountTypeQuery(""));
 
         IEnumerable<GetAccountTypeResponse> data = list.AccountTypes.Data;
 
