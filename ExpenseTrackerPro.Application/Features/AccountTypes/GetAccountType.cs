@@ -22,9 +22,13 @@ public class GetAccountTypeResponse:IMapFrom<AccountType>
 public class GetAccountTypeQuery:IRequest<GetAccountTypeView>
 {
     public string SearchString { get; set; }
-    public GetAccountTypeQuery(string searchString)
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+    public GetAccountTypeQuery(int pageNumber, int pageSize, string searchString)
     {
         SearchString = searchString;
+        PageNumber = pageNumber;
+        PageSize = pageSize;
     }
 }
 

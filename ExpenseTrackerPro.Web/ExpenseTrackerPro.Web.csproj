@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\Accounts\" />
     <Folder Include="Components\Pages\DashBoards\" />
     <Folder Include="Components\Pages\Expenses\" />
     <Folder Include="Components\Pages\IncomeCategories\" />

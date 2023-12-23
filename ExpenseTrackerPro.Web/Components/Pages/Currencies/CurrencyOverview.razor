@@ -1,43 +1,82 @@
-﻿@page "/currencyoverview"
+﻿@page "/currencyOverview"
 @using ExpenseTrackerPro.Application.Features.Currencies
 @using MediatR
 @inject IMediator mediator
-<PageTitle>Currency</PageTitle>
+<PageTitle>Currency Overview</PageTitle>
 
-<h1>Currency Overview</h1>
-
-@if (applications?.Currencies == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th style="width:20px">Symbol</th>              
-                <th>Country & Currency</th>
-                <th>Currency Code</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var application in applications.Currencies.Data)
-            {
-                <tr>
-                    <td><div class="p-2 m-2 border border-2 border-dark rounded-2 align-content-center">@application.Symbol</div></td>
-                    <td>@application.CountryCurrency</td>
-                    <td>@application.Code</td>                 
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetCurrencyResponse>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table" RowsPerPage="20">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Currency Overview</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Symbol</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="countryCurrency" T="GetCurrencyResponse">Country and Currency</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="code" T="GetCurrencyResponse">Currency Code</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center w-25">@context.Symbol</div></MudTd>
+        <MudTd DataLabel="CountryCurrency">@context.CountryCurrency</MudTd>
+        <MudTd DataLabel="Code">@context.Code</MudTd>
+     </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 @code {
-    private GetCurrencyView? applications;
-    private string searchString = string.Empty;
+    private GetCurrencyView? list;
+    private IEnumerable<GetCurrencyResponse> pagedData;
+    private MudTable<GetCurrencyResponse> table;
 
-    protected override async Task OnInitializedAsync()
+    private int totalItems;
+    private string searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<TableData<GetCurrencyResponse>> ServerReload(TableState state)
     {
-        applications = await mediator.Send(new GetCurrencyQuery(searchString));
+        list = await mediator.Send(new GetCurrencyQuery(""));
+
+        IEnumerable<GetCurrencyResponse> data = list.Currencies.Data;
+
+        data = data.Where(item =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (item.CountryCurrency.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (item.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            case "countryCurrency":
+                data = data.OrderByDirection(state.SortDirection, o => o.CountryCurrency);
+                break;
+            case "code":
+                data = data.OrderByDirection(state.SortDirection, o => o.Code);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<GetCurrencyResponse>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
     }
 }
