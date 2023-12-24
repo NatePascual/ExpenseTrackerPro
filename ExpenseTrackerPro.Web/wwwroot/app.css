@@ -49,3 +49,29 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+/*CUSTOM*/
+.mud-table-cell-custom-group {
+    font-weight: 500;
+}
+
+.mud-table-cell-custom-group-footer {
+    padding-bottom: 50px;
+    text-align: right;
+}
+
+.wd-5 {
+    width: 5%;
+}
+
+.wd-10 {
+    width: 10%;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.wd-95 {
+    width: 95%;
+}

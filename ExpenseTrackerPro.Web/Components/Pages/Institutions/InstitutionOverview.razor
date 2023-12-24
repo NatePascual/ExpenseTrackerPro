@@ -1,0 +1,85 @@
+﻿@page "/institutionOverview"
+@using ExpenseTrackerPro.Application.Features.Institutions
+@using MediatR
+@inject IMediator mediator
+<PageTitle>Institution Overview</PageTitle>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetInstitutionResponse>>>(ServerReload))"
+          Dense="false" Hover="true" @ref="table" RowsPerPage="10">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Institution Overview</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>    
+        <MudTh><MudTableSortLabel SortLabel="name" T="GetInstitutionResponse">Institution</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>  
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+ </MudTable>
+
+@code {
+    private GetInstitutionView? list;
+    private IEnumerable<GetInstitutionResponse> pagedData;
+    private IEnumerable<GetInstitutionResponse> data;
+    private MudTable<GetInstitutionResponse> table;
+    private int totalItems;
+    private string searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<TableData<GetInstitutionResponse>> ServerReload(TableState state)
+    {
+        await LoadData(state.Page, state.PageSize);
+
+        await SortAndPaged(state);
+
+        return new TableData<GetInstitutionResponse>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task LoadData(int page, int pageSize)
+    {
+        list = await mediator.Send(new GetInstitutionQuery(searchString));
+
+        data = list.Institutions.Data;
+
+        data = data.Where(item =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (item.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+    }
+
+    private async Task SortAndPaged(TableState state)
+    {
+        switch (state.SortLabel)
+        {
+            case "name":
+                data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+    }
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+}

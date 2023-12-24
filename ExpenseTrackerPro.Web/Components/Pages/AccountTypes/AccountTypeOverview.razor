@@ -1,37 +1,45 @@
 ﻿@page "/accountTypeOverview"
 @using MudBlazor
 @using ExpenseTrackerPro.Application.Features.AccountTypes
+@using ExpenseTrackerPro.Shared.Enums
 @using MediatR
 @inject IMediator mediator
 <PageTitle>Account Type Overview</PageTitle>
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<GetAccountTypeResponse>>>(ServerReload))"
-          Dense="false" Hover="true" @ref="table" RowsPerPage="20">
+          GroupBy="@_groupDefinition" Dense="false" Hover="true" @ref="table" RowsPerPage="20" FixedHeader="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Account Type Overview</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
-    <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="classification" T="GetAccountTypeResponse">Classification</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="name" T="GetAccountTypeResponse">Account Type Name</MudTableSortLabel></MudTh>
+    <HeaderContent>     
+        <MudTh Class="wd-5"></MudTh>
+        <MudTh Class="wd-95"><MudTableSortLabel SortLabel="name" T="GetAccountTypeResponse">Account Type Name</MudTableSortLabel></MudTh>
     </HeaderContent>
+    <GroupHeaderTemplate>
+        <MudTh Class="mud-table-cell-custom-group" colspan="5"><h6>@($"{context.GroupName}: {context.Key}")</h6></MudTh>
+    </GroupHeaderTemplate>
     <RowTemplate>
-        <MudTd DataLabel="Classification">@context.Classification</MudTd>
+        <MudTd><MudImage Src="@(ImageLocation.AccountType.ToString() + context.ImageUrl)"
+                Alt="@context.Name" Elevation="25" Class="rounded-sm" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+        </MudTd>
          <MudTd DataLabel="Name">@context.Name</MudTd>
-
     </RowTemplate>
-        <NoRecordsContent>
-            <MudText>No matching records found</MudText>
-        </NoRecordsContent>
-        <LoadingContent>
-            <MudText>Loading...</MudText>
-        </LoadingContent>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+    <GroupFooterTemplate>
+        <MudTh Class="mud-table-cell-custom-group mud-table-cell-custom-group-footer" colspan="5"></MudTh>
+    </GroupFooterTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
     @code {
     private GetAccountTypeView? list;
     private IEnumerable<GetAccountTypeResponse> pagedData;
@@ -40,6 +48,19 @@
 
     private int totalItems;
     private string searchString = null;
+
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
+
+    private TableGroupDefinition<GetAccountTypeResponse> _groupDefinition = new()
+    {
+        GroupName = "Group",
+        Indentation = false,
+        Expandable = true,
+        IsInitiallyExpanded = true,
+        Selector = (e) => e.Classification
+
+    };
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -63,8 +84,7 @@
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return true;
-            if (item.Classification.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
+
             if (item.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
@@ -77,9 +97,6 @@
     {
         switch (state.SortLabel)
         {
-            case "classification":
-                data = data.OrderByDirection(state.SortDirection, o => o.Classification);
-                break;
             case "name":
                 data = data.OrderByDirection(state.SortDirection, o => o.Name);
                 break;

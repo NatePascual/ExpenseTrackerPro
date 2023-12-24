@@ -22,3 +22,4 @@ public enum UploadType
     [Description(@"ImageTransactions\Income")]
     Income,
 }
+

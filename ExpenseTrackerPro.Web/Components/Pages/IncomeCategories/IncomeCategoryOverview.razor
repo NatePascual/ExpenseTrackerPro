@@ -1,0 +1,93 @@
+﻿@page "/incomeCategoryOverview"
+@using ExpenseTrackerPro.Application.Features.IncomeCategories
+@using ExpenseTrackerPro.Shared.Enums
+@using MediatR
+@inject IMediator mediator
+<PageTitle>Income Category Overview</PageTitle>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetIncomeCategoryResponse>>>(ServerReload))"
+          Dense="false" Hover="true" @ref="table" RowsPerPage="10">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Category Overview</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>    
+        <MudTh Class="wd-5"></MudTh>
+        <MudTh Class="wd-95"><MudTableSortLabel SortLabel="category" T="GetIncomeCategoryResponse">Category</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="wd-5">
+            <MudImage Src="@(ImageLocation.IncomeCategory.ToString() + context.ImageUrl)"
+                 Alt="@context.Name" Elevation="25" Class="rounded-sm" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+        </MudTd>
+        <MudTd DataLabel="Name" Class="wd-95">@context.Name</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+ </MudTable>
+
+@code {
+    private GetIncomeCategoryView? list;
+    private IEnumerable<GetIncomeCategoryResponse> pagedData;
+    private IEnumerable<GetIncomeCategoryResponse> data;
+    private MudTable<GetIncomeCategoryResponse> table;
+    private int totalItems;
+    private string searchString = null;
+
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<TableData<GetIncomeCategoryResponse>> ServerReload(TableState state)
+    {
+        await LoadData(state.Page, state.PageSize);
+
+        await SortAndPaged(state);
+
+        return new TableData<GetIncomeCategoryResponse>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task LoadData(int page, int pageSize)
+    {
+        list = await mediator.Send(new GetIncomeCategoryQuery(""));
+
+        data = list.IncomeCategories.Data;
+
+        data = data.Where(item =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (item.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+    }
+
+    private async Task SortAndPaged(TableState state)
+    {
+        switch (state.SortLabel)
+        {
+            case "category":
+                data = data.OrderByDirection(state.SortDirection, o => o.Name);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+    }
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+}
