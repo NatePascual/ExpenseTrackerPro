@@ -1,5 +1,6 @@
 ﻿@page "/institutionOverview"
 @using ExpenseTrackerPro.Application.Features.Institutions
+@using ExpenseTrackerPro.Shared.Enums
 @using MediatR
 @inject IMediator mediator
 <PageTitle>Institution Overview</PageTitle>
@@ -13,9 +14,14 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>    
-        <MudTh><MudTableSortLabel SortLabel="name" T="GetInstitutionResponse">Institution</MudTableSortLabel></MudTh>
+        <MudTh Class="wd-5"></MudTh>
+        <MudTh Class="wd-95"><MudTableSortLabel SortLabel="name" T="GetInstitutionResponse">Description</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>  
+        <MudTd>
+            <MudImage Src="@(ImageLocation.Institution.ToString() + context.ImageUrl)"
+                      Alt="@context.Name" Elevation="25" Class="rounded-sm" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
     </RowTemplate>
     <NoRecordsContent>
@@ -37,6 +43,8 @@
     private int totalItems;
     private string searchString = null;
 
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>

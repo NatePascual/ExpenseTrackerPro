@@ -5,6 +5,7 @@ using ExpenseTrackerPro.Application.Extensions;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Incomes;
@@ -25,19 +26,19 @@ public class GetIncomeResponse : IMapFrom<Income>
 public class GetIncomeQuery : IRequest<GetIncomeView>
 {
     public string SearchString { get; set; }
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
-    public GetIncomeQuery(int pageNumber, int pageSize, string searchString)
+    //public int PageNumber { get; set; }
+    //public int PageSize { get; set; }
+    public GetIncomeQuery(string searchString)
     {
         SearchString = searchString;
-        PageNumber = pageNumber;
-        PageSize = pageSize;
+        //PageNumber = pageNumber;
+        //PageSize = pageSize;
     }
 }
 
 public class GetIncomeView
 {
-    public Result<PaginatedResult<GetIncomeResponse>> Incomes {  get; set; }
+    public Result<List<GetIncomeResponse>> Incomes {  get; set; }
 }
 
 internal class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,GetIncomeView>
@@ -69,12 +70,12 @@ internal class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,GetIncomeV
         var getAll = await _unitOfWork.Repository<Income>().Entities
                      .Specify(filterSpec)
                      .Select(expression)
-                     .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+                     .ToListAsync(cancellationToken);
 
-        var map = _mapper.Map<PaginatedResult<GetIncomeResponse>>(getAll);
+        var map = _mapper.Map<List<GetIncomeResponse>>(getAll);
 
         var result = new GetIncomeView();
-        result.Incomes = await Result<PaginatedResult<GetIncomeResponse>>.SuccessAsync(map);
+        result.Incomes = await Result<List<GetIncomeResponse>>.SuccessAsync(map);
 
         return result;
     }

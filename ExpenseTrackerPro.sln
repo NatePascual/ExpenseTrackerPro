@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Shared", "ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj", "{9426A1DF-B23B-4987-9BA9-497C8E05AE03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Web", "ExpenseTrackerPro.Web\ExpenseTrackerPro.Web.csproj", "{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Web", "ExpenseTrackerPro.Web\ExpenseTrackerPro.Web.csproj", "{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

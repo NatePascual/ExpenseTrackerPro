@@ -9,6 +9,14 @@
   <ItemGroup>
     <PackageReference Include="LazyCache" Version="2.4.0" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="MudBlazor" Version="6.11.2" />
   </ItemGroup>
@@ -22,10 +30,8 @@
   <ItemGroup>
     <Folder Include="Components\Pages\DashBoards\" />
     <Folder Include="Components\Pages\Expenses\" />
-    <Folder Include="Components\Pages\Incomes\" />
     <Folder Include="Components\Pages\Transfers\" />
     <Folder Include="Components\Pages\UserProfiles\" />
-    <Folder Include="wwwroot\Images\Institution\" />
     <Folder Include="wwwroot\ImageTransactions\Expense\" />
     <Folder Include="wwwroot\ImageTransactions\Income\" />
     <Folder Include="wwwroot\ImageTransactions\" />

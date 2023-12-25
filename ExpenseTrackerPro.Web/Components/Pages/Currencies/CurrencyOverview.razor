@@ -13,12 +13,12 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Symbol</MudTh>
+        <MudTh Class="wd-10">Symbol</MudTh>
         <MudTh><MudTableSortLabel SortLabel="countryCurrency" T="GetCurrencyResponse">Country and Currency</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="code" T="GetCurrencyResponse">Currency Code</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center w-25">@context.Symbol</div></MudTd>
+        <MudTd><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.Symbol</div></MudTd>
         <MudTd DataLabel="CountryCurrency">@context.CountryCurrency</MudTd>
         <MudTd DataLabel="Code">@context.Code</MudTd>
      </RowTemplate>
@@ -32,9 +32,10 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-@code {
+    @code {
     private GetCurrencyView? list;
     private IEnumerable<GetCurrencyResponse> pagedData;
+    private IEnumerable<GetCurrencyResponse> data;
     private MudTable<GetCurrencyResponse> table;
 
     private int totalItems;
@@ -45,9 +46,18 @@
     /// </summary>
     private async Task<TableData<GetCurrencyResponse>> ServerReload(TableState state)
     {
+        await LoadData();
+
+        await SortAndPaged(state);
+
+        return new TableData<GetCurrencyResponse>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task LoadData()
+    {
         list = await mediator.Send(new GetCurrencyQuery(""));
 
-        IEnumerable<GetCurrencyResponse> data = list.Currencies.Data;
+        data = list.Currencies.Data;
 
         data = data.Where(item =>
         {
@@ -60,6 +70,10 @@
             return false;
         }).ToArray();
         totalItems = data.Count();
+    }
+
+    private async Task SortAndPaged(TableState state)
+    {
         switch (state.SortLabel)
         {
             case "countryCurrency":
@@ -71,7 +85,6 @@
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-        return new TableData<GetCurrencyResponse>() { TotalItems = totalItems, Items = pagedData };
     }
 
     private void OnSearch(string text)
