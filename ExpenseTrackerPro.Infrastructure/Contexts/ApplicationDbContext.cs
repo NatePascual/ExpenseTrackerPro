@@ -3,7 +3,6 @@ using ExpenseTrackerPro.Domain.Contracts;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace ExpenseTrackerPro.Infrastructure.Contexts;
 
@@ -20,7 +19,6 @@ public class ApplicationDbContext : DbContext
         _dateTime = dateTime;
     }
 
-
     public DbSet<AccountType> AccountTypes => Set<AccountType>();
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<Expense> Expenses => Set<Expense>();
@@ -31,6 +29,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<Institution> Institutions => Set<Institution>();
     public DbSet<Currency> Currencies => Set<Currency>();
+    public DbSet<Transaction> Transactions => Set<Transaction>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
@@ -96,15 +95,15 @@ public class ApplicationDbContext : DbContext
         AddInstitutions(modelBuilder: modelBuilder);
 
         modelBuilder.Entity<Transfer>()
-            .HasOne(t => t.FromAccount)
-            .WithMany(a => a.TransfersFrom)
-            .HasForeignKey(t => t.FromAccountId)
+            .HasOne(t => t.Sender)
+            .WithMany(a => a.Senders)
+            .HasForeignKey(t => t.SenderId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Transfer>()
-            .HasOne(t => t.ToAccount)
-            .WithMany(a => a.TransfersTo)
-            .HasForeignKey(t => t.ToAccountId)
+            .HasOne(t => t.Receiver)
+            .WithMany(a => a.Receivers)
+            .HasForeignKey(t => t.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);

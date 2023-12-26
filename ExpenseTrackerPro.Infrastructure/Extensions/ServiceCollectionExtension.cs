@@ -24,9 +24,9 @@ public static class ServiceCollectionExtension
 
 
         services.AddTransient(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
-        services.AddTransient<IAccountRepository, AccountRepository>();
-        services.AddTransient<IAccountTypeRepository, AccountTypeRepository>();
-        services.AddTransient<ICategoryRepository, CategoryRepository>();
+        //services.AddTransient<IAccountRepository, AccountRepository>();
+        //services.AddTransient<IAccountTypeRepository, AccountTypeRepository>();
+        //services.AddTransient<ICategoryRepository, CategoryRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
 
     }

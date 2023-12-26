@@ -5,17 +5,17 @@ using ExpenseTrackerPro.Application.Extensions;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
-using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerPro.Application.Features.Transfers;
 
 public class GetTransferResponse : IMapFrom<Transfer>
 {
     public int Id { get; set; }
-    public int FromAccountId { get; set; }
-    public string FromAccountName { get; set; }
-    public int ToAccountId { get; set; }
-    public string ToAccountName { get; set; }
+    public int SenderId { get; set; }
+    public string SenderName { get; set; }
+    public int ReceiverId { get; set; }
+    public string ReceiverName { get; set; }
     public float Amount { get; set; }
     public DateOnly TransactionDate { get; set; }
     public string Note { get; set; }
@@ -25,20 +25,16 @@ public class GetTransferResponse : IMapFrom<Transfer>
 public class GetTransferQuery : IRequest<GetTransferView>
 {
     public string SearchString { get; set; }
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
 
-    public GetTransferQuery(int pageNumber, int pageSize, string searchString)
+    public GetTransferQuery(string searchString)
     {
         SearchString = searchString;
-        PageNumber = pageNumber;
-        PageSize = pageSize;
     }
 }
 
 public class GetTransferView
 {
-    public Result<PaginatedResult<GetTransferResponse>> Transfers { get; set; }
+    public Result<IList<GetTransferResponse>> Transfers { get; set; }
 }
 
 internal class GetTransferQueryHandler : IRequestHandler<GetTransferQuery, GetTransferView>
@@ -54,30 +50,17 @@ internal class GetTransferQueryHandler : IRequestHandler<GetTransferQuery, GetTr
 
     public async Task<GetTransferView> Handle(GetTransferQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<Transfer, GetTransferResponse>> expression = e => new GetTransferResponse()
-        {
-            Id = e.Id,
-            FromAccountId = e.FromAccountId,
-            FromAccountName = e.FromAccount.Name,
-            ToAccountId = e.ToAccountId,
-            ToAccountName = e.ToAccount.Name,
-            Amount = e.Amount,
-            TransactionDate = e.TransactionDate,
-            Note = e.Note,
-            IsTransferAsExpense = e.IsTransferAsExpense
-        };
 
         var filterSpec = new TransferSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Transfer>().Entities
                      .Specify(filterSpec)
-                     .Select(expression)
-                     .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+                     .ToListAsync();
 
-        var map = _mapper.Map<PaginatedResult<GetTransferResponse>>(getAll);
+        var map = _mapper.Map<IList<GetTransferResponse>>(getAll);
 
         var result = new GetTransferView();
-        result.Transfers = await Result<PaginatedResult<GetTransferResponse>>.SuccessAsync(map);
+        result.Transfers = await Result<IList<GetTransferResponse>>.SuccessAsync(map);
 
         return result;
     }

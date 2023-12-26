@@ -1,0 +1,53 @@
+﻿@using MudBlazor
+@using ExpenseTrackerPro.Application.Features.Accounts
+@using ExpenseTrackerPro.Application.Features.AccountTypes
+@using ExpenseTrackerPro.Application.Features.Institutions
+@using ExpenseTrackerPro.Application.Features.Currencies
+@using MediatR
+@inject IMediator mediator
+
+<EditForm Model="@CreateUpdateAccountModel" >
+    <MudDialog>
+        <TitleContent>
+            @{
+                if(CreateUpdateAccountModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                         Create Account
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        Update Account
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (CreateUpdateAccountModel.Id != 0)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudTextField Disabled For="@(() => CreateUpdateAccountModel.Id)" @bind-Value="CreateUpdateAccountModel.Id" Label="Id" />
+                     </MudItem>
+                }
+
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled">Cancel</MudButton>
+            @if (CreateUpdateAccountModel.Id != 0)
+            {
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"  Color="Color.Secondary">Update</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"  Color="Color.Success">Create</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+

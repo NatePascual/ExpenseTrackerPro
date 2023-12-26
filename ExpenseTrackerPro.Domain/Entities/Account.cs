@@ -30,9 +30,9 @@ public class Account : BaseAuditableEntity
 
     public bool IsIncludedBalance { get; set; } = false;
 
-    public virtual ICollection<Transfer> TransfersFrom { get; set; }
-    public virtual ICollection<Transfer> TransfersTo { get; set; }
-
+    public virtual ICollection<Transfer> Senders { get; set; }
+    public virtual ICollection<Transfer> Receivers { get; set; }
+    public virtual ICollection<Transaction> Transactions { get; set; }
 
     public Account(int accountTypeId, 
                    int institutionId, 

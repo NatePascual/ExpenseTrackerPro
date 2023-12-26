@@ -8,7 +8,6 @@ using ExpenseTrackerPro.Shared.Wrappers;
 using LazyCache;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Currencies;
 
@@ -36,7 +35,7 @@ public class GetCurrencyQuery : IRequest<GetCurrencyView>
 
 public class GetCurrencyView
 {
-    public Result<List<GetCurrencyResponse>> Currencies { get; set; }
+    public Result<IList<GetCurrencyResponse>> Currencies { get; set; }
 }
 
 internal class GetCurrencyQueryHandler : IRequestHandler<GetCurrencyQuery,GetCurrencyView>
@@ -53,27 +52,18 @@ internal class GetCurrencyQueryHandler : IRequestHandler<GetCurrencyQuery,GetCur
 
     public async Task<GetCurrencyView> Handle(GetCurrencyQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<Currency, GetCurrencyResponse>> expression = e => new GetCurrencyResponse()
-        {
-            Id = e.Id,
-            CountryCurrency = e.CountryCurrency,
-            Code = e.Code,
-            Symbol = e.Symbol
-        };
-
         var filterSpec = new CurrencySpecification(request.SearchString);
 
-        Func<Task<List<GetCurrencyResponse>>> getAll = () => _unitOfWork.Repository<Currency>().Entities
+        var getAll = () => _unitOfWork.Repository<Currency>().Entities
                        .Specify(filterSpec)
-                       .Select(expression)
                        .ToListAsync();
 
         var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetCurrenciesCacheKey, getAll);
 
-        var map = _mapper.Map<List<GetCurrencyResponse>>(list);
+        var map = _mapper.Map<IList<GetCurrencyResponse>>(list);
 
         var result = new GetCurrencyView();
-        result.Currencies = await Result<List<GetCurrencyResponse>>.SuccessAsync(map);
+        result.Currencies = await Result<IList<GetCurrencyResponse>>.SuccessAsync(map);
 
         return result;
     }

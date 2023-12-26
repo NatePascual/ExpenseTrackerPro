@@ -9,7 +9,6 @@ using ExpenseTrackerPro.Shared.Wrappers;
 using LazyCache;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Categories;
 
@@ -35,7 +34,7 @@ public class GetCategoryQuery: IRequest<GetCategoryView>
 
 public class GetCategoryView
 {
-    public Result<List<GetCategoryResponse>> Categories { get; set; }
+    public Result<IList<GetCategoryResponse>> Categories { get; set; }
 }
 
 internal class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery,GetCategoryView>
@@ -53,28 +52,18 @@ internal class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery,GetCat
 
     public async Task<GetCategoryView> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<Category, GetCategoryResponse>> expression = e => new GetCategoryResponse()
-        {
-            Id = e.Id,
-            ParentId = e.ParentId,
-            ParentName = e.Parent.Name,
-            Name = e.Name,   
-            ImageUrl = e.ImageUrl
-        };
-
         var filterSpec = new CategorySpecification(request.SearchString);
 
-        Func<Task<List<GetCategoryResponse>>> getAll = () => _unitOfWork.Repository<Category>().Entities
+        var getAll = () => _unitOfWork.Repository<Category>().Entities
                        .Specify(filterSpec)
-                       .Select(expression)
                        .ToListAsync();
 
         var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetCategoriesCacheKey, getAll);
 
-        var map = _mapper.Map<List<GetCategoryResponse>>(list);
+        var map = _mapper.Map<IList<GetCategoryResponse>>(list);
 
         var result = new GetCategoryView();
-        result.Categories = await Result<List<GetCategoryResponse>>.SuccessAsync(map);
+        result.Categories = await Result<IList<GetCategoryResponse>>.SuccessAsync(map);
 
         return result;
 

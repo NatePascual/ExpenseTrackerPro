@@ -2,11 +2,10 @@
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Common.Mappings;
 using ExpenseTrackerPro.Application.Extensions;
-using ExpenseTrackerPro.Application.Features.Accounts;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
-using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerPro.Application.Features.Expenses;
 
@@ -27,20 +26,16 @@ public class GetExpenseResponse: IMapFrom<Expense>
 public class GetExpenseQuery : IRequest<GetExpenseView>
 {
     public string SearchString { get; set; }
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
 
-    public GetExpenseQuery(int pageNumber, int pageSize, string searchString)
+    public GetExpenseQuery(string searchString)
     {
         SearchString = searchString;
-        PageNumber = pageNumber;
-        PageSize = pageSize;
     }
 }
 
 public class GetExpenseView
 {
-    public Result<PaginatedResult<GetExpenseResponse>> Expenses { get; set; }
+    public Result<IList<GetExpenseResponse>> Expenses { get; set; }
 }
 
 internal class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, GetExpenseView>
@@ -55,30 +50,17 @@ internal class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, GetExpe
 
     public async Task<GetExpenseView> Handle(GetExpenseQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<Expense, GetExpenseResponse>> expression = e => new GetExpenseResponse()
-        {
-            Id = e.Id,
-            CategoryId = e.CategoryId,
-            CategoryName = e.ExpenseCategory.Name,
-            AccountId = e.AccountId,
-            AccountName = e.Account.Name,
-            Provider = e.Provider,
-            TransactionDate = e.TransactionDate,
-            Note = e.Note,
-            Photo = e.Photo
-        };
 
         var filterSpec = new ExpenseSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Expense>().Entities
                   .Specify(filterSpec)
-                  .Select(expression)
-                  .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+                  .ToListAsync(cancellationToken);
 
-        var map = _mapper.Map<PaginatedResult<GetExpenseResponse>>(getAll);
+        var map = _mapper.Map<IList<GetExpenseResponse>>(getAll);
 
         var result = new GetExpenseView();
-        result.Expenses = await Result<PaginatedResult<GetExpenseResponse>>.SuccessAsync(map);
+        result.Expenses = await Result<IList<GetExpenseResponse>>.SuccessAsync(map);
 
         return result;
     }

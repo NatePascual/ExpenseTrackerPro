@@ -6,7 +6,6 @@ using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Incomes;
 
@@ -26,13 +25,10 @@ public class GetIncomeResponse : IMapFrom<Income>
 public class GetIncomeQuery : IRequest<GetIncomeView>
 {
     public string SearchString { get; set; }
-    //public int PageNumber { get; set; }
-    //public int PageSize { get; set; }
+
     public GetIncomeQuery(string searchString)
     {
         SearchString = searchString;
-        //PageNumber = pageNumber;
-        //PageSize = pageSize;
     }
 }
 
@@ -53,23 +49,10 @@ internal class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,GetIncomeV
 
     public async Task<GetIncomeView> Handle(GetIncomeQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<Income, GetIncomeResponse>> expression = e => new GetIncomeResponse()
-        {
-            Id = e.Id,
-            AccountId = e.AccountId,
-            AccountName = e.Account.Name,
-            IncomeCategoryId = e.IncomeCategoryId,
-            IncomeCategoryName = e.IncomeCategory.Name,
-            Amount = e.Amount,
-            TransactionDate = e.TransactionDate,
-            Note = e.Note,
-            Photo = e.Photo,
-        };
 
         var filterSpec = new IncomeSpecification(request.SearchString);
         var getAll = await _unitOfWork.Repository<Income>().Entities
                      .Specify(filterSpec)
-                     .Select(expression)
                      .ToListAsync(cancellationToken);
 
         var map = _mapper.Map<List<GetIncomeResponse>>(getAll);

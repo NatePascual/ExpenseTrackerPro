@@ -10,6 +10,7 @@ public class Expense : BaseAuditableEntity
     public int CategoryId { get; set; }
     public virtual Category ExpenseCategory { get; set; }
 
+    [ForeignKey(nameof(Account.Id))]
     public int AccountId { get; set; }
     public Account Account { get; set; }
 

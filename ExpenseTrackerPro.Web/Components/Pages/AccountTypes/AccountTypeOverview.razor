@@ -76,7 +76,7 @@
 
     private async Task LoadData(int page, int pageSize)
     {
-        list = await mediator.Send(new GetAccountTypeQuery(page,pageSize,""));
+        list = await mediator.Send(new GetAccountTypeQuery(""));
 
         data = list.AccountTypes.Data;
 
@@ -102,7 +102,7 @@
                 break;
         }
 
-        pagedData = data;// data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
     }
 
     private void OnSearch(string text)

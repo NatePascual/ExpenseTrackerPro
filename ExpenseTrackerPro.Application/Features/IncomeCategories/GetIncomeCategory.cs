@@ -8,7 +8,6 @@ using ExpenseTrackerPro.Shared.Wrappers;
 using LazyCache;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.IncomeCategories;
 
@@ -31,7 +30,7 @@ public class GetIncomeCategoryQuery : IRequest<GetIncomeCategoryView>
 
 public class GetIncomeCategoryView
 {
-    public Result<List<GetIncomeCategoryResponse>> IncomeCategories {  get; set; }
+    public Result<IList<GetIncomeCategoryResponse>> IncomeCategories {  get; set; }
 }
 
 internal class GetIncomeCategoryQueryHandler : IRequestHandler<GetIncomeCategoryQuery, GetIncomeCategoryView>
@@ -49,26 +48,18 @@ internal class GetIncomeCategoryQueryHandler : IRequestHandler<GetIncomeCategory
     public async Task<GetIncomeCategoryView> Handle(GetIncomeCategoryQuery request, CancellationToken cancellationToken)
     {
 
-        Expression<Func<IncomeCategory, GetIncomeCategoryResponse>> expression = e => new GetIncomeCategoryResponse()
-        {
-            Id = e.Id,
-            Name = e.Name,
-            ImageUrl = e.ImageUrl
-        };
-
         var filterSpec = new IncomeCategorySpecification(request.SearchString);
 
-        Func<Task<List<GetIncomeCategoryResponse>>> getAll = () => _unitOfWork.Repository<IncomeCategory>().Entities
+        var getAll = () => _unitOfWork.Repository<IncomeCategory>().Entities
                         .Specify(filterSpec)
-                        .Select(expression)
                         .ToListAsync();
 
         var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetIncomeCategoriesCacheKey, getAll);
 
-        var map = _mapper.Map<List<GetIncomeCategoryResponse>>(list);
+        var map = _mapper.Map<IList<GetIncomeCategoryResponse>>(list);
 
         var result = new GetIncomeCategoryView();
-        result.IncomeCategories = await Result<List<GetIncomeCategoryResponse>>.SuccessAsync(map);
+        result.IncomeCategories = await Result<IList<GetIncomeCategoryResponse>>.SuccessAsync(map);
 
         return result;
     }

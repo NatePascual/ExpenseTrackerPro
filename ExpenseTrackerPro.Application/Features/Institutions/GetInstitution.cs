@@ -8,7 +8,6 @@ using ExpenseTrackerPro.Shared.Wrappers;
 using LazyCache;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Institutions;
 
@@ -31,7 +30,7 @@ public class GetInstitutionQuery: IRequest<GetInstitutionView>
 
 public class GetInstitutionView
 {
-    public Result<List<GetInstitutionResponse>> Institutions { get; set; }
+    public Result<IList<GetInstitutionResponse>> Institutions { get; set; }
 }
 
 internal class GetInstitutionQueryHandler : IRequestHandler<GetInstitutionQuery, GetInstitutionView>
@@ -49,26 +48,19 @@ internal class GetInstitutionQueryHandler : IRequestHandler<GetInstitutionQuery,
 
     public async Task<GetInstitutionView> Handle(GetInstitutionQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<Institution, GetInstitutionResponse>> expression = e => new GetInstitutionResponse()
-        {
-            Id = e.Id,
-            Name = e.Name,
-            ImageUrl = e.ImageUrl
-        };
 
         var filterSpec = new InstitutionSpecification(request.SearchString);
 
-        Func<Task<List<GetInstitutionResponse>>> getAll = () => _unitOfWork.Repository<Institution>().Entities
+        var getAll = () => _unitOfWork.Repository<Institution>().Entities
                        .Specify(filterSpec)
-                       .Select(expression)
                        .ToListAsync();
 
         var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetInstitutionCacheKey, getAll);
 
-        var map = _mapper.Map<List<GetInstitutionResponse>>(list);
+        var map = _mapper.Map<IList<GetInstitutionResponse>>(list);
 
         var result = new GetInstitutionView();
-        result.Institutions = await Result<List<GetInstitutionResponse>>.SuccessAsync(map);
+        result.Institutions = await Result<IList<GetInstitutionResponse>>.SuccessAsync(map);
 
         return result;
 
