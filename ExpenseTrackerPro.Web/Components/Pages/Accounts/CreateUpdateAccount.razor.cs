@@ -3,7 +3,6 @@ using ExpenseTrackerPro.Application.Features.AccountTypes;
 using ExpenseTrackerPro.Application.Features.Currencies;
 using ExpenseTrackerPro.Application.Features.Institutions;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.SignalR;
 using MudBlazor;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Accounts;
@@ -20,6 +19,7 @@ public partial class CreateUpdateAccount
     protected override async Task OnInitializedAsync()
     {
         await LoadDataAsync();
+        StateHasChanged();
     }
 
     public void Cancel()
@@ -36,7 +36,7 @@ public partial class CreateUpdateAccount
 
     private async Task LoadAccountTypes()
     {
-        var list = await mediator.Send(new GetAccountTypeQuery(""));
+        var list = await _mediator.Send(new GetAccountTypeQuery(""));
 
         if (list.AccountTypes.Succeeded)
         {
@@ -44,9 +44,17 @@ public partial class CreateUpdateAccount
         }
     }
 
+    private async Task<IEnumerable<int>> SearchAccountType(string search)
+    {      
+        if (string.IsNullOrEmpty(search))
+            return _accountTypes.Select(x => x.Id);
+
+        return _accountTypes.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
+    }
+
     private async Task LoadInstitutions()
     {
-        var list = await mediator.Send(new GetInstitutionQuery(""));
+        var list = await _mediator.Send(new GetInstitutionQuery(""));
 
         if (list.Institutions.Succeeded)
         {
@@ -54,13 +62,45 @@ public partial class CreateUpdateAccount
         }
     }
 
+    private async Task<IEnumerable<int>> SearchInstitution(string search)
+    {
+        if (string.IsNullOrEmpty(search))
+            return _institutions.Select(x => x.Id);
+
+        return _institutions.Where(x => x.Name.Contains(search,StringComparison.InvariantCultureIgnoreCase)).Select(x =>x.Id);
+    }
+
     private async Task LoadCurrencies()
     {
-        var list = await mediator.Send(new GetCurrencyQuery(""));
+        var list = await _mediator.Send(new GetCurrencyQuery(""));
 
         if (list.Currencies.Succeeded)
         {
             _currencies = list.Currencies.Data.ToList();
+        }
+    }
+    private async Task<IEnumerable<int>> SearchCurrency(string search)
+    {
+        if (string.IsNullOrEmpty(search))
+            return _currencies.Select(x => x.Id);
+
+        return _currencies.Where(x => x.Code.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
+    }
+
+    private async Task SaveAsync()
+    {
+        var response = await _mediator.Send(CreateUpdateAccountModel);
+        if (response.Succeeded)
+        {
+            _snackBar.Add(response.Messages[0], Severity.Success);
+            MudDialog.Close();
+        }
+        else
+        {
+            foreach (var message in response.Messages)
+            {
+                _snackBar.Add(message, Severity.Error);
+            }
         }
     }
 }

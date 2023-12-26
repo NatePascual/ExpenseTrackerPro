@@ -33,7 +33,7 @@ public class GetIncomeCategoryView
     public Result<IList<GetIncomeCategoryResponse>> IncomeCategories {  get; set; }
 }
 
-internal class GetIncomeCategoryQueryHandler : IRequestHandler<GetIncomeCategoryQuery, GetIncomeCategoryView>
+internal sealed class GetIncomeCategoryQueryHandler : IRequestHandler<GetIncomeCategoryQuery, GetIncomeCategoryView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

@@ -39,7 +39,7 @@ public class GetTransactionView
     public Result<IList<GetTransactionResponse>> Transactions { get; set; }
 }
 
-internal class GetTransactionQueryHandler : IRequestHandler<GetTransactionQuery,GetTransactionView>
+internal sealed class GetTransactionQueryHandler : IRequestHandler<GetTransactionQuery,GetTransactionView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

@@ -38,7 +38,7 @@ public class GetCurrencyView
     public Result<IList<GetCurrencyResponse>> Currencies { get; set; }
 }
 
-internal class GetCurrencyQueryHandler : IRequestHandler<GetCurrencyQuery,GetCurrencyView>
+internal sealed class GetCurrencyQueryHandler : IRequestHandler<GetCurrencyQuery,GetCurrencyView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

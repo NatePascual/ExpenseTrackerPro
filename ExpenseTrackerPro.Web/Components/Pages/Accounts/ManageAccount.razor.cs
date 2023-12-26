@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackerPro.Application.Features.Accounts;
+using ExpenseTrackerPro.Shared.Constants.Applications;
 using MudBlazor;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Accounts;
@@ -26,7 +27,7 @@ public partial class ManageAccount
 
     private async Task LoadData(int page, int pageSize)
     {
-        list = await mediator.Send(new GetAccountQuery(searchString));
+        list = await _mediator.Send(new GetAccountQuery(searchString));
 
         data = list.Accounts.Data;
 
@@ -81,22 +82,59 @@ public partial class ManageAccount
         var parameters = new DialogParameters();
         if (id != 0)
         {
-            var product = pagedData.FirstOrDefault(c => c.Id == id);
-            if (product != null)
+            var account = pagedData.FirstOrDefault(c => c.Id == id);
+            if (account != null)
             {
                 parameters.Add(nameof(CreateUpdateAccount.CreateUpdateAccountModel), new CreateUpdateAccountCommand
                 {
-                    Id = product.Id,
-                    Name = product.Name,
+                    Id = account.Id,
+                    Name = account.Name,
+                    AccountTypeId = account.AccountTypeId,
+                    CurrencyId = account.CurrencyId,
+                    InstitutionId = account.InstitutionId,
+                    AccountNumber = account.AccountNumber,
+                    Balance = account.Balance,
+                    IsIncludedBalance = account.IsIncludedBalance,
                 });
             }
         }
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small,Position = DialogPosition.Center, 
+                                          FullWidth = true, DisableBackdropClick = true };
         var dialog = _dialogService.Show<CreateUpdateAccount>(id == 0 ? "Create" : "Update", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             OnSearch("");
+        }
+    }
+
+    private async Task Delete(int id)
+    {
+        string deleteContent = "Delete Content";
+        var parameters = new DialogParameters
+            {
+                {nameof(Shared.Dialogs.DeleteConfirmation.ContentText), string.Format(deleteContent, id)}
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>("Delete", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            //DeleteAsync(id)
+            //var response = await _mediator.Send();
+            //if (response.Succeeded)
+            //{
+            //    OnSearch("");
+            //    _snackBar.Add(response.Messages[0], Severity.Success);
+            //}
+            //else
+            //{
+            //    OnSearch("");
+            //    foreach (var message in response.Messages)
+            //    {
+            //        _snackBar.Add(message, Severity.Error);
+            //    }
+            //}
         }
     }
 }

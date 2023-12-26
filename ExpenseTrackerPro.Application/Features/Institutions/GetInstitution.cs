@@ -33,7 +33,7 @@ public class GetInstitutionView
     public Result<IList<GetInstitutionResponse>> Institutions { get; set; }
 }
 
-internal class GetInstitutionQueryHandler : IRequestHandler<GetInstitutionQuery, GetInstitutionView>
+internal sealed class GetInstitutionQueryHandler : IRequestHandler<GetInstitutionQuery, GetInstitutionView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

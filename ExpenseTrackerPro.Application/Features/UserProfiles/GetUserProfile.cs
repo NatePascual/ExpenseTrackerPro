@@ -36,7 +36,7 @@ public class GetUserProfileView
     public Result<IList<GetUserProfileResponse>> UserProfiles {  get; set; }
 }
 
-internal class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, GetUserProfileView>
+internal sealed class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, GetUserProfileView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

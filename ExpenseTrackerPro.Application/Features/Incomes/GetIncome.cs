@@ -37,7 +37,7 @@ public class GetIncomeView
     public Result<List<GetIncomeResponse>> Incomes {  get; set; }
 }
 
-internal class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,GetIncomeView>
+internal sealed class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,GetIncomeView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

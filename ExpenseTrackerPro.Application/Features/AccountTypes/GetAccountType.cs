@@ -33,7 +33,7 @@ public class GetAccountTypeView
     public Result<IList<GetAccountTypeResponse>> AccountTypes { get; set; }
 }
 
-internal class GetAccountTypeQueryHandler : IRequestHandler<GetAccountTypeQuery, GetAccountTypeView>
+internal sealed class GetAccountTypeQueryHandler : IRequestHandler<GetAccountTypeQuery, GetAccountTypeView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

@@ -235,17 +235,13 @@ public class ApplicationDbContext : DbContext
              new AccountType("Wallet", Classification.Cash.ToString(), "wallet.png") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
              new AccountType("Checking", Classification.Cash.ToString(), "checking.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
              new AccountType("Saving", Classification.Cash.ToString(), "savings.png") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Credit Card", Classification.Credit.ToString(), "credit.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Line of Credit", Classification.Credit.ToString(), "line-of-credit.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Retirement", Classification.Investment.ToString(), "retirement.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Brokerage", Classification.Investment.ToString(), "brokerage.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Investment", Classification.Investment.ToString(), "investment.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Insurance", Classification.Investment.ToString(), "insurance.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Crypto", Classification.Investment.ToString(), "crypto.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Loan", Classification.Loans.ToString(), "loan.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Mortgage", Classification.Loans.ToString(), "mortgage.png") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Property", Classification.Assets.ToString(), "property.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Other Account", Classification.OtherAccount.ToString(), "bank.png") { Id = 16, Created = DateTime.Now, CreatedBy = "System" }
+             new AccountType("Retirement", Classification.Investment.ToString(), "retirement.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Brokerage", Classification.Investment.ToString(), "brokerage.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Investment", Classification.Investment.ToString(), "investment.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Insurance", Classification.Investment.ToString(), "insurance.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Crypto", Classification.Investment.ToString(), "crypto.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Property", Classification.Assets.ToString(), "property.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Other Account", Classification.OtherAccount.ToString(), "bank.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 

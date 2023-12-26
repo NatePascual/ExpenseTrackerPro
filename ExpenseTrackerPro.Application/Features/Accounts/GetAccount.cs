@@ -6,6 +6,7 @@ using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
@@ -42,7 +43,7 @@ public class GetAccountView
     public Result<List<GetAccountResponse>> Accounts { get; set; }
 }
 
-internal class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, GetAccountView>
+internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, GetAccountView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -59,8 +60,8 @@ internal class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, GetAcco
         {
             Id = e.Id,
             AccountTypeId = e.AccountTypeId,
-            AccountTypeName = e.Institution != null ? e.Institution.Name : e.AccountType.Name,
-            AccountTypeImageUrl = e.Institution != null ? e.Institution.ImageUrl : e.AccountType.ImageUrl,
+            AccountTypeName = e.AccountType != null ? e.AccountType.Name : e.Institution.Name,
+            AccountTypeImageUrl = e.AccountType != null ? e.AccountType.ImageUrl : e.Institution.ImageUrl ,
             InstitutionId = e.InstitutionId,
             InstitutionName = e.Institution.Name,
             InstitutionImageUrl = e.Institution.ImageUrl,

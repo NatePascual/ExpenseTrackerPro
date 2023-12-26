@@ -2,8 +2,9 @@
 @using MudBlazor
 @using ExpenseTrackerPro.Application.Features.Accounts
 @using MediatR
-@inject IMediator mediator
+@inject IMediator _mediator
 @inject IDialogService _dialogService
+@inject ISnackbar _snackBar
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -16,24 +17,32 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
         <div class="justify-center mud-text-align-center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => InvokeModal(0))">Create</MudButton>
-            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Secondary">Reload</MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary">Create</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error">Reload</MudButton>
         </div>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="accountTypeName" T="GetAccountResponse">Account Type Name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="institutionName" T="GetAccountResponse">Institution Name</MudTableSortLabel></MudTh>
-        <MudTh>Currency Symbol</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="institutionName" T="GetAccountResponse">Institution Name</MudTableSortLabel></MudTh>      
         <MudTh><MudTableSortLabel SortLabel="accountName" T="GetAccountResponse">Account Name</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="accountNumber" T="GetAccountResponse">Account Number</MudTableSortLabel></MudTh>
+        <MudTh>Currency Symbol</MudTh>
         <MudTh><MudTableSortLabel SortLabel="balance" T="GetAccountResponse">Balance</MudTableSortLabel></MudTh>
+        <MudTh Style="text-align:right">Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="AccountTypeName">@context.AccountTypeName</MudTd>
          <MudTd DataLabel="InstitutionName">@context.InstitutionName</MudTd>
          <MudTd DataLabel="Name">@context.Name</MudTd>
          <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
+            <MudTd><div class="w-25 p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
          <MudTd DataLabel="Balance">@context.Balance</MudTd>
+         <MudTd DataLabel="Actions" Style="text-align: right">
+            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
+                <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))">Edit</MudMenuItem>
+                <MudMenuItem @onclick="@(() => Delete(@context.Id))">Delete</MudMenuItem>            
+            </MudMenu>  
+        </MudTd>
      </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

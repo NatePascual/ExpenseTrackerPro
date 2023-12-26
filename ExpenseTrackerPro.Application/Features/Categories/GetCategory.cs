@@ -37,7 +37,7 @@ public class GetCategoryView
     public Result<IList<GetCategoryResponse>> Categories { get; set; }
 }
 
-internal class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery,GetCategoryView>
+internal sealed class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery,GetCategoryView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

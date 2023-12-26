@@ -4,6 +4,7 @@ using AutoMapper;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Shared.Wrappers;
 using System.ComponentModel.DataAnnotations;
+using ExpenseTrackerPro.Application.Features.Transactions;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
 
@@ -21,7 +22,7 @@ public class CreateUpdateAccountCommand : IRequest<Result<int>>
 
     public float Balance { get; set; }
 
-    public bool IsIncludedBalance { get; set; } = false;
+    public bool IsIncludedBalance { get; set; } = true;
 }
 
 internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<CreateUpdateAccountCommand, Result<int>>
@@ -43,8 +44,12 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
             var entity = _mapper.Map<Account>(command);
             await _unitOfWork.Repository<Account>().AddAsync(entity);
             await _unitOfWork.Commit(cancellationToken);
-            result = await Result<int>.SuccessAsync(entity.Id, "Account Saved!");
-      
+
+            await ManageTransaction.AddAsync(_unitOfWork, entity.Id, "Starting Balance",
+                                              DateOnly.FromDateTime(entity.Created), 
+                                              entity.Balance, false, false,cancellationToken);
+
+            result = await Result<int>.SuccessAsync(entity.Id, "Account Saved!");     
         }
         else
         {
@@ -62,6 +67,7 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
                 var entity = _mapper.Map<Account>(command);
                 await _unitOfWork.Repository<Account>().UpdateAsync(entity);
                 await _unitOfWork.Commit(cancellationToken);
+               
                 result = await Result<int>.SuccessAsync(entity.Id, "Account Updated!");
             }
             else
@@ -74,4 +80,6 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
         return result;
 
     }
+
+
 }

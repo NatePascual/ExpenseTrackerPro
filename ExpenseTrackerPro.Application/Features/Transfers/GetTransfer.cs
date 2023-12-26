@@ -37,7 +37,7 @@ public class GetTransferView
     public Result<IList<GetTransferResponse>> Transfers { get; set; }
 }
 
-internal class GetTransferQueryHandler : IRequestHandler<GetTransferQuery, GetTransferView>
+internal sealed class GetTransferQueryHandler : IRequestHandler<GetTransferQuery, GetTransferView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

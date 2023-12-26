@@ -38,7 +38,7 @@ public class GetExpenseView
     public Result<IList<GetExpenseResponse>> Expenses { get; set; }
 }
 
-internal class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, GetExpenseView>
+internal sealed class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, GetExpenseView>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
