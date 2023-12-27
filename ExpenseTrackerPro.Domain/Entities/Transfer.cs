@@ -16,7 +16,7 @@ public class Transfer : BaseAuditableEntity
     [Required]
     public float Amount { get; set; }
 
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     [MaxLength(200)]
     public string Note { get; set; }
@@ -26,7 +26,7 @@ public class Transfer : BaseAuditableEntity
     public Transfer(int senderId,
                     int receiverId,
                     float amount,
-                    DateOnly transactionDate,
+                    DateTime? transactionDate,
                     string note,
                     bool isTransferAsExpense)
     {

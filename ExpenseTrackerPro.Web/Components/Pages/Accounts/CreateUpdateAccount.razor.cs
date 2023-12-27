@@ -22,11 +22,6 @@ public partial class CreateUpdateAccount
         StateHasChanged();
     }
 
-    public void Cancel()
-    {
-        MudDialog.Cancel();
-    }
-
     private async Task LoadDataAsync()
     {
         await LoadAccountTypes();
@@ -103,4 +98,9 @@ public partial class CreateUpdateAccount
             }
         }
     }
+    public void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
 }

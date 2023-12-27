@@ -1,7 +1,7 @@
 ﻿using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Domain.Contracts;
 using ExpenseTrackerPro.Domain.Entities;
-using ExpenseTrackerPro.Domain.Enums;
+using ExpenseTrackerPro.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerPro.Infrastructure.Contexts;
@@ -338,7 +338,7 @@ public class ApplicationDbContext : DbContext
             new IncomeCategory("Refunds", "refund.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
             new IncomeCategory("Reimbursement", "reimbursement.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
             new IncomeCategory("Rental Income", "rental.png") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Salary &Paycheck", "salary.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Salary & Paycheck", "salary.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
             new IncomeCategory("Savings", "savings.png") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
             new IncomeCategory("Selling Income", "selling.png") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
             new IncomeCategory("Transfer", "transfer.png") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },

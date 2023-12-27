@@ -1,6 +1,6 @@
-﻿@page "/manageAccount"
-@using MudBlazor
+﻿@page "/ManageAccount"
 @using ExpenseTrackerPro.Application.Features.Accounts
+@using MudBlazor
 @using MediatR
 @inject IMediator _mediator
 @inject IDialogService _dialogService
@@ -16,7 +16,7 @@
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
-        <div class="justify-center mud-text-align-center">
+        <div class="justify-center mud-text-align-right">
             <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary">Create</MudButton>
             <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error">Reload</MudButton>
         </div>
@@ -35,10 +35,11 @@
          <MudTd DataLabel="InstitutionName">@context.InstitutionName</MudTd>
          <MudTd DataLabel="Name">@context.Name</MudTd>
          <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
-            <MudTd><div class="w-25 p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
+         <MudTd><div class="w-25 p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
          <MudTd DataLabel="Balance">@context.Balance</MudTd>
          <MudTd DataLabel="Actions" Style="text-align: right">
-            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
+            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
+                     IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
                 <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))">Edit</MudMenuItem>
                 <MudMenuItem @onclick="@(() => Delete(@context.Id))">Delete</MudMenuItem>            
             </MudMenu>  

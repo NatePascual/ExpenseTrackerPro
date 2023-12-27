@@ -16,7 +16,7 @@ public class Income : BaseAuditableEntity
 
     [Required]
     public float Amount { get; set; }
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     [MaxLength(200)]
     public string Note { get; set; }
@@ -27,7 +27,7 @@ public class Income : BaseAuditableEntity
     public Income(int incomeCategory,
                   int accountId,
                   float amount,
-                  DateOnly transactionDate,
+                  DateTime? transactionDate,
                   string note,
                   string photo) 
     {

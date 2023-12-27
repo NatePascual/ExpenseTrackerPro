@@ -9,7 +9,7 @@ public static class ManageTransaction
     public static async Task AddAsync(IUnitOfWork unitOfWork,
                                   int id,
                                   string transactionType,
-                                  DateOnly transactionDate,
+                                  DateTime transactionDate,
                                   float amount,
                                   bool asSender,
                                   bool asReceiver,

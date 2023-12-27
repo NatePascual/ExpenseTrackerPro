@@ -5,14 +5,18 @@ using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Shared.Wrappers;
 using System.ComponentModel.DataAnnotations;
 using ExpenseTrackerPro.Application.Features.Transactions;
+using ExpenseTrackerPro.Shared.Enums;
+using ExpenseTrackerPro.Application.Extensions;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
 
 public class CreateUpdateAccountCommand : IRequest<Result<int>>
 {
     public int Id { get; set; }
+    [Required]
     public int AccountTypeId { get; set; }
     public int InstitutionId { get; set; }
+    [Required]
     public int CurrencyId { get; set; }
 
     [Length(10, 30), Required]
@@ -20,6 +24,7 @@ public class CreateUpdateAccountCommand : IRequest<Result<int>>
     [MaxLength(4), Required]
     public string AccountNumber { get; set; }
 
+    [Required]
     public float Balance { get; set; }
 
     public bool IsIncludedBalance { get; set; } = true;
@@ -45,11 +50,10 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
             await _unitOfWork.Repository<Account>().AddAsync(entity);
             await _unitOfWork.Commit(cancellationToken);
 
-            await ManageTransaction.AddAsync(_unitOfWork, entity.Id, "Starting Balance",
-                                              DateOnly.FromDateTime(entity.Created), 
-                                              entity.Balance, false, false,cancellationToken);
+            await ManageTransaction.AddAsync(_unitOfWork, entity.Id, TransactionType.StartingBalance.ToDescriptionString(),
+                                              entity.Created, entity.Balance, false, false,cancellationToken);
 
-            result = await Result<int>.SuccessAsync(entity.Id, "Account Saved!");     
+            result = await Result<int>.SuccessAsync(entity.Id,Messages.AccountSaved.ToDescriptionString());     
         }
         else
         {
@@ -64,15 +68,15 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
                 account.AccountNumber = command.AccountNumber ?? account.AccountNumber;
                 account.Balance = (command.Balance == 0) ? account.Balance : command.Balance;
 
-                var entity = _mapper.Map<Account>(command);
+                var entity = _mapper.Map<Account>(account);
                 await _unitOfWork.Repository<Account>().UpdateAsync(entity);
                 await _unitOfWork.Commit(cancellationToken);
                
-                result = await Result<int>.SuccessAsync(entity.Id, "Account Updated!");
+                result = await Result<int>.SuccessAsync(entity.Id, Messages.AccountUpdated.ToDescriptionString());
             }
             else
             {
-                result = await Result<int>.FailAsync("Record not found!");
+                result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());
             }
         }
         

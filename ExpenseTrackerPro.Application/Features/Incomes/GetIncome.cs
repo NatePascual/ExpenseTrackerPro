@@ -17,7 +17,7 @@ public class GetIncomeResponse : IMapFrom<Income>
     public int AccountId { get; set; }
     public string AccountName { get; set; }
     public float Amount { get; set; }
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
     public string Note {  get; set; }
     public string Photo {  get; set; }
 }

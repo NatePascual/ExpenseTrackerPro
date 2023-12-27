@@ -18,7 +18,7 @@ public class GetTransactionResponse  : IMapFrom<Transaction>
     public string TransactionType { get; set; }
     public bool AsSender { get; set; } = false;
     public bool AsReceiver { get; set; } = false;
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
     public float Amount { get; set; }
 
     public string AmountToString { get; set; }

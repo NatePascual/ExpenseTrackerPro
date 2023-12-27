@@ -12,7 +12,7 @@ public class Transaction : BaseAuditableEntity
     public bool AsSender { get; set; } = false;
     public bool AsReceiver { get; set; } = false;
 
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
     public float Amount { get; set; }
 
     [NotMapped]
@@ -38,7 +38,7 @@ public class Transaction : BaseAuditableEntity
 
     public Transaction(int accountId, 
                        string transactionType,
-                       DateOnly transactionDate,
+                       DateTime? transactionDate,
                        float amount,
                        bool asSender,
                        bool asReceiver)

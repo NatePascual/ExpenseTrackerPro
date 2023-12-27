@@ -17,8 +17,7 @@ public class GetExpenseResponse: IMapFrom<Expense>
     public int AccountId { get; set; }
     public string AccountName { get; set; }
     public string Provider {  get; set; }
-    public string Title { get; set; }
-    public DateOnly TransactionDate { get; set; }
+    public DateTime TransactionDate { get; set; }
     public string Note {  get; set; }
     public string Photo { get; set; }
 }

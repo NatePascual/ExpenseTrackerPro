@@ -1,5 +1,4 @@
 ﻿using ExpenseTrackerPro.Application.Features.Accounts;
-using ExpenseTrackerPro.Shared.Constants.Applications;
 using MudBlazor;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Accounts;

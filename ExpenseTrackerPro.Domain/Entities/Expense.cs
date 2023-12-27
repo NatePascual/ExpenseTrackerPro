@@ -16,11 +16,8 @@ public class Expense : BaseAuditableEntity
 
     public string Provider { get; set; } = null;
 
-    [MaxLength(100)]
-    public string Title { get; set; }
-
     [Required]
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     [Required]
     public float Amount { get; set; }
@@ -34,15 +31,13 @@ public class Expense : BaseAuditableEntity
     public Expense(int categoryId, 
                    int accountId, 
                    string provider,
-                   string title,
-                   DateOnly transactionDate,
+                   DateTime? transactionDate,
                    string note,
                    string photo) 
     {
         CategoryId = categoryId;
         AccountId = accountId;
         Provider = provider;
-        Title = title;
         TransactionDate = transactionDate;
         Note = note;
         Photo = photo;

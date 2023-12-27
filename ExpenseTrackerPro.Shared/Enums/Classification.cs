@@ -1,4 +1,4 @@
-﻿namespace ExpenseTrackerPro.Domain.Enums;
+﻿namespace ExpenseTrackerPro.Shared.Enums;
 
 public enum Classification
 {
