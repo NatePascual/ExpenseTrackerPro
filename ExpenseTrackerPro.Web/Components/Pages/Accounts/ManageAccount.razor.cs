@@ -97,8 +97,13 @@ public partial class ManageAccount
                 });
             }
         }
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small,Position = DialogPosition.Center, 
-                                          FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { 
+                    CloseButton = true,
+                    MaxWidth = MaxWidth.Medium,
+                    Position = DialogPosition.CenterLeft,
+                    FullWidth = true,
+                    DisableBackdropClick = true 
+        };
         var dialog = _dialogService.Show<CreateUpdateAccount>(id == 0 ? "Create" : "Update", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)

@@ -2,10 +2,12 @@
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Common.Mappings;
 using ExpenseTrackerPro.Application.Extensions;
+using ExpenseTrackerPro.Application.Features.Expenses;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Incomes;
 
@@ -14,10 +16,12 @@ public class GetIncomeResponse : IMapFrom<Income>
     public int Id { get; set; }
     public int IncomeCategoryId { get; set; }
     public string IncomeCategoryName { get; set; }
+    public string IncomeCategoryImageUrl { get; set; }
     public int AccountId { get; set; }
     public string AccountName { get; set; }
-    public float Amount { get; set; }
     public DateTime? TransactionDate { get; set; }
+    public string CurrencySymbol { get; set; }
+    public float Amount { get; set; }
     public string Note {  get; set; }
     public string Photo {  get; set; }
 }
@@ -49,10 +53,24 @@ internal sealed class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,Get
 
     public async Task<GetIncomeView> Handle(GetIncomeQuery request, CancellationToken cancellationToken)
     {
-
+        Expression<Func<Income, GetIncomeResponse>> expression = e => new GetIncomeResponse()
+        {
+            Id = e.Id,
+            AccountId = e.AccountId,
+            AccountName = e.Account.Name,
+            IncomeCategoryId = e.IncomeCategoryId,
+            IncomeCategoryName = e.IncomeCategory.Name,
+            IncomeCategoryImageUrl = e.IncomeCategory.ImageUrl,
+            CurrencySymbol = e.Account.Currency.Symbol,
+            TransactionDate = e.TransactionDate,
+            Amount = e.Amount,
+            Note = e.Note,
+            Photo = e.Photo
+        };
         var filterSpec = new IncomeSpecification(request.SearchString);
         var getAll = await _unitOfWork.Repository<Income>().Entities
                      .Specify(filterSpec)
+                     .Select(expression)
                      .ToListAsync(cancellationToken);
 
         var map = _mapper.Map<List<GetIncomeResponse>>(getAll);

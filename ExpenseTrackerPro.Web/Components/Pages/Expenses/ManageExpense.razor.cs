@@ -1,19 +1,19 @@
-﻿using ExpenseTrackerPro.Application.Features.Incomes;
+﻿using ExpenseTrackerPro.Application.Features.Accounts;
+using ExpenseTrackerPro.Application.Features.Expenses;
+using ExpenseTrackerPro.Application.Features.Incomes;
+using ExpenseTrackerPro.Web.Components.Pages.Accounts;
 using MudBlazor;
 
-namespace ExpenseTrackerPro.Web.Components.Pages.Incomes;
+namespace ExpenseTrackerPro.Web.Components.Pages.Expenses;
 
-public partial class ManageIncome
+public partial class ManageExpense
 {
-    private GetIncomeView? list;
-    private IEnumerable<GetIncomeResponse> pagedData;
-    private IEnumerable<GetIncomeResponse> data;
-    private MudTable<GetIncomeResponse> table;
-
+    private GetExpenseView? list;
+    private IEnumerable<GetExpenseResponse> pagedData;
+    private IEnumerable<GetExpenseResponse> data;
+    private MudTable<GetExpenseResponse> table;
     private int totalItems;
     private string searchString = null;
-    private int ImageHeight { get; } = 50;
-    private int ImageWidth { get; } = 50;
 
     private TableGroupDefinition<GetIncomeResponse> _groupDefinition = new()
     {
@@ -24,38 +24,35 @@ public partial class ManageIncome
         Selector = (e) => e.TransactionDate.Value.ToString("d")
 
     };
-
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<GetIncomeResponse>> ServerReload(TableState state)
+    private async Task<TableData<GetExpenseResponse>> ServerReload(TableState state)
     {
-        await LoadData();
+        await LoadData(state.Page, state.PageSize);
 
         await SortAndPaged(state);
 
-        return new TableData<GetIncomeResponse>() { TotalItems = totalItems, Items = pagedData };
+        return new TableData<GetExpenseResponse>() { TotalItems = totalItems, Items = pagedData };
     }
 
-    private async Task LoadData()
+    private async Task LoadData(int page, int pageSize)
     {
-        list = await _mediator.Send(new GetIncomeQuery(""));
+        list = await _mediator.Send(new GetExpenseQuery(searchString));
 
-        data = list.Incomes.Data;
+        data = list.Expenses.Data;
 
         data = data.Where(item =>
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return true;
+            if (item.CategoryName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
             if (item.AccountName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (item.IncomeCategoryName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            if (item.Provider.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (item.Amount.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-            if (item.TransactionDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-
+           
             return false;
         }).ToArray();
         totalItems = data.Count();
@@ -65,11 +62,14 @@ public partial class ManageIncome
     {
         switch (state.SortLabel)
         {
-            case "incomeCategoryName":
-                data = data.OrderByDirection(state.SortDirection, o => o.IncomeCategoryName);
+            case "categoryName":
+                data = data.OrderByDirection(state.SortDirection, o => o.CategoryName);
                 break;
             case "accountName":
                 data = data.OrderByDirection(state.SortDirection, o => o.AccountName);
+                break;
+            case "provider":
+                data = data.OrderByDirection(state.SortDirection, o => o.Provider);
                 break;
             case "amount":
                 data = data.OrderByDirection(state.SortDirection, o => o.Amount);
@@ -78,8 +78,6 @@ public partial class ManageIncome
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
     }
-
-
     private void OnSearch(string text)
     {
         searchString = text;
@@ -91,16 +89,19 @@ public partial class ManageIncome
         var parameters = new DialogParameters();
         if (id != 0)
         {
-            var income = pagedData.FirstOrDefault(c => c.Id == id);
-            if (income != null)
+            var expense = pagedData.FirstOrDefault(c => c.Id == id);
+            if (expense != null)
             {
-                parameters.Add(nameof(CreateUpdateIncome.CreateUpdateIncomeModel), new CreateUpdateIncomeCommand
+                parameters.Add(nameof(CreateUpdateExpense.CreateUpdateExpenseModel), new CreateUpdateExpenseCommand
                 {
-                    Id = income.Id,
-                    IncomeCategoryId = income.IncomeCategoryId,
-                    AccountId = income.AccountId,
-                    Amount = income.Amount,
-                    TransactionDate = income.TransactionDate
+                    Id = expense.Id,
+                    CategoryId = expense.CategoryId,
+                    AccountId = expense.AccountId,
+                    Provider = expense.Provider,
+                    TransactionDate = expense.TransactionDate,
+                    Amount = expense.Amount,
+                    Note = expense.Note,
+                    Photo = expense.Photo
                 });
             }
         }
@@ -112,7 +113,7 @@ public partial class ManageIncome
             FullWidth = true,
             DisableBackdropClick = true
         };
-        var dialog = _dialogService.Show<CreateUpdateIncome>(id == 0 ? "Create" : "Update", parameters, options);
+        var dialog = _dialogService.Show<CreateUpdateExpense>(id == 0 ? "Create" : "Update", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

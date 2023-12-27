@@ -23,6 +23,8 @@ public class CreateUpdateExpenseCommand : IRequest<Result<int>>
     [Required]
     public DateTime? TransactionDate { get; set; }
 
+    [Required]
+    public float Amount { get; set; }
     public string Note { get; set; }
 
     public string Photo { get; set; }

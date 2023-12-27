@@ -14,13 +14,13 @@
         <MudText Typo="Typo.h6">Manage Account</MudText>
          <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>  
         <MudSpacer />
         <div class="justify-center mud-text-align-right">
             <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary">Create</MudButton>
             <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error">Reload</MudButton>
         </div>
-    </ToolBarContent>
+     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="accountTypeName" T="GetAccountResponse">Account Type Name</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="institutionName" T="GetAccountResponse">Institution Name</MudTableSortLabel></MudTh>      

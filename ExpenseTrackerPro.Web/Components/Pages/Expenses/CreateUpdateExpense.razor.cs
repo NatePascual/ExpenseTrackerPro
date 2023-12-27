@@ -1,17 +1,17 @@
 ﻿using ExpenseTrackerPro.Application.Features.Accounts;
-using ExpenseTrackerPro.Application.Features.IncomeCategories;
-using ExpenseTrackerPro.Application.Features.Incomes;
+using ExpenseTrackerPro.Application.Features.Categories;
+using ExpenseTrackerPro.Application.Features.Expenses;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace ExpenseTrackerPro.Web.Components.Pages.Incomes;
+namespace ExpenseTrackerPro.Web.Components.Pages.Expenses;
 
-public partial class CreateUpdateIncome
+public partial class CreateUpdateExpense
 {
-    [Parameter] public CreateUpdateIncomeCommand CreateUpdateIncomeModel { get; set; } = new();
+    [Parameter] public CreateUpdateExpenseCommand CreateUpdateExpenseModel { get; set; } = new();
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
-    private List<GetIncomeCategoryResponse> _incomeCategories { get; set; } = new();
+    private List<GetCategoryResponse> _categories { get; set; } = new();
     private List<GetAccountResponse> _accounts { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
@@ -21,32 +21,32 @@ public partial class CreateUpdateIncome
 
     private async Task LoadDataAsync()
     {
-        await LoadIncomeCategory();
+        await LoadCategory();
         await LoadAccounts();
     }
 
-    private async Task LoadIncomeCategory()
+    private async Task LoadCategory()
     {
-        var list = await _mediator.Send(new GetIncomeCategoryQuery(""));
+        var list = await _mediator.Send(new GetCategoryQuery(""));
 
-        if (list.IncomeCategories.Succeeded)
+        if (list.Categories.Succeeded)
         {
-            _incomeCategories = list.IncomeCategories.Data.ToList();
+            _categories = list.Categories.Data.ToList();
         }
     }
 
     private async Task<IEnumerable<int>> SearchIncomeCategory(string search)
     {
         if (string.IsNullOrEmpty(search))
-             return _incomeCategories.Select(x => x.Id);
+            return _categories.Select(x => x.Id);
 
-        return _incomeCategories.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
+        return _categories.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
     }
     private async Task LoadAccounts()
     {
         var list = await _mediator.Send(new GetAccountQuery(""));
 
-        if(list.Accounts.Succeeded)
+        if (list.Accounts.Succeeded)
         {
             _accounts = list.Accounts.Data.ToList();
         }
@@ -54,7 +54,7 @@ public partial class CreateUpdateIncome
 
     private async Task<IEnumerable<int>> SearchAccount(string search)
     {
-        if(string.IsNullOrEmpty(search))
+        if (string.IsNullOrEmpty(search))
             return _accounts.Select(x => x.Id);
 
         return _accounts.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
@@ -62,7 +62,7 @@ public partial class CreateUpdateIncome
 
     private async Task SaveAsync()
     {
-        var response = await _mediator.Send(CreateUpdateIncomeModel);
+        var response = await _mediator.Send(CreateUpdateExpenseModel);
         if (response.Succeeded)
         {
             _snackBar.Add(response.Messages[0], Severity.Success);
@@ -80,5 +80,4 @@ public partial class CreateUpdateIncome
     {
         MudDialog.Cancel();
     }
-
 }

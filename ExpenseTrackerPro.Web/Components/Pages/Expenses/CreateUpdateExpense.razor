@@ -2,61 +2,61 @@
 @using MediatR
 @inject IMediator _mediator
 @inject ISnackbar _snackBar
-<EditForm Model="@CreateUpdateIncomeModel" OnSubmit="SaveAsync">
+<EditForm Model="@CreateUpdateExpenseModel" OnSubmit="SaveAsync">
     <MudDialog>
         <TitleContent>
             @{
-                if(CreateUpdateIncomeModel.Id == 0)
+                if (CreateUpdateExpenseModel.Id == 0)
                 {
                     <MudText Typo="Typo.h6">
                         <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
-                        Create Income
+                        Create Expense
                     </MudText>
                 }
                 else
                 {
                     <MudText Typo="Typo.h6">
                         <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
-                        Update Income
+                        Update Expense
                     </MudText>
                 }
             }
         </TitleContent>
         <DialogContent>
             <MudGrid>
-                 @if (CreateUpdateIncomeModel.Id != 0)
+                @if (CreateUpdateExpenseModel.Id != 0)
                 {
                     <MudItem xs="12" md="6">
-                        <MudTextField Disabled For="@(() => CreateUpdateIncomeModel.Id)" @bind-Value="CreateUpdateIncomeModel.Id" Label="Id" Variant="Variant.Outlined" />
+                        <MudTextField Disabled For="@(() => CreateUpdateExpenseModel.Id)" @bind-Value="CreateUpdateExpenseModel.Id" Label="Id" Variant="Variant.Outlined" />
                      </MudItem>
                 }
                 <MudItem xs="12" md="6">
-                    <MudTextField For="@(() => CreateUpdateIncomeModel.Amount)" @bind-Value="CreateUpdateIncomeModel.Amount" Label="Amount" Variant="Variant.Outlined" />
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    <MudAutocomplete MaxItems="120" T="int" Label="Account" For="@(() => CreateUpdateIncomeModel.AccountId)" @bind-Value="CreateUpdateIncomeModel.AccountId"
+                    <MudAutocomplete MaxItems="120" T="int" Label="Account" For="@(() => CreateUpdateExpenseModel.AccountId)" @bind-Value="CreateUpdateExpenseModel.AccountId"
                                      Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                                      ResetValueOnEmptyText="true" SearchFunc="SearchAccount"
                                      ToStringFunc="@(i => _accounts.FirstOrDefault(x => x.Id == i)?.Name ?? string.Empty)" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudAutocomplete MaxItems="120" T="int" Label="Category" For="@(() => CreateUpdateIncomeModel.IncomeCategoryId)" @bind-Value="CreateUpdateIncomeModel.IncomeCategoryId"
-                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" 
+                    <MudAutocomplete MaxItems="120" T="int" Label="Category" For="@(() => CreateUpdateExpenseModel.CategoryId)" @bind-Value="CreateUpdateExpenseModel.CategoryId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                                      ResetValueOnEmptyText="true" SearchFunc="SearchIncomeCategory"
-                                     ToStringFunc="@(at => _incomeCategories.FirstOrDefault(x => x.Id == at)?.Name ?? string.Empty)" />
+                                     ToStringFunc="@(at => _categories.FirstOrDefault(x => x.Id == at)?.Name ?? string.Empty)" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudDatePicker Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateIncomeModel.TransactionDate)" @bind-Date="CreateUpdateIncomeModel.TransactionDate"
+                    <MudTextField For="@(() => CreateUpdateExpenseModel.Amount)" @bind-Value="CreateUpdateExpenseModel.Amount" Label="Amount" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudDatePicker Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateExpenseModel.TransactionDate)" @bind-Date="CreateUpdateExpenseModel.TransactionDate"
                                    Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="en-US Date" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField For="@(() => CreateUpdateIncomeModel.Note)" @bind-Value="CreateUpdateIncomeModel.Note" Label="Note" Variant="Variant.Outlined" />
+                    <MudTextField For="@(() => CreateUpdateExpenseModel.Note)" @bind-Value="CreateUpdateExpenseModel.Note" Label="Note" Variant="Variant.Outlined" />
                 </MudItem>
-            </MudGrid> 
+            </MudGrid>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
-            @if (CreateUpdateIncomeModel.Id != 0)
+            @if (CreateUpdateExpenseModel.Id != 0)
             {
                 <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Secondary">Update</MudButton>
             }

@@ -6,6 +6,7 @@ using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Expenses;
 
@@ -17,7 +18,9 @@ public class GetExpenseResponse: IMapFrom<Expense>
     public int AccountId { get; set; }
     public string AccountName { get; set; }
     public string Provider {  get; set; }
-    public DateTime TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
+    public string CurrencySymbol { get; set; }
+    public float Amount { get; set; }
     public string Note {  get; set; }
     public string Photo { get; set; }
 }
@@ -49,11 +52,25 @@ internal sealed class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, 
 
     public async Task<GetExpenseView> Handle(GetExpenseQuery request, CancellationToken cancellationToken)
     {
-
+        Expression<Func<Expense, GetExpenseResponse>> expression = e => new GetExpenseResponse()
+        {
+            Id = e.Id,
+            CategoryId = e.CategoryId,
+            CategoryName = e.ExpenseCategory.Name,
+            AccountId = e.AccountId,
+            AccountName = e.Account.Name,
+            CurrencySymbol = e.Account.Currency.Symbol,
+            Provider = e.Provider,
+            TransactionDate = e.TransactionDate,
+            Amount = e.Amount,
+            Note= e.Note,
+            Photo = e.Photo
+        };
         var filterSpec = new ExpenseSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Expense>().Entities
                   .Specify(filterSpec)
+                  .Select(expression)
                   .ToListAsync(cancellationToken);
 
         var map = _mapper.Map<IList<GetExpenseResponse>>(getAll);
