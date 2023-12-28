@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Components\Pages\DashBoards\" />
+    <Folder Include="Components\Pages\Transactions\" />
     <Folder Include="Components\Pages\UserProfiles\" />
     <Folder Include="wwwroot\ImageTransactions\Expense\" />
     <Folder Include="wwwroot\ImageTransactions\Income\" />

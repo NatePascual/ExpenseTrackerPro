@@ -75,3 +75,12 @@ h1:focus {
 .wd-95 {
     width: 95%;
 }
+
+.IconContainer
+{
+    width:50px;
+    padding:1px;
+    margin:1px;
+    text-align:center;
+    vertical-align:middle;
+}
