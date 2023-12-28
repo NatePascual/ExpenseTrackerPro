@@ -18,8 +18,8 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>  
         <MudSpacer />
         <div class="justify-center mud-text-align-right">
-            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary">Create</MudButton>
-            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error">Reload</MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Create"></MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
         </div>
      </ToolBarContent>
     <HeaderContent>
@@ -32,17 +32,17 @@
         <MudTh Style="text-align:right">Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="AccountTypeName">
+        <MudTd DataLabel="Account Type">
             <MudImage Src="@(ImageLocation.AccountType.ToString() + context.AccountTypeImageUrl)"
                       Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
                       @context.AccountTypeName
         </MudTd>      
-         <MudTd DataLabel="InstitutionName">
+         <MudTd DataLabel="Institution">
             <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
                       Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
                     @context.InstitutionName
           </MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Account">@context.Name</MudTd>
         <MudTd DataLabel="Account Number">@context.AccountNumber</MudTd>   
          <MudTd Class="IconContainer"><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
          <MudTd DataLabel="Balance">@context.Balance</MudTd>

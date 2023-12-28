@@ -13,20 +13,20 @@ namespace ExpenseTrackerPro.Application.Features.Accounts;
 public class CreateUpdateAccountCommand : IRequest<Result<int>>
 {
     public int Id { get; set; }
-    [Required]
+    [Required, Display(Name ="Account Type")]
     public int AccountTypeId { get; set; }
     public string AccountTypeImageUrl { get; set; }
 
-    [Required]
+    [Required, Display(Name = "Bank Or Institution")]
     public int InstitutionId { get; set; }
 
     public string InstitutionImageUrl { get; set; }
-    [Required]
+    [Required, Display(Name = "Currency")]
     public int CurrencyId { get; set; }
 
     [Length(10, 30), Required]
     public string Name { get; set; }
-    [MaxLength(4), Required]
+    [MaxLength(4), Required, Display(Name = "Account Number")]
     public string AccountNumber { get; set; }
 
     [Required]

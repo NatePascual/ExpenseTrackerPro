@@ -31,8 +31,8 @@ public partial class CreateUpdateAccount
             _accountTypeMediumSetting = 11;
             _institutionMediumSetting = 11;
 
-            _accountTypeSmallSetting = 11;
-            _institutionSmallSetting = 11;
+            _accountTypeSmallSetting = 10;
+            _institutionSmallSetting = 10;
         }
 
         await LoadDataAsync();

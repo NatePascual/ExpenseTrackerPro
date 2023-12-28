@@ -33,7 +33,7 @@
                 }
                 @if(CreateUpdateAccountModel.Id != 0)
                 {
-                    <MudItem xs="1" md="1">
+                    <MudItem xs="2" md="1">
                         <MudImage Src="@(ImageLocation.AccountType.ToString() + CreateUpdateAccountModel.AccountTypeImageUrl)"
                                   Alt="Account Type" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
                      </MudItem>
@@ -46,7 +46,7 @@
                 </MudItem>
                 @if (CreateUpdateAccountModel.Id != 0)
                 {
-                    <MudItem xs="1" md="1">
+                    <MudItem xs="2" md="1">
                         <MudImage Src="@(ImageLocation.Institution.ToString() + CreateUpdateAccountModel.InstitutionImageUrl)"
                                   Alt="Institution" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
                     </MudItem>
