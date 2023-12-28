@@ -15,8 +15,10 @@ public class GetExpenseResponse: IMapFrom<Expense>
     public int Id { get; set; }
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
+    public string CategoryImageUrl {  get; set; }
     public int AccountId { get; set; }
     public string AccountName { get; set; }
+    public string InstitutionImageUrl { get; set; }
     public string Provider {  get; set; }
     public DateTime? TransactionDate { get; set; }
     public string CurrencySymbol { get; set; }
@@ -57,8 +59,10 @@ internal sealed class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, 
             Id = e.Id,
             CategoryId = e.CategoryId,
             CategoryName = e.ExpenseCategory.Name,
+            CategoryImageUrl = e.ExpenseCategory.ImageUrl,
             AccountId = e.AccountId,
             AccountName = e.Account.Name,
+            InstitutionImageUrl = e.Account.Institution.ImageUrl,
             CurrencySymbol = e.Account.Currency.Symbol,
             Provider = e.Provider,
             TransactionDate = e.TransactionDate,

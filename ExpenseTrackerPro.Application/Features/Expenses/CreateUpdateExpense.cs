@@ -28,6 +28,9 @@ public class CreateUpdateExpenseCommand : IRequest<Result<int>>
     public string Note { get; set; }
 
     public string Photo { get; set; }
+
+    public string CategoryImageUrl { get; set; }
+    public string InstitutionImageUrl { get; set; }
 }
 
 internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<CreateUpdateExpenseCommand, Result<int>>
@@ -68,6 +71,7 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
                 expense.TransactionDate = (command.TransactionDate != expense.TransactionDate) ? command.TransactionDate : expense.TransactionDate;
                 expense.Note = command.Note ?? expense.Note;
                 expense.Photo = command.Photo ?? expense.Photo;
+                expense.Amount = (command.Amount == 0) ? expense.Amount : command.Amount;
 
                 var entity = _mapper.Map<Expense>(expense);
                 await _unitOfWork.Repository<Expense>().UpdateAsync(entity);

@@ -28,7 +28,7 @@
                 @if (CreateUpdateAccountModel.Id != 0)
                 {
                     <MudItem xs="12" md="12" Class="visually-hidden">
-                        <MudTextField hidden For="@(() => CreateUpdateAccountModel.Id)" @bind-Value="CreateUpdateAccountModel.Id" />
+                        <MudTextField Disabled For="@(() => CreateUpdateAccountModel.Id)" @bind-Value="CreateUpdateAccountModel.Id" />
                      </MudItem>
                 }
                 @if(CreateUpdateAccountModel.Id != 0)

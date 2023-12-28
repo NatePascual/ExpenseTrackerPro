@@ -28,7 +28,7 @@
                  @if (CreateUpdateIncomeModel.Id != 0)
                 {
                     <MudItem xs="12" md="6" Class="visually-hidden">
-                        <MudTextField hidden For="@(() => CreateUpdateIncomeModel.Id)" @bind-Value="CreateUpdateIncomeModel.Id" Label="Id" Variant="Variant.Outlined" />
+                        <MudTextField Disabled For="@(() => CreateUpdateIncomeModel.Id)" @bind-Value="CreateUpdateIncomeModel.Id" Label="Id" Variant="Variant.Outlined" />
                      </MudItem>
                 }
                 <MudItem xs="12" md="12">

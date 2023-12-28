@@ -51,14 +51,16 @@ h1:focus {
 }
 
 /*CUSTOM*/
-.mud-table-cell-custom-group {
-    font-weight: 500;
+/*.mud-table-cell-custom-group {
+    font-weight: 500 !important;
 }
 
 .mud-table-cell-custom-group-footer {
-    padding-bottom: 50px;
-    text-align: right;
-}
+    padding-bottom: 50px !important;
+    text-align: right !important;
+    font-weight: 500 !important;
+    color: red !important;
+}*/
 
 .wd-5 {
     width: 5%;
@@ -74,6 +76,10 @@ h1:focus {
 
 .wd-95 {
     width: 95%;
+}
+
+.wd-99 {
+    width: 99%;
 }
 
 .IconContainer

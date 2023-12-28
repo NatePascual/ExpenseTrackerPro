@@ -1,7 +1,4 @@
-﻿using ExpenseTrackerPro.Application.Features.Accounts;
-using ExpenseTrackerPro.Application.Features.Expenses;
-using ExpenseTrackerPro.Application.Features.Incomes;
-using ExpenseTrackerPro.Web.Components.Pages.Accounts;
+﻿using ExpenseTrackerPro.Application.Features.Expenses;
 using MudBlazor;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Expenses;
@@ -14,8 +11,10 @@ public partial class ManageExpense
     private MudTable<GetExpenseResponse> table;
     private int totalItems;
     private string searchString = null;
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
 
-    private TableGroupDefinition<GetIncomeResponse> _groupDefinition = new()
+    private TableGroupDefinition<GetExpenseResponse> _groupDefinition = new()
     {
         GroupName = "Group",
         Indentation = false,
@@ -101,15 +100,17 @@ public partial class ManageExpense
                     TransactionDate = expense.TransactionDate,
                     Amount = expense.Amount,
                     Note = expense.Note,
-                    Photo = expense.Photo
+                    Photo = expense.Photo,
+                    InstitutionImageUrl = expense.InstitutionImageUrl,
+                    CategoryImageUrl = expense.CategoryImageUrl
                 });
             }
         }
         var options = new DialogOptions
         {
             CloseButton = true,
-            MaxWidth = MaxWidth.Medium,
-            Position = DialogPosition.CenterLeft,
+            MaxWidth = MaxWidth.Small,
+            Position = DialogPosition.TopLeft,
             FullWidth = true,
             DisableBackdropClick = true
         };

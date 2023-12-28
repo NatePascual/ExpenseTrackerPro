@@ -27,7 +27,6 @@
         <MudTh><MudTableSortLabel SortLabel="institutionName" T="GetAccountResponse">Institution</MudTableSortLabel></MudTh>      
         <MudTh><MudTableSortLabel SortLabel="accountName" T="GetAccountResponse">Account</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="accountNumber" T="GetAccountResponse">Account Number</MudTableSortLabel></MudTh>
-        <MudTh>Currency</MudTh>
         <MudTh><MudTableSortLabel SortLabel="balance" T="GetAccountResponse">Balance</MudTableSortLabel></MudTh>
         <MudTh Style="text-align:right">Actions</MudTh>
     </HeaderContent>
@@ -38,14 +37,13 @@
                       @context.AccountTypeName
         </MudTd>      
          <MudTd DataLabel="Institution">
-            <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
+          <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
                       Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
                     @context.InstitutionName
           </MudTd>
         <MudTd DataLabel="Account">@context.Name</MudTd>
         <MudTd DataLabel="Account Number">@context.AccountNumber</MudTd>   
-         <MudTd Class="IconContainer"><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
-         <MudTd DataLabel="Balance">@context.Balance</MudTd>
+        <MudTd DataLabel="Balance">@context.CurrencySymbol @context.Balance.ToString("#,###.00")</MudTd>
          <MudTd DataLabel="Actions" Style="text-align: right">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                      IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">

@@ -13,8 +13,20 @@ public partial class CreateUpdateExpense
 
     private List<GetCategoryResponse> _categories { get; set; } = new();
     private List<GetAccountResponse> _accounts { get; set; } = new();
+
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
+
+    private int _mediumSetting = 12;
+    private int _smallSetting = 12;
     protected override async Task OnInitializedAsync()
     {
+        if (CreateUpdateExpenseModel.Id > 0)
+        {
+            _mediumSetting = 10;
+            _smallSetting = 10;
+        }
+
         await LoadDataAsync();
         StateHasChanged();
     }
