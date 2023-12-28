@@ -17,6 +17,7 @@ public class GetIncomeResponse : IMapFrom<Income>
     public int IncomeCategoryId { get; set; }
     public string IncomeCategoryName { get; set; }
     public string IncomeCategoryImageUrl { get; set; }
+    public string InstitutionImageUrl { get; set; }
     public int AccountId { get; set; }
     public string AccountName { get; set; }
     public DateTime? TransactionDate { get; set; }
@@ -61,6 +62,7 @@ internal sealed class GetIncomeQueryHandler : IRequestHandler<GetIncomeQuery,Get
             IncomeCategoryId = e.IncomeCategoryId,
             IncomeCategoryName = e.IncomeCategory.Name,
             IncomeCategoryImageUrl = e.IncomeCategory.ImageUrl,
+            InstitutionImageUrl = e.Account.Institution.ImageUrl,
             CurrencySymbol = e.Account.Currency.Symbol,
             TransactionDate = e.TransactionDate,
             Amount = e.Amount,

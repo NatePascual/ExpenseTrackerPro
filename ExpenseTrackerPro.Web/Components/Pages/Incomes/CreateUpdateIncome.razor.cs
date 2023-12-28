@@ -13,8 +13,26 @@ public partial class CreateUpdateIncome
 
     private List<GetIncomeCategoryResponse> _incomeCategories { get; set; } = new();
     private List<GetAccountResponse> _accounts { get; set; } = new();
+
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
+
+    private int _incomeCategoryMediumSetting = 6;
+    private int _institutionMediumSetting = 6;
+
+    private int _incomeCategorySmallSetting = 12;
+    private int _institutionSmallSetting = 12;
     protected override async Task OnInitializedAsync()
     {
+        if (CreateUpdateIncomeModel.Id > 0)
+        {
+            _incomeCategoryMediumSetting = 11;
+            _institutionMediumSetting = 11;
+
+            _incomeCategorySmallSetting = 10;
+            _institutionSmallSetting = 10;
+        }
+
         await LoadDataAsync();
         StateHasChanged();
     }

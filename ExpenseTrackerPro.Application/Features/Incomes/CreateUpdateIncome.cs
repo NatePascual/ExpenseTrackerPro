@@ -13,14 +13,18 @@ namespace ExpenseTrackerPro.Application.Features.Incomes;
 public class CreateUpdateIncomeCommand: IRequest<Result<int>>
 {
     public int Id { get; set; }
-    [Required]
+    [Required, Display(Name = "Income Category")]
     public int IncomeCategoryId { get; set; }
-    [Required]
+    [Required, Display(Name = "Account")]
     public int AccountId { get; set; }
     [Required]
     public float Amount { get; set; }
     [Required]
     public DateTime? TransactionDate { get; set; } = DateTime.Now;
+
+    public string IncomeCategoryImageUrl { get; set; }
+    public string InstitutionImageUrl { get; set; }
+
     public string Note { get; set; }
     public string Photo { get; set; }
 }

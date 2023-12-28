@@ -16,12 +16,11 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
         <div class="justify-center mud-text-align-right">
-            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary">Create</MudButton>
-            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error">Reload</MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Create"></MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
         </div>
     </ToolBarContent>
     <HeaderContent>   
-        <MudTh Class="wd-5"></MudTh>
         <MudTh><MudTableSortLabel SortLabel="incomeCategoryName" T="GetIncomeResponse">Category</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="accountName" T="GetIncomeResponse">Account</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="amount" T="GetIncomeResponse">Amount</MudTableSortLabel></MudTh>      
@@ -32,19 +31,23 @@
         <MudTh Class="mud-table-cell-custom-group" colspan="8"><h6>@($"{context.GroupName}: {context.Key}")</h6></MudTh>
     </GroupHeaderTemplate>
     <RowTemplate>
-        <MudTh Class="wd-5">
+        <MudTd DataLabel="Income Category">
             <MudImage Src="@(ImageLocation.IncomeCategory.ToString() + context.IncomeCategoryImageUrl)"
-                      Alt="@context.IncomeCategoryName" Elevation="25" Class="rounded-sm" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-        </MudTh>
-        <MudTd DataLabel="IncomeCategoryName">@context.IncomeCategoryName</MudTd>
-        <MudTd DataLabel="AccountName">@context.AccountName</MudTd>
+                      Alt="Income Category" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                     @context.IncomeCategoryName
+         </MudTd>
+        <MudTd DataLabel="Account">
+            <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
+                      Alt="Institution" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                     @context.AccountName
+         </MudTd>
          <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>
         <MudTd DataLabel="Note">@context.Note</MudTd>
         <MudTd DataLabel="Actions" Style="text-align: right">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                      IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
-                <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))">Edit</MudMenuItem>
-                <MudMenuItem @onclick="@(() => Delete(@context.Id))">Delete</MudMenuItem>
+                    <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.Edit">Edit</MudMenuItem>
+                    <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>
             </MudMenu>
         </MudTd>
      </RowTemplate>
