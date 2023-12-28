@@ -55,6 +55,7 @@ internal sealed class GetTransactionQueryHandler : IRequestHandler<GetTransactio
         var filterSpec = new TransactionSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Transaction>().Entities
+                     .AsNoTracking()
                      .Specify(filterSpec)
                      .ToListAsync();
 

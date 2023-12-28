@@ -69,9 +69,10 @@ internal sealed class GetExpenseQueryHandler : IRequestHandler<GetExpenseQuery, 
         var filterSpec = new ExpenseSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Expense>().Entities
-                  .Specify(filterSpec)
-                  .Select(expression)
-                  .ToListAsync(cancellationToken);
+                          .AsNoTracking()
+                          .Specify(filterSpec)
+                          .Select(expression)
+                          .ToListAsync(cancellationToken);
 
         var map = _mapper.Map<IList<GetExpenseResponse>>(getAll);
 

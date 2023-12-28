@@ -76,6 +76,7 @@ internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, 
         var filterSpec = new AccountSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Account>().Entities
+                  .AsNoTracking()
                   .Specify(filterSpec)
                   .Select(expression)
                   .ToListAsync(cancellationToken);

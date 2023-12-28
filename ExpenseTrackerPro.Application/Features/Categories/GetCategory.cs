@@ -55,6 +55,7 @@ internal sealed class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery
         var filterSpec = new CategorySpecification(request.SearchString);
 
         var getAll = () => _unitOfWork.Repository<Category>().Entities
+                       .AsNoTracking()
                        .Specify(filterSpec)
                        .ToListAsync();
 

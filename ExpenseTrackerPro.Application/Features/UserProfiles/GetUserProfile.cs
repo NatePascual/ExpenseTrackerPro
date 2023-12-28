@@ -52,6 +52,7 @@ internal sealed class GetUserProfileQueryHandler : IRequestHandler<GetUserProfil
         var filterSpec = new UserProfileSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<UserProfile>().Entities
+                     .AsNoTracking()
                      .Specify(filterSpec)
                      .ToListAsync();
 

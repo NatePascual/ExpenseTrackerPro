@@ -19,10 +19,10 @@ public class Account : BaseAuditableEntity
     public int CurrencyId { get; set; }
     public virtual Currency Currency { get; set; }
 
-    [Length(10, 30), Required]
+    [Length(4, 30), Required]
     public string Name { get; set; }
 
-    [MaxLength(4), Required]
+    [Length(4,4), Required]
     public string AccountNumber { get; set; }
 
     [Required]

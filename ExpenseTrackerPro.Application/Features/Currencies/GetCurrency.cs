@@ -55,6 +55,7 @@ internal sealed class GetCurrencyQueryHandler : IRequestHandler<GetCurrencyQuery
         var filterSpec = new CurrencySpecification(request.SearchString);
 
         var getAll = () => _unitOfWork.Repository<Currency>().Entities
+                       .AsNoTracking()
                        .Specify(filterSpec)
                        .ToListAsync();
 

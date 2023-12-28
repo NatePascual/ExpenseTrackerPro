@@ -51,6 +51,7 @@ internal sealed class GetIncomeCategoryQueryHandler : IRequestHandler<GetIncomeC
         var filterSpec = new IncomeCategorySpecification(request.SearchString);
 
         var getAll = () => _unitOfWork.Repository<IncomeCategory>().Entities
+                        .AsNoTracking()
                         .Specify(filterSpec)
                         .ToListAsync();
 

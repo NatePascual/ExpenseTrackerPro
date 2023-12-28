@@ -24,9 +24,9 @@ public class CreateUpdateAccountCommand : IRequest<Result<int>>
     [Required, Display(Name = "Currency")]
     public int CurrencyId { get; set; }
 
-    [Length(10, 30), Required]
+    [Length(4, 30), Required]
     public string Name { get; set; }
-    [MaxLength(4), Required, Display(Name = "Account Number")]
+    [Length(4,4, ErrorMessage ="Minimum Length is 4!"), Required, Display(Name = "Account Number")]
     public string AccountNumber { get; set; }
 
     [Required]

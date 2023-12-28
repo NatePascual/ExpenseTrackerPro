@@ -52,6 +52,7 @@ internal sealed class GetInstitutionQueryHandler : IRequestHandler<GetInstitutio
         var filterSpec = new InstitutionSpecification(request.SearchString);
 
         var getAll = () => _unitOfWork.Repository<Institution>().Entities
+                       .AsNoTracking()
                        .Specify(filterSpec)
                        .ToListAsync();
 

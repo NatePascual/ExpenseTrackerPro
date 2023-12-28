@@ -51,6 +51,7 @@ internal sealed class GetAccountTypeQueryHandler : IRequestHandler<GetAccountTyp
         var filterSpec = new AccountTypeSpecification(request.SearchString);
 
         var getAll = () => _unitOfWork.Repository<AccountType>().Entities
+                   .AsNoTracking()
                    .Specify(filterSpec)
                    .ToListAsync();
 

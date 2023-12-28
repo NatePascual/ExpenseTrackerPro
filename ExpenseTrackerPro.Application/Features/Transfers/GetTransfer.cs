@@ -54,6 +54,7 @@ internal sealed class GetTransferQueryHandler : IRequestHandler<GetTransferQuery
         var filterSpec = new TransferSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Transfer>().Entities
+                     .AsNoTracking()
                      .Specify(filterSpec)
                      .ToListAsync();
 
