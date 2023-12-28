@@ -80,14 +80,14 @@
             </MudGrid>
         </DialogContent>
         <DialogActions>
-            <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
             @if (CreateUpdateAccountModel.Id != 0)
             {
-                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"  Color="Color.Secondary">Update</MudButton>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>
             }
             else
             {
-                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"  Color="Color.Success">Create</MudButton>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" StartIcon="@Icons.Material.Filled.Create">Create</MudButton>
             }
         </DialogActions>
     </MudDialog>

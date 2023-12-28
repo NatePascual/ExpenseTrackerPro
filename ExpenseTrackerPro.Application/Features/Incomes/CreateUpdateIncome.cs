@@ -15,6 +15,7 @@ public class CreateUpdateIncomeCommand: IRequest<Result<int>>
     public int Id { get; set; }
     [Required, Display(Name = "Income Category")]
     public int IncomeCategoryId { get; set; }
+
     [Required, Display(Name = "Account")]
     public int AccountId { get; set; }
     [Required]

@@ -17,20 +17,14 @@ public partial class CreateUpdateIncome
     private int ImageHeight { get; } = 50;
     private int ImageWidth { get; } = 50;
 
-    private int _incomeCategoryMediumSetting = 6;
-    private int _institutionMediumSetting = 6;
-
-    private int _incomeCategorySmallSetting = 12;
-    private int _institutionSmallSetting = 12;
+    private int _mediumSetting = 12;
+    private int _smallSetting = 12;
     protected override async Task OnInitializedAsync()
     {
         if (CreateUpdateIncomeModel.Id > 0)
         {
-            _incomeCategoryMediumSetting = 11;
-            _institutionMediumSetting = 11;
-
-            _incomeCategorySmallSetting = 10;
-            _institutionSmallSetting = 10;
+            _mediumSetting = 10;
+            _smallSetting = 10;
         }
 
         await LoadDataAsync();

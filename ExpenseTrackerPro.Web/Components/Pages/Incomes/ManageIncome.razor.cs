@@ -100,15 +100,19 @@ public partial class ManageIncome
                     IncomeCategoryId = income.IncomeCategoryId,
                     AccountId = income.AccountId,
                     Amount = income.Amount,
-                    TransactionDate = income.TransactionDate
+                    TransactionDate = income.TransactionDate,
+                    Note = income.Note,
+                    Photo = income.Photo,
+                    IncomeCategoryImageUrl = income.IncomeCategoryImageUrl,
+                    InstitutionImageUrl = income.InstitutionImageUrl,
                 });
             }
         }
         var options = new DialogOptions
         {
             CloseButton = true,
-            MaxWidth = MaxWidth.Medium,
-            Position = DialogPosition.CenterLeft,
+            MaxWidth = MaxWidth.Small,
+            Position = DialogPosition.TopLeft,
             FullWidth = true,
             DisableBackdropClick = true
         };
