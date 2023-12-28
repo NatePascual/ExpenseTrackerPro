@@ -12,6 +12,8 @@ public partial class ManageAccount
     private int totalItems;
     private string searchString = null;
 
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
@@ -94,6 +96,8 @@ public partial class ManageAccount
                     AccountNumber = account.AccountNumber,
                     Balance = account.Balance,
                     IsIncludedBalance = account.IsIncludedBalance,
+                    InstitutionImageUrl = account.InstitutionImageUrl,
+                    AccountTypeImageUrl = account.AccountTypeImageUrl,
                 });
             }
         }

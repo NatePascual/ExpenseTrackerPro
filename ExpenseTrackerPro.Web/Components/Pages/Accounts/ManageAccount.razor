@@ -1,5 +1,6 @@
 ﻿@page "/ManageAccount"
 @using ExpenseTrackerPro.Application.Features.Accounts
+@using ExpenseTrackerPro.Shared.Enums
 @using MudBlazor
 @using MediatR
 @inject IMediator _mediator
@@ -22,20 +23,28 @@
         </div>
      </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="accountTypeName" T="GetAccountResponse">Account Type Name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="institutionName" T="GetAccountResponse">Institution Name</MudTableSortLabel></MudTh>      
-        <MudTh><MudTableSortLabel SortLabel="accountName" T="GetAccountResponse">Account Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="accountTypeName" T="GetAccountResponse">Account Type</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="institutionName" T="GetAccountResponse">Institution</MudTableSortLabel></MudTh>      
+        <MudTh><MudTableSortLabel SortLabel="accountName" T="GetAccountResponse">Account</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="accountNumber" T="GetAccountResponse">Account Number</MudTableSortLabel></MudTh>
-        <MudTh>Currency Symbol</MudTh>
+        <MudTh>Currency</MudTh>
         <MudTh><MudTableSortLabel SortLabel="balance" T="GetAccountResponse">Balance</MudTableSortLabel></MudTh>
         <MudTh Style="text-align:right">Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="AccountTypeName">@context.AccountTypeName</MudTd>
-         <MudTd DataLabel="InstitutionName">@context.InstitutionName</MudTd>
-         <MudTd DataLabel="Name">@context.Name</MudTd>
-         <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
-         <MudTd><div class="w-25 p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
+        <MudTd DataLabel="AccountTypeName">
+            <MudImage Src="@(ImageLocation.AccountType.ToString() + context.AccountTypeImageUrl)"
+                      Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                      @context.AccountTypeName
+        </MudTd>      
+         <MudTd DataLabel="InstitutionName">
+            <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
+                      Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    @context.InstitutionName
+          </MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Account Number">@context.AccountNumber</MudTd>   
+         <MudTd Class="IconContainer"><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.CurrencySymbol</div></MudTd>
          <MudTd DataLabel="Balance">@context.Balance</MudTd>
          <MudTd DataLabel="Actions" Style="text-align: right">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"

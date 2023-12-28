@@ -15,9 +15,26 @@ public partial class CreateUpdateAccount
     private List<GetAccountTypeResponse> _accountTypes = new();
     private List<GetInstitutionResponse> _institutions = new();
     private List<GetCurrencyResponse> _currencies = new();
+    private int ImageHeight { get; } = 50;
+    private int ImageWidth { get; } = 50;
+
+    private int _accountTypeMediumSetting = 6;
+    private int _institutionMediumSetting = 6;
+
+    private int _accountTypeSmallSetting = 12;
+    private int _institutionSmallSetting = 12;
 
     protected override async Task OnInitializedAsync()
     {
+        if(CreateUpdateAccountModel.Id > 0)
+        {
+            _accountTypeMediumSetting = 11;
+            _institutionMediumSetting = 11;
+
+            _accountTypeSmallSetting = 11;
+            _institutionSmallSetting = 11;
+        }
+
         await LoadDataAsync();
         StateHasChanged();
     }

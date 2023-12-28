@@ -15,7 +15,12 @@ public class CreateUpdateAccountCommand : IRequest<Result<int>>
     public int Id { get; set; }
     [Required]
     public int AccountTypeId { get; set; }
+    public string AccountTypeImageUrl { get; set; }
+
+    [Required]
     public int InstitutionId { get; set; }
+
+    public string InstitutionImageUrl { get; set; }
     [Required]
     public int CurrencyId { get; set; }
 
@@ -66,7 +71,7 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
                 account.CurrencyId = (command.CurrencyId ==0) ? account.CurrencyId : command.CurrencyId;
                 account.Name = command.Name ?? account.Name;
                 account.AccountNumber = command.AccountNumber ?? account.AccountNumber;
-                account.Balance = (command.Balance == 0) ? account.Balance : command.Balance;
+                account.Balance = (command.Balance == 0) ? account.Balance : command.Balance;  
 
                 var entity = _mapper.Map<Account>(account);
                 await _unitOfWork.Repository<Account>().UpdateAsync(entity);
