@@ -103,8 +103,8 @@ public partial class ManageAccount
         }
         var options = new DialogOptions { 
                     CloseButton = true,
-                    MaxWidth = MaxWidth.Medium,
-                    Position = DialogPosition.CenterLeft,
+                    MaxWidth = MaxWidth.Small,
+                    Position = DialogPosition.TopLeft,
                     FullWidth = true,
                     DisableBackdropClick = true 
         };

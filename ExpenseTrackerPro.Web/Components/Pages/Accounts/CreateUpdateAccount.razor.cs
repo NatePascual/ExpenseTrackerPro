@@ -18,21 +18,16 @@ public partial class CreateUpdateAccount
     private int ImageHeight { get; } = 50;
     private int ImageWidth { get; } = 50;
 
-    private int _accountTypeMediumSetting = 6;
-    private int _institutionMediumSetting = 6;
+    private int _mediumSetting = 12;
+    private int _smallSetting = 12;
 
-    private int _accountTypeSmallSetting = 12;
-    private int _institutionSmallSetting = 12;
 
     protected override async Task OnInitializedAsync()
     {
         if(CreateUpdateAccountModel.Id > 0)
         {
-            _accountTypeMediumSetting = 11;
-            _institutionMediumSetting = 11;
-
-            _accountTypeSmallSetting = 10;
-            _institutionSmallSetting = 10;
+            _mediumSetting = 10;
+            _smallSetting = 10;
         }
 
         await LoadDataAsync();
