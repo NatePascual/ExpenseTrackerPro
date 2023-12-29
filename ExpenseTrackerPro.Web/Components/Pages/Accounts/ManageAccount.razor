@@ -10,7 +10,7 @@
 <PageTitle>Manage Account</PageTitle>
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<GetAccountResponse>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table" RowsPerPage="20">
+          Dense="true" Hover="true" @ref="table" RowsPerPage="20" Breakpoint="Breakpoint.Sm">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Manage Account</MudText>
          <MudSpacer />
@@ -34,13 +34,13 @@
         <MudTd DataLabel="Account Type">
             <MudImage Src="@(ImageLocation.AccountType.ToString() + context.AccountTypeImageUrl)"
                       Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-                      @context.AccountTypeName
+            <span class="d-none d-md-inline">@context.AccountTypeName</span>
         </MudTd>      
          <MudTd DataLabel="Institution">
-          <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
+            <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
                       Alt="@context.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-                    @context.InstitutionName
-          </MudTd>
+            <span class="d-none d-md-inline">@context.InstitutionName</span>
+        </MudTd>
         <MudTd DataLabel="Account">@context.Name</MudTd>
         <MudTd DataLabel="Account Number">@context.AccountNumber</MudTd>   
         <MudTd DataLabel="Balance">@context.CurrencySymbol @context.Balance.ToString("#,###.00")</MudTd>

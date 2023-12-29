@@ -11,15 +11,15 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<GetTransferResponse>>>(ServerReload))"
           GroupBy="@_groupDefinition" Dense="true" Hover="true" @ref="table" RowsPerPage="20">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Manage Transfer</MudText>
-        <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        <MudSpacer />
+         <MudText Typo="Typo.h6">Manage Transfer</MudText>
+         <MudSpacer />
+         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+         <MudSpacer />
         <div class="justify-center mud-text-align-right">
-            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
-            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
-        </div>
+                <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
+                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
+         </div>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="senderName" T="GetTransferResponse">Sender</MudTableSortLabel></MudTh>
@@ -34,12 +34,12 @@
         <MudTd DataLabel="Sender">
             <MudImage Src="@(ImageLocation.Institution.ToString() + context.SenderInstitutionImageUrl)"
                       Alt="@context.SenderName" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-            @context.SenderName
+            <span class="d-none d-md-inline">@context.SenderName</span>
         </MudTd>
         <MudTd DataLabel="Receiver">
             <MudImage Src="@(ImageLocation.Institution.ToString() + context.ReceiverInstitutionImageUrl)"
                       Alt="@context.ReceiverName" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-            @context.ReceiverName
+            <span class="d-none d-md-inline">@context.ReceiverName</span>
         </MudTd>
         <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>
         <MudTd DataLabel="Actions" Class="ta-r">

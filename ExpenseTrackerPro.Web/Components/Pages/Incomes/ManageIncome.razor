@@ -33,13 +33,13 @@
         <MudTd DataLabel="Income Category">
             <MudImage Src="@(ImageLocation.IncomeCategory.ToString() + context.IncomeCategoryImageUrl)"
                       Alt="Income Category" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-                     @context.IncomeCategoryName
-         </MudTd>
+            <span class="d-none d-md-inline">@context.IncomeCategoryName</span>
+        </MudTd>
         <MudTd DataLabel="Account">
             <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
                       Alt="Institution" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-                     @context.AccountName
-         </MudTd>
+            <span class="d-none d-md-inline">@context.AccountName</span>
+        </MudTd>
          <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>
             <MudTd DataLabel="Actions" Class="ta-r">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"

@@ -36,12 +36,12 @@
         <MudTd DataLabel="Account">
             <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
                       Alt="@context.AccountName" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-            @context.AccountName
+            <span class="d-none d-md-inline">@context.AccountName</span>
          </MudTd>
         <MudTd DataLabel="Category">
             <MudImage Src="@(ImageLocation.Category.ToString() + context.CategoryImageUrl)"
                       Alt="@context.CategoryName" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
-            @context.CategoryName
+            <span class="d-none d-md-inline">@context.CategoryName</span>
          </MudTd>
         <MudTd DataLabel="Provider">@context.Provider</MudTd>
         <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>

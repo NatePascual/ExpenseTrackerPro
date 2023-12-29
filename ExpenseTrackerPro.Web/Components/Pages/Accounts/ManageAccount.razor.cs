@@ -106,7 +106,7 @@ public partial class ManageAccount
                     MaxWidth = MaxWidth.Small,
                     Position = DialogPosition.TopLeft,
                     FullWidth = true,
-                    DisableBackdropClick = true 
+                    DisableBackdropClick = true
         };
         var dialog = _dialogService.Show<CreateUpdateAccount>(id == 0 ? "Create" : "Update", parameters, options);
         var result = await dialog.Result;
@@ -118,12 +118,17 @@ public partial class ManageAccount
 
     private async Task Delete(int id)
     {
-        string deleteContent = "Delete Content";
-        var parameters = new DialogParameters
-            {
-                {nameof(Shared.Dialogs.DeleteConfirmation.ContentText), string.Format(deleteContent, id)}
-            };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        string deleteContent = "Do you really want to delete these records? This process cannot be undone.";
+        var parameters = new DialogParameters<Shared.Dialogs.DeleteConfirmation>();
+        parameters.Add(x => x.ContentText, deleteContent);
+            //{
+            //    {nameof(Shared.Dialogs.DeleteConfirmation.ContentText), string.Format(deleteContent, id)}
+            //};
+        var options = new DialogOptions { 
+                        CloseButton = true,
+                        MaxWidth = MaxWidth.Small, 
+                        FullWidth = true, 
+                        DisableBackdropClick = true };
         var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
