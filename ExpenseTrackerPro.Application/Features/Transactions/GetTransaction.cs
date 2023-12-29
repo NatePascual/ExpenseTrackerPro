@@ -20,17 +20,17 @@ public class GetTransactionResponse  : IMapFrom<Transaction>
     public bool AsReceiver { get; set; } = false;
     public DateTime? TransactionDate { get; set; }
     public float Amount { get; set; }
-
+    public string ImageUrl { get; set; }
     public string AmountToString { get; set; }
 }
 
 public class GetTransactionQuery : IRequest<GetTransactionView>
 {
-    public string SearchString { get; set; }
+    public int Id { get; set; }
 
-    public GetTransactionQuery(string searchString)
+    public GetTransactionQuery(int id)
     {
-        SearchString = searchString;
+        Id = id;
     }
 }
 
@@ -52,7 +52,7 @@ internal sealed class GetTransactionQueryHandler : IRequestHandler<GetTransactio
     public async Task<GetTransactionView> Handle(GetTransactionQuery request, CancellationToken cancellationToken)
     {
 
-        var filterSpec = new TransactionSpecification(request.SearchString);
+        var filterSpec = new TransactionSpecification(request.Id);
 
         var getAll = await _unitOfWork.Repository<Transaction>().Entities
                      .AsNoTracking()

@@ -15,6 +15,8 @@ public partial class CreateUpdateAccount
     private List<GetAccountTypeResponse> _accountTypes = new();
     private List<GetInstitutionResponse> _institutions = new();
     private List<GetCurrencyResponse> _currencies = new();
+
+    private bool _isDisabled { get; set; } = false;
     private int ImageHeight { get; } = 50;
     private int ImageWidth { get; } = 50;
 
@@ -28,6 +30,7 @@ public partial class CreateUpdateAccount
         {
             _mediumSetting = 10;
             _smallSetting = 10;
+            _isDisabled = true;
         }
 
         await LoadDataAsync();

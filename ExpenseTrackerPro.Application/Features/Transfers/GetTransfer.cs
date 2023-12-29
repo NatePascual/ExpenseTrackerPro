@@ -6,6 +6,7 @@ using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Transfers;
 
@@ -17,9 +18,14 @@ public class GetTransferResponse : IMapFrom<Transfer>
     public int ReceiverId { get; set; }
     public string ReceiverName { get; set; }
     public float Amount { get; set; }
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
     public string Note { get; set; }
     public bool IsTransferAsExpense { get; set; }
+
+    public string SenderInstitutionImageUrl { get; set; }
+
+    public string ReceiverInstitutionImageUrl { get; set; }
+    public string CurrencySymbol { get; set; }
 }
 
 public class GetTransferQuery : IRequest<GetTransferView>
@@ -50,12 +56,28 @@ internal sealed class GetTransferQueryHandler : IRequestHandler<GetTransferQuery
 
     public async Task<GetTransferView> Handle(GetTransferQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<Transfer, GetTransferResponse>> expression = e => new GetTransferResponse()
+        {
+            Id = e.Id,
+            SenderId = e.SenderId,
+            SenderName = e.Sender.Name,
+            SenderInstitutionImageUrl = e.Sender.Institution.ImageUrl,
+            ReceiverId = e.ReceiverId,
+            ReceiverName = e.Receiver.Name,
+            ReceiverInstitutionImageUrl = e.Receiver.Institution.ImageUrl,
+            Amount = e.Amount,
+            TransactionDate = e.TransactionDate,
+            Note = e.Note,
+            IsTransferAsExpense = false,
+            CurrencySymbol = (e.Sender.Currency.Symbol != e.Receiver.Currency.Symbol) ? e.Sender.Currency.Symbol : null,
+        };
 
         var filterSpec = new TransferSpecification(request.SearchString);
 
         var getAll = await _unitOfWork.Repository<Transfer>().Entities
                      .AsNoTracking()
                      .Specify(filterSpec)
+                     .Select(expression)
                      .ToListAsync();
 
         var map = _mapper.Map<IList<GetTransferResponse>>(getAll);

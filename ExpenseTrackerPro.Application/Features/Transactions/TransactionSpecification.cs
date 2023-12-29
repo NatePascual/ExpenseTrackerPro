@@ -5,13 +5,13 @@ namespace ExpenseTrackerPro.Application.Features.Transactions;
 
 public class TransactionSpecification : Specification<Transaction>
 {
-    public TransactionSpecification(string searchString)
+    public TransactionSpecification(int id)
     {
         Includes.Add(a => a.Account);
 
-        if (!string.IsNullOrEmpty(searchString))
+        if (id != 0)
         {
-            Criteria = p => (p.Account != null) && (p.Account.Name.Contains(searchString) || p.Account.AccountNumber.Contains(searchString));
+            Criteria = p => (p.Account != null) && (p.Account.Id == id);
         }
         else
         {

@@ -49,37 +49,69 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
         {
             var entity = _mapper.Map<Income>(command);
             await _unitOfWork.Repository<Income>().AddAsync(entity);
-            await _unitOfWork.Commit(cancellationToken);
 
-            await ManageTransaction.AddAsync(_unitOfWork, entity.AccountId,TransactionType.Income.ToDescriptionString(),
-                                            entity.Created,entity.Amount, false, true, cancellationToken);
+            var debitedAccount = await Debit(entity, cancellationToken);
 
-            result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeSaved.ToDescriptionString());
+            if(debitedAccount)
+            {
+                await _unitOfWork.Commit(cancellationToken);
 
+                await ManageTransaction.AddAsync(_unitOfWork, entity.AccountId, TransactionType.Income.ToDescriptionString(),
+                                                entity.Created, entity.Amount, false, debitedAccount, cancellationToken);
+
+                result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeSaved.ToDescriptionString());
+            }
+          
         }
         else
         {
-            var income = await _unitOfWork.Repository<Income>().GetByIdAsync(command.Id);
+            //await UpdadteIncome(command,cancellationToken);
+            result = await Result<int>.FailAsync("Update Disabled for the meantime!");
+        }
 
-            if(income != null)
-            {
-                income.IncomeCategoryId = (command.IncomeCategoryId == 0) ? income.IncomeCategoryId : command.IncomeCategoryId;
-                income.AccountId = (command.AccountId == 0) ? income.AccountId : command.AccountId;
-                income.Amount = (command.Amount == 0) ? income.Amount : command.Amount;
-                income.TransactionDate = (command.TransactionDate != income.TransactionDate) ? command.TransactionDate : income.TransactionDate;
-                income.Note = command.Note ?? income.Note;
-                income.Photo = command.Photo ?? income.Photo;
+        return result;
+    }
 
-                var entity = _mapper.Map<Income>(income);
-                await _unitOfWork.Repository<Income>().UpdateAsync(entity);
-                await _unitOfWork.Commit(cancellationToken);
+    private async Task<bool> Debit(Income income, CancellationToken cancellationToken)
+    {
+        var account = _unitOfWork.Repository<Account>().Entities.FirstOrDefault(x => x.Id == income.AccountId);
 
-                result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeUpdated.ToDescriptionString());
-            }
-            else
-            {
-                result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());
-            }
+        if (account != null)
+        {
+            account.Balance += income.Amount;
+            var entity = _mapper.Map<Account>(account);
+            await _unitOfWork.Repository<Account>().UpdateAsync(entity);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task<Result<int>> UpdadteIncome(CreateUpdateIncomeCommand command,CancellationToken cancellationToken)
+    {
+        Result<int> result = null;
+
+        var income = await _unitOfWork.Repository<Income>().GetByIdAsync(command.Id);
+
+        if (income != null)
+        {
+            income.IncomeCategoryId = (command.IncomeCategoryId == 0) ? income.IncomeCategoryId : command.IncomeCategoryId;
+            income.AccountId = (command.AccountId == 0) ? income.AccountId : command.AccountId;
+            income.Amount = (command.Amount == 0) ? income.Amount : command.Amount;
+            income.TransactionDate = (command.TransactionDate != income.TransactionDate) ? command.TransactionDate : income.TransactionDate;
+            income.Note = command.Note ?? income.Note;
+            income.Photo = command.Photo ?? income.Photo;
+
+            var entity = _mapper.Map<Income>(income);
+            await _unitOfWork.Repository<Income>().UpdateAsync(entity);
+            await _unitOfWork.Commit(cancellationToken);
+
+            result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeUpdated.ToDescriptionString());
+        }
+        else
+        {
+            result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());
         }
 
         return result;

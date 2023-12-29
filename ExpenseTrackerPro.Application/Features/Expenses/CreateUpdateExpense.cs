@@ -21,7 +21,7 @@ public class CreateUpdateExpenseCommand : IRequest<Result<int>>
     public string Provider {  get; set; }
 
     [Required]
-    public DateTime? TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; } = DateTime.Now;
 
     [Required]
     public float Amount { get; set; }
@@ -50,40 +50,77 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
         if(command.Id == 0)
         {
             var entity = _mapper.Map<Expense>(command);
-
             await _unitOfWork.Repository<Expense>().AddAsync(entity);
-            await _unitOfWork.Commit(cancellationToken);
 
-            await ManageTransaction.AddAsync(_unitOfWork, entity.AccountId, TransactionType.Expense.ToDescriptionString(),
-                                            entity.Created,entity.Amount, true, false, cancellationToken);
+            var modifiedAccount = await ModifyAccount(entity, cancellationToken);
 
-            result = await Result<int>.SuccessAsync(entity.Id, Messages.ExpenseSaved.ToDescriptionString());
-        }
-        else
-        {
-            var expense = await _unitOfWork.Repository<Expense>().GetByIdAsync(command.Id);
-
-            if(expense != null) 
+            if(modifiedAccount)
             {
-                expense.AccountId = (command.AccountId == 0) ? expense.AccountId : command.AccountId;
-                expense.CategoryId = (command.CategoryId == 0) ? expense.CategoryId : command.CategoryId;
-                expense.Provider = command.Provider ?? expense.Provider;
-                expense.TransactionDate = (command.TransactionDate != expense.TransactionDate) ? command.TransactionDate : expense.TransactionDate;
-                expense.Note = command.Note ?? expense.Note;
-                expense.Photo = command.Photo ?? expense.Photo;
-                expense.Amount = (command.Amount == 0) ? expense.Amount : command.Amount;
-
-                var entity = _mapper.Map<Expense>(expense);
-                await _unitOfWork.Repository<Expense>().UpdateAsync(entity);
                 await _unitOfWork.Commit(cancellationToken);
 
-                result = await Result<int>.SuccessAsync(entity.Id, Messages.ExpenseUpdated.ToDescriptionString());
+                await ManageTransaction.AddAsync(_unitOfWork, entity.AccountId, TransactionType.Expense.ToDescriptionString(),
+                                                entity.Created, entity.Amount, true, false, cancellationToken);
+
+                result = await Result<int>.SuccessAsync(entity.Id, Messages.ExpenseSaved.ToDescriptionString());
             }
             else
             {
-                result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());    
+                result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());
             }
+         
         }
+        else
+        {
+            //await UpdateExpense(command, cancellationToken);
+
+            result = await Result<int>.FailAsync("Update Disabled for the meantime!");
+        }
+        return result;
+    }
+
+    private async Task<bool> ModifyAccount(Expense expense, CancellationToken cancellationToken)
+    {
+        var account = _unitOfWork.Repository<Account>().Entities.FirstOrDefault(x => x.Id == expense.AccountId);
+
+        if (account != null)
+        {
+            account.Balance = account.Balance - expense.Amount;
+            var entity = _mapper.Map<Account>(account);
+            await _unitOfWork.Repository<Account>().UpdateAsync(entity);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task<Result<int>> UpdateExpense(CreateUpdateExpenseCommand command, CancellationToken cancellationToken)
+    {
+        Result<int> result = null;
+
+        var expense = await _unitOfWork.Repository<Expense>().GetByIdAsync(command.Id);
+
+        if (expense != null)
+        {
+            expense.AccountId = (command.AccountId == 0) ? expense.AccountId : command.AccountId;
+            expense.CategoryId = (command.CategoryId == 0) ? expense.CategoryId : command.CategoryId;
+            expense.Provider = command.Provider ?? expense.Provider;
+            expense.TransactionDate = (command.TransactionDate != expense.TransactionDate) ? command.TransactionDate : expense.TransactionDate;
+            expense.Note = command.Note ?? expense.Note;
+            expense.Photo = command.Photo ?? expense.Photo;
+            expense.Amount = (command.Amount == 0) ? expense.Amount : command.Amount;
+
+            var entity = _mapper.Map<Expense>(expense);
+            await _unitOfWork.Repository<Expense>().UpdateAsync(entity);
+            await _unitOfWork.Commit(cancellationToken);
+
+            result = await Result<int>.SuccessAsync(entity.Id, Messages.ExpenseUpdated.ToDescriptionString());
+        }
+        else
+        {
+            result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());
+        }
+
         return result;
     }
 }

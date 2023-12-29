@@ -48,7 +48,7 @@
         <MudTd DataLabel="Actions" Class="ta-r">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                         IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
-                <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.Edit">Edit</MudMenuItem>
+                <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.GridView">View</MudMenuItem>
                 <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>
             </MudMenu>
         </MudTd>

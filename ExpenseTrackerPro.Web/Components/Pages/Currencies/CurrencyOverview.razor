@@ -5,7 +5,7 @@
 <PageTitle>Currency Overview</PageTitle>
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<GetCurrencyResponse>>>(ServerReload))"
-          Dense="true" Hover="true" @ref="table" RowsPerPage="20">
+          Dense="false" Hover="true" @ref="table" RowsPerPage="20">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Currency Overview</MudText>
         <MudSpacer />
@@ -18,7 +18,7 @@
         <MudTh><MudTableSortLabel SortLabel="code" T="GetCurrencyResponse">Currency Code</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd><div class="p-2 m-2 border border-2 border-secondary rounded-2 d-flex justify-content-center">@context.Symbol</div></MudTd>
+        <MudTd><div class="currency-icon">@context.Symbol</div></MudTd>
         <MudTd DataLabel="CountryCurrency">@context.CountryCurrency</MudTd>
         <MudTd DataLabel="Code">@context.Code</MudTd>
      </RowTemplate>

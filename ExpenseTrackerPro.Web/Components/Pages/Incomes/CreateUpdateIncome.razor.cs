@@ -14,6 +14,7 @@ public partial class CreateUpdateIncome
     private List<GetIncomeCategoryResponse> _incomeCategories { get; set; } = new();
     private List<GetAccountResponse> _accounts { get; set; } = new();
 
+    private bool _isDisabled { get;  set; } = false;
     private int ImageHeight { get; } = 50;
     private int ImageWidth { get; } = 50;
 
@@ -21,10 +22,11 @@ public partial class CreateUpdateIncome
     private int _smallSetting = 12;
     protected override async Task OnInitializedAsync()
     {
-        if (CreateUpdateIncomeModel.Id > 0)
+        if (CreateUpdateIncomeModel.Id != 0)
         {
             _mediumSetting = 10;
             _smallSetting = 10;
+            _isDisabled = true;
         }
 
         await LoadDataAsync();
@@ -70,6 +72,18 @@ public partial class CreateUpdateIncome
             return _accounts.Select(x => x.Id);
 
         return _accounts.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
+    }
+
+    private string ReturnAccount(int id)
+    {
+        var entity = _accounts.FirstOrDefault(x => x.Id == id);
+        var result = string.Empty;
+        if (entity != null)
+        {
+            result = $"( {entity.InstitutionName} ) {entity.AccountTypeName}  | {entity.Name} | {entity.CurrencySymbol} {entity.Balance}";
+        }
+
+        return result;
     }
 
     private async Task SaveAsync()
