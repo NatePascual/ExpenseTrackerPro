@@ -79,8 +79,7 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
         }
         else
         {
-           //result = await UpdateTransfer(command, cancellationToken);
-            result = await Result<int>.FailAsync("Update Disabled for the meantime!");
+               result = await UpdateTransfer(command, cancellationToken); 
         }
 
         return result;
@@ -99,6 +98,7 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
             return true;
         }
 
+        _message = "";
         return false;
     }
 
@@ -124,11 +124,12 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
 
         var transfer = await _unitOfWork.Repository<Transfer>().GetByIdAsync(command.Id);
 
+        //disabling account's Sender and Receiver and amount for the meantime
         if (transfer != null)
         {
-            transfer.SenderId = (command.SenderId == 0) ? transfer.SenderId : command.SenderId;
-            transfer.ReceiverId = (command.ReceiverId == 0) ? transfer.ReceiverId : command.ReceiverId;
-            transfer.Amount = (command.Amount == 0) ? transfer.Amount : command.Amount;
+            //transfer.SenderId = (command.SenderId == 0) ? transfer.SenderId : command.SenderId;
+            //transfer.ReceiverId = (command.ReceiverId == 0) ? transfer.ReceiverId : command.ReceiverId;
+            //transfer.Amount = (command.Amount == 0) ? transfer.Amount : command.Amount;
             transfer.TransactionDate = (command.TransactionDate != transfer.TransactionDate) ? command.TransactionDate : transfer.TransactionDate;
             transfer.Note = command.Note ?? transfer.Note;
             transfer.IsTransferAsExpense = transfer.IsTransferAsExpense;

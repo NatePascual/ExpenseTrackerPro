@@ -37,6 +37,7 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private string _message;
 
     public CreateUpdateExpenseCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
@@ -52,9 +53,9 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
             var entity = _mapper.Map<Expense>(command);
             await _unitOfWork.Repository<Expense>().AddAsync(entity);
 
-            var modifiedAccount = await ModifyAccount(entity, cancellationToken);
+            var credit = await Credit(entity, cancellationToken);
 
-            if(modifiedAccount)
+            if(credit)
             {
                 await _unitOfWork.Commit(cancellationToken);
 
@@ -65,20 +66,19 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
             }
             else
             {
-                result = await Result<int>.FailAsync(Messages.RecordNotFound.ToDescriptionString());
+                result = await Result<int>.FailAsync(_message);
             }
          
         }
         else
         {
-            //await UpdateExpense(command, cancellationToken);
+            result = await UpdateExpense(command, cancellationToken);
 
-            result = await Result<int>.FailAsync("Update Disabled for the meantime!");
         }
         return result;
     }
 
-    private async Task<bool> ModifyAccount(Expense expense, CancellationToken cancellationToken)
+    private async Task<bool> Credit(Expense expense, CancellationToken cancellationToken)
     {
         var account = _unitOfWork.Repository<Account>().Entities.FirstOrDefault(x => x.Id == expense.AccountId);
 
@@ -91,6 +91,8 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
             return true;
         }
 
+        _message = Messages.AccountDoesntExist.ToDescriptionString();
+
         return false;
     }
 
@@ -100,15 +102,16 @@ internal sealed class CreateUpdateExpenseCommandHandler : IRequestHandler<Create
 
         var expense = await _unitOfWork.Repository<Expense>().GetByIdAsync(command.Id);
 
+        //disabling Amount and Account for the meantime//
         if (expense != null)
         {
-            expense.AccountId = (command.AccountId == 0) ? expense.AccountId : command.AccountId;
+            //expense.AccountId = (command.AccountId == 0) ? expense.AccountId : command.AccountId;
             expense.CategoryId = (command.CategoryId == 0) ? expense.CategoryId : command.CategoryId;
             expense.Provider = command.Provider ?? expense.Provider;
             expense.TransactionDate = (command.TransactionDate != expense.TransactionDate) ? command.TransactionDate : expense.TransactionDate;
             expense.Note = command.Note ?? expense.Note;
             expense.Photo = command.Photo ?? expense.Photo;
-            expense.Amount = (command.Amount == 0) ? expense.Amount : command.Amount;
+            //expense.Amount = (command.Amount == 0) ? expense.Amount : command.Amount;
 
             var entity = _mapper.Map<Expense>(expense);
             await _unitOfWork.Repository<Expense>().UpdateAsync(entity);

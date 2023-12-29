@@ -40,6 +40,10 @@ public enum Messages
     TransferUpdated,
     [Description("Transfer Deleted!")]
     TransferDeleted,
-    [Description("Record Not Found")]
+    [Description("Record Not Found!")]
     RecordNotFound,
+    [Description("Account with Institution {0} and Number {1} already exists!")]
+    AccountInstitutionAndNumberExists,
+    [Description("Account doesn't Exist!")]
+    AccountDoesntExist,
 }

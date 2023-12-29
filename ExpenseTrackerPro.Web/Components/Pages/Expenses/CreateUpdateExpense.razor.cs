@@ -74,6 +74,31 @@ public partial class CreateUpdateExpense
         return _accounts.Where(x => x.Name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
     }
 
+    private string ReturnAccount(int id)
+    {
+        var entity = _accounts.FirstOrDefault(x => x.Id == id);
+        var result = string.Empty;
+        if (entity != null)
+        {
+            result = $"( {entity.InstitutionName} ) {entity.AccountTypeName}  | {entity.Name} | {entity.CurrencySymbol} {entity.Balance}";
+        }
+
+        return result;
+    }
+
+    private string ReturnCategory(int id)
+    {
+        var entity = _categories.FirstOrDefault(x => x.Id == id);
+        var result = string.Empty;
+        if (entity != null)
+        {
+            var parentName = entity.ParentName != null ? $"({entity.ParentName}) | " : string.Empty;
+            result = $" { parentName} {entity.Name} ";
+        }
+
+        return result;
+    }
+
     private async Task SaveAsync()
     {
         var response = await _mediator.Send(CreateUpdateExpenseModel);

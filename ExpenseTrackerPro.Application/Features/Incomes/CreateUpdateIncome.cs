@@ -34,7 +34,7 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-
+    private string _message;
     public CreateUpdateIncomeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
@@ -65,8 +65,7 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
         }
         else
         {
-            //await UpdadteIncome(command,cancellationToken);
-            result = await Result<int>.FailAsync("Update Disabled for the meantime!");
+            result = await UpdadteIncome(command,cancellationToken);
         }
 
         return result;
@@ -85,6 +84,7 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
             return true;
         }
 
+        _message = Messages.AccountDoesntExist.ToDescriptionString();
         return false;
     }
 
@@ -97,8 +97,8 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
         if (income != null)
         {
             income.IncomeCategoryId = (command.IncomeCategoryId == 0) ? income.IncomeCategoryId : command.IncomeCategoryId;
-            income.AccountId = (command.AccountId == 0) ? income.AccountId : command.AccountId;
-            income.Amount = (command.Amount == 0) ? income.Amount : command.Amount;
+            //income.AccountId = (command.AccountId == 0) ? income.AccountId : command.AccountId;
+            //income.Amount = (command.Amount == 0) ? income.Amount : command.Amount;
             income.TransactionDate = (command.TransactionDate != income.TransactionDate) ? command.TransactionDate : income.TransactionDate;
             income.Note = command.Note ?? income.Note;
             income.Photo = command.Photo ?? income.Photo;

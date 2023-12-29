@@ -8,6 +8,7 @@ using ExpenseTrackerPro.Application.Features.Transactions;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Application.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
 
@@ -53,13 +54,11 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
 
         var validate = await Validate(command, cancellationToken);
 
-        if (!validate)
-        {
-           return await Result<int>.FailAsync(_message);
-        }
-
         if (command.Id == 0)
         {
+            if (!validate)
+                return await Result<int>.FailAsync(_message);
+            
             var entity = _mapper.Map<Account>(command);
             await _unitOfWork.Repository<Account>().AddAsync(entity);
             await _unitOfWork.Commit(cancellationToken);
@@ -111,6 +110,7 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
 
     private async Task<bool> Validate(CreateUpdateAccountCommand command, CancellationToken cancellationToken)
     {
+        StringBuilder sb = new StringBuilder();
         var account =  _unitOfWork.Repository<Account>().Entities
                        .Include(x=>x.Institution)
                        .FirstOrDefault(x => x.AccountNumber == command.AccountNumber 
@@ -118,7 +118,7 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
 
         if (account != null)
         {
-            _message = $"Account with Institution {account.Institution.Name} and Number {account.AccountNumber} already exists!";
+            _message = sb.AppendFormat(Messages.AccountInstitutionAndNumberExists.ToDescriptionString(),account.Institution.Name,account.AccountNumber).ToString();
             return false;
         }
         return true;

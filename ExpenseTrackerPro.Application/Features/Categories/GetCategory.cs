@@ -9,6 +9,7 @@ using ExpenseTrackerPro.Shared.Wrappers;
 using LazyCache;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Categories;
 
@@ -52,11 +53,20 @@ internal sealed class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery
 
     public async Task<GetCategoryView> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<Category, GetCategoryResponse>> expression = e => new GetCategoryResponse()
+        {
+            Id = e.Id,
+            Name = e.Name,
+            ImageUrl = e.ImageUrl,
+            ParentId = e.ParentId,
+            ParentName = e.Parent.Name
+        };
         var filterSpec = new CategorySpecification(request.SearchString);
 
         var getAll = () => _unitOfWork.Repository<Category>().Entities
                        .AsNoTracking()
                        .Specify(filterSpec)
+                       .Select(expression)
                        .ToListAsync();
 
         var list = await _cache.GetOrAddAsync(ApplicationConstant.Cache.GetCategoriesCacheKey, getAll);

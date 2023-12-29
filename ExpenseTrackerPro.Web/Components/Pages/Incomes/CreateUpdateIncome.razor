@@ -17,8 +17,8 @@
                 else
                 {
                     <MudText Typo="Typo.h6">
-                        <MudIcon Icon="@Icons.Material.Filled.GridView" Class="mr-3 mb-n1" />
-                        View Income
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        Update Income
                     </MudText>
                 }
             }
@@ -57,19 +57,19 @@
                     </MudItem>
                 }
                 <MudItem xs="_smallSetting" md="_mediumSetting">
-                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120" T="int" Label="Category" For="@(() => CreateUpdateIncomeModel.IncomeCategoryId)" @bind-Value="CreateUpdateIncomeModel.IncomeCategoryId"
+                    <MudAutocomplete MaxItems="120" T="int" Label="Category" For="@(() => CreateUpdateIncomeModel.IncomeCategoryId)" @bind-Value="CreateUpdateIncomeModel.IncomeCategoryId"
                                      Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" 
                                      ResetValueOnEmptyText="true" SearchFunc="SearchIncomeCategory"
                                      ToStringFunc="@(at => _incomeCategories.FirstOrDefault(x => x.Id == at)?.Name ?? string.Empty)" 
                                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Category" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudDatePicker Disabled="_isDisabled" Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateIncomeModel.TransactionDate)" @bind-Date="CreateUpdateIncomeModel.TransactionDate"
+                    <MudDatePicker Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateIncomeModel.TransactionDate)" @bind-Date="CreateUpdateIncomeModel.TransactionDate"
                                    Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="Transaction Date"
                                    Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudTextField Disabled="_isDisabled"  For="@(() => CreateUpdateIncomeModel.Note)" @bind-Value="CreateUpdateIncomeModel.Note" Label="Note"
+                    <MudTextField For="@(() => CreateUpdateIncomeModel.Note)" @bind-Value="CreateUpdateIncomeModel.Note" Label="Note"
                                   Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Notes" />
                 </MudItem>
             </MudGrid> 
@@ -78,8 +78,7 @@
             <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
             @if (CreateUpdateIncomeModel.Id != 0)
             {
-                <MudButton Disabled="_isDisabled" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>
-                
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>            
             }  
             else
             {

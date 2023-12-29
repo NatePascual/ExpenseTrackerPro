@@ -18,8 +18,8 @@
                 else
                 {
                     <MudText Typo="Typo.h6">
-                        <MudIcon Icon="@Icons.Material.Filled.GridView" Class="mr-3 mb-n1" />
-                        View Transfer
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        Update Transfer
                     </MudText>
                 }
             }
@@ -66,12 +66,12 @@
                 </MudItem>
                
                 <MudItem xs="12" md="12">
-                    <MudDatePicker Disabled="_isDisabled" Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateTransferModel.TransactionDate)" @bind-Date="CreateUpdateTransferModel.TransactionDate"
+                    <MudDatePicker Label="Transaction Date" Editable="true" For="@(() => CreateUpdateTransferModel.TransactionDate)" @bind-Date="CreateUpdateTransferModel.TransactionDate"
                                    Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="Transaction Date"
                                    Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudTextField Disabled="_isDisabled" For="@(() => CreateUpdateTransferModel.Note)" @bind-Value="CreateUpdateTransferModel.Note" Label="Note"
+                    <MudTextField For="@(() => CreateUpdateTransferModel.Note)" @bind-Value="CreateUpdateTransferModel.Note" Label="Note"
                                   Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Notes" />
                 </MudItem>
             </MudGrid>
@@ -80,7 +80,7 @@
             <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
             @if (CreateUpdateTransferModel.Id != 0)
             {
-                 <MudButton Disabled="_isDisabled" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>         
+                 <MudButton  Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>         
             }
             else
             {
