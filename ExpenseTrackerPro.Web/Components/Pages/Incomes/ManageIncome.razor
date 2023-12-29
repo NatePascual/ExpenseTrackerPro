@@ -24,7 +24,6 @@
         <MudTh><MudTableSortLabel SortLabel="incomeCategoryName" T="GetIncomeResponse">Category</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="accountName" T="GetIncomeResponse">Account</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="amount" T="GetIncomeResponse">Amount</MudTableSortLabel></MudTh>      
-        <MudTh>Note</MudTh>
         <MudTh Class="ta-r">Actions</MudTh>
     </HeaderContent>
     <GroupHeaderTemplate>
@@ -42,7 +41,6 @@
                      @context.AccountName
          </MudTd>
          <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>
-        <MudTd DataLabel="Note">@context.Note</MudTd>
             <MudTd DataLabel="Actions" Class="ta-r">
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                      IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
