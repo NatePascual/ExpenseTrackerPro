@@ -17,8 +17,8 @@
                 else
                 {
                     <MudText Typo="Typo.h6">
-                        <MudIcon Icon="@Icons.Material.Filled.GridView" Class="mr-3 mb-n1" />
-                        View Account
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        Update Account
                     </MudText>
                 }
             }
@@ -39,7 +39,7 @@
                      </MudItem>
                 }
                 <MudItem xs="_smallSetting" md="_mediumSetting">
-                    <MudAutocomplete Disabled="_isDisabled" MaxItems="15" T="int" Label="Account Type" For="@(() => CreateUpdateAccountModel.AccountTypeId)" @bind-Value="CreateUpdateAccountModel.AccountTypeId"
+                    <MudAutocomplete MaxItems="15" T="int" Label="Account Type" For="@(() => CreateUpdateAccountModel.AccountTypeId)" @bind-Value="CreateUpdateAccountModel.AccountTypeId"
                                      Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" 
                                      ResetValueOnEmptyText="true" SearchFunc="SearchAccountType"
                                      ToStringFunc="@(at => _accountTypes.FirstOrDefault(x => x.Id == at)?.Name ?? string.Empty)" 
@@ -53,28 +53,28 @@
                     </MudItem>
                 }
                 <MudItem xs="_smallSetting" md="_mediumSetting">
-                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120"  T="int" Label="Bank or Institution" For="@(() => CreateUpdateAccountModel.InstitutionId)" @bind-Value="CreateUpdateAccountModel.InstitutionId"
+                    <MudAutocomplete  MaxItems="120"  T="int" Label="Bank or Institution" For="@(() => CreateUpdateAccountModel.InstitutionId)" @bind-Value="CreateUpdateAccountModel.InstitutionId"
                                      Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                                      ResetValueOnEmptyText="true" SearchFunc="SearchInstitution"
                                      ToStringFunc="@(i => _institutions.FirstOrDefault(x => x.Id == i)?.Name ?? string.Empty)" 
                                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AccountBalance" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudTextField Disabled="_isDisabled" For="@(() => CreateUpdateAccountModel.Name)" @bind-Value="CreateUpdateAccountModel.Name" Label="Account Name"
+                    <MudTextField  For="@(() => CreateUpdateAccountModel.Name)" @bind-Value="CreateUpdateAccountModel.Name" Label="Account Name"
                                   Variant="Variant.Outlined"  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ManageAccounts" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudTextField Disabled="_isDisabled" For="@(() => CreateUpdateAccountModel.AccountNumber)" @bind-Value="CreateUpdateAccountModel.AccountNumber" Label="Account Number" 
+                    <MudTextField For="@(() => CreateUpdateAccountModel.AccountNumber)" @bind-Value="CreateUpdateAccountModel.AccountNumber" Label="Account Number" 
                                   Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Numbers" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120" T="int" Label="Currency" For="@(() => CreateUpdateAccountModel.CurrencyId)" @bind-Value="CreateUpdateAccountModel.CurrencyId"
+                    <MudAutocomplete MaxItems="120" T="int" Label="Currency" For="@(() => CreateUpdateAccountModel.CurrencyId)" @bind-Value="CreateUpdateAccountModel.CurrencyId"
                                      Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
                                      ResetValueOnEmptyText="true" SearchFunc="SearchCurrency"
                                      ToStringFunc="@(c => _currencies.FirstOrDefault(x => x.Id == c)?.Code ?? string.Empty)" />
                 </MudItem>
                 <MudItem xs="12" md="12">
-                    <MudTextField Disabled="_isDisabled" For="@(() => CreateUpdateAccountModel.Balance)" @bind-Value="CreateUpdateAccountModel.Balance" Label="Starting Balance"
+                    <MudTextField Disabled="_isDisabled" Style="font-size:large;font-weight:600;" For="@(() => CreateUpdateAccountModel.Balance)" @bind-Value="CreateUpdateAccountModel.Balance" Label="Starting Balance"
                                   Format="F2" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money" />
                 </MudItem>
             </MudGrid>
@@ -83,7 +83,7 @@
             <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
             @if (CreateUpdateAccountModel.Id != 0)
             {
-                 <MudButton Disabled="_isDisabled" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>    
+                 <MudButton  Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>    
             }
             else
             {
