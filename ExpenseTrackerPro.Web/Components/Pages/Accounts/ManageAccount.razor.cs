@@ -104,7 +104,7 @@ public partial class ManageAccount
         var options = new DialogOptions { 
                     CloseButton = true,
                     MaxWidth = MaxWidth.Small,
-                    Position = DialogPosition.TopLeft,
+                    Position = DialogPosition.Center,
                     FullWidth = true,
                     DisableBackdropClick = true
         };
@@ -127,6 +127,7 @@ public partial class ManageAccount
         var options = new DialogOptions { 
                         CloseButton = true,
                         MaxWidth = MaxWidth.Small, 
+                        Position=DialogPosition.Center,
                         FullWidth = true, 
                         DisableBackdropClick = true };
         var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>("Delete", parameters, options);
