@@ -29,7 +29,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<Institution> Institutions => Set<Institution>();
     public DbSet<Currency> Currencies => Set<Currency>();
-    public DbSet<Transaction> Transactions => Set<Transaction>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

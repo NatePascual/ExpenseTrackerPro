@@ -121,9 +121,6 @@ public partial class ManageAccount
         string deleteContent = "Do you really want to delete these records? This process cannot be undone.";
         var parameters = new DialogParameters<Shared.Dialogs.DeleteConfirmation>();
         parameters.Add(x => x.ContentText, deleteContent);
-            //{
-            //    {nameof(Shared.Dialogs.DeleteConfirmation.ContentText), string.Format(deleteContent, id)}
-            //};
         var options = new DialogOptions { 
                         CloseButton = true,
                         MaxWidth = MaxWidth.Small, 
@@ -134,21 +131,20 @@ public partial class ManageAccount
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            //DeleteAsync(id)
-            //var response = await _mediator.Send();
-            //if (response.Succeeded)
-            //{
-            //    OnSearch("");
-            //    _snackBar.Add(response.Messages[0], Severity.Success);
-            //}
-            //else
-            //{
-            //    OnSearch("");
-            //    foreach (var message in response.Messages)
-            //    {
-            //        _snackBar.Add(message, Severity.Error);
-            //    }
-            //}
+            var response = await _mediator.Send(new DeleteAccountCommand(id));
+            if (response.Succeeded)
+            {
+                OnSearch("");
+                _snackBar.Add(response.Messages[0], Severity.Success);
+            }
+            else
+            {
+                OnSearch("");
+                foreach (var message in response.Messages)
+                {
+                    _snackBar.Add(message, Severity.Error);
+                }
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ using AutoMapper;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Shared.Wrappers;
 using System.ComponentModel.DataAnnotations;
-using ExpenseTrackerPro.Application.Features.Transactions;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Application.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -62,9 +61,6 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
             var entity = _mapper.Map<Account>(command);
             await _unitOfWork.Repository<Account>().AddAsync(entity);
             await _unitOfWork.Commit(cancellationToken);
-
-            await ManageTransaction.AddAsync(_unitOfWork, entity.Id, TransactionType.StartingBalance.ToDescriptionString(),
-                                                entity.Created, entity.Balance, false, false, cancellationToken);
 
             result = await Result<int>.SuccessAsync(entity.Id, Messages.AccountSaved.ToDescriptionString());
         }

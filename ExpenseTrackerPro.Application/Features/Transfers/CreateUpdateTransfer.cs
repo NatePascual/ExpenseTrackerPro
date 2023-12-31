@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Extensions;
-using ExpenseTrackerPro.Application.Features.Transactions;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseTrackerPro.Application.Features.Transfers;
@@ -36,12 +36,14 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IEntryService _entryService;
     private string _message;
 
-    public CreateUpdateTransferCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateUpdateTransferCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IEntryService entryService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _entryService = entryService;
     }
 
     public async Task<Result<int>> Handle(CreateUpdateTransferCommand command, CancellationToken cancellationToken)
@@ -57,23 +59,20 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
             await _unitOfWork.Repository<Transfer>().AddAsync(entity);
 
             
-            var sender = await Credit(entity, cancellationToken);
-            var receiver = await Debit(entity, cancellationToken);
+            var sender = await _entryService.DebitAccount(_unitOfWork,_mapper,entity.SenderId,entity.Amount,cancellationToken);
+            var receiver = await _entryService.CreditAccount(_unitOfWork,_mapper,entity.ReceiverId,entity.Amount,cancellationToken);
 
             if(sender && receiver)
             {
                 await _unitOfWork.Commit(cancellationToken);
 
-                await ManageTransaction.AddAsync(_unitOfWork, entity.SenderId, TransactionType.Transfer.ToDescriptionString(),
-                                                 entity.Created, entity.Amount, true, false, cancellationToken);
-
-                await ManageTransaction.AddAsync(_unitOfWork, entity.ReceiverId, TransactionType.Transfer.ToDescriptionString(),
-                                                entity.Created, entity.Amount, false, true, cancellationToken);
-
                 result = await Result<int>.SuccessAsync(entity.Id, Messages.TransferSaved.ToDescriptionString());
             }
            else
-            {              
+            {
+                if (!_entryService.Message.IsNullOrEmpty())
+                    _message = _entryService.Message;
+
                 result = await Result<int>.FailAsync(_message);
             }
         }

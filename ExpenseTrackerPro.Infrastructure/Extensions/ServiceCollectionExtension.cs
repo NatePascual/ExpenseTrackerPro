@@ -24,7 +24,7 @@ public static class ServiceCollectionExtension
         services.AddHttpContextAccessor();
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
+      
 
         services.AddTransient(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
         services.AddTransient<IAccountRepository, AccountRepository>();
@@ -34,6 +34,6 @@ public static class ServiceCollectionExtension
         services.AddTransient<IIncomeCategoryRepository, IncomeCategoryRepository>();
         services.AddTransient<IInstitutionRepository,InstitutionRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
-
+        services.AddTransient<IEntryService, EntryService>();
     }
 }

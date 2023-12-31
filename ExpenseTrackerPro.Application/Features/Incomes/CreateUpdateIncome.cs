@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Extensions;
-using ExpenseTrackerPro.Application.Features.Transactions;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseTrackerPro.Application.Features.Incomes;
@@ -34,11 +34,13 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IEntryService _entryService;
     private string _message;
-    public CreateUpdateIncomeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateUpdateIncomeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IEntryService entryService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _entryService = entryService;
     }
 
     public async Task<Result<int>> Handle(CreateUpdateIncomeCommand command, CancellationToken cancellationToken)
@@ -50,18 +52,22 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
             var entity = _mapper.Map<Income>(command);
             await _unitOfWork.Repository<Income>().AddAsync(entity);
 
-            var debitedAccount = await Debit(entity, cancellationToken);
+            var credit = await _entryService.DebitAccount(_unitOfWork,_mapper, entity.AccountId,entity.Amount, cancellationToken);
 
-            if(debitedAccount)
+            if(credit)
             {
                 await _unitOfWork.Commit(cancellationToken);
 
-                await ManageTransaction.AddAsync(_unitOfWork, entity.AccountId, TransactionType.Income.ToDescriptionString(),
-                                                entity.Created, entity.Amount, false, debitedAccount, cancellationToken);
-
                 result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeSaved.ToDescriptionString());
             }
-          
+            else
+            {
+                if (!_entryService.Message.IsNullOrEmpty())
+                    _message = _entryService.Message;
+
+                result = await Result<int>.FailAsync(_message);
+            }
+
         }
         else
         {
@@ -69,23 +75,6 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
         }
 
         return result;
-    }
-
-    private async Task<bool> Debit(Income income, CancellationToken cancellationToken)
-    {
-        var account = _unitOfWork.Repository<Account>().Entities.FirstOrDefault(x => x.Id == income.AccountId);
-
-        if (account != null)
-        {
-            account.Balance += income.Amount;
-            var entity = _mapper.Map<Account>(account);
-            await _unitOfWork.Repository<Account>().UpdateAsync(entity);
-
-            return true;
-        }
-
-        _message = Messages.AccountDoesntExist.ToDescriptionString();
-        return false;
     }
 
     private async Task<Result<int>> UpdadteIncome(CreateUpdateIncomeCommand command,CancellationToken cancellationToken)

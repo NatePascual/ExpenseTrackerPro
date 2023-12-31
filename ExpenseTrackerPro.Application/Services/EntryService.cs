@@ -7,20 +7,21 @@ using Microsoft.Identity.Client;
 
 namespace ExpenseTrackerPro.Application.Services;
 
-public static class UtilityService
+public  class EntryService : IEntryService
 {
-    public static string Message {  get; set; }
-    public static async Task<bool> Credit(IUnitOfWork unitOfWork,IMapper mapper, int accountId, float sourceAmount, CancellationToken cancellationToken )
+    public string Message { get; set; }
+
+    public  async Task<bool> CreditAccount(IUnitOfWork unitOfWork,IMapper mapper, int accountId, float sourceAmount, CancellationToken cancellationToken )
     {
         return await ComputeAccount(unitOfWork, mapper, accountId, sourceAmount, true, cancellationToken);
     }
 
-    public static async Task<bool> Debit(IUnitOfWork unitOfWork, IMapper mapper, int accountId, float sourceAmount, CancellationToken cancellationToken)
+    public  async Task<bool> DebitAccount(IUnitOfWork unitOfWork, IMapper mapper, int accountId, float sourceAmount, CancellationToken cancellationToken)
     {
         return await ComputeAccount(unitOfWork, mapper, accountId, sourceAmount, false, cancellationToken);
     }
 
-    private static async Task<bool> ComputeAccount(IUnitOfWork unitOfWork,IMapper mapper, int accountId, float sourceAmount, bool isCredit, CancellationToken)
+    private  async Task<bool> ComputeAccount(IUnitOfWork unitOfWork,IMapper mapper, int accountId, float sourceAmount, bool isCredit, CancellationToken cancellationToken)
     {
         var account = await unitOfWork.Repository<Account>().GetByIdAsync(accountId);
 
@@ -32,11 +33,11 @@ public static class UtilityService
 
         if (isCredit)
         {
-            account.Balance -= sourceAmount;
+            account.Balance += sourceAmount;
         }
         else
         {
-            account.Balance += sourceAmount;
+            account.Balance -= sourceAmount;
         }
        
         var entity = mapper.Map<Account>(account);
