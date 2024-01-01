@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTrackerPro.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231231125936_intialMigration")]
-    partial class intialMigration
+    [Migration("20240101154908_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,9 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                     b.Property<int>("InstitutionId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsHidden")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsIncludedBalance")
                         .HasColumnType("bit");
 
@@ -70,6 +73,9 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TransactionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountTypeId");
@@ -78,7 +84,53 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("InstitutionId");
 
+                    b.HasIndex("TransactionId");
+
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccountNumber = "0001",
+                            AccountTypeId = 12,
+                            Balance = 0f,
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3460),
+                            CreatedBy = "System",
+                            CurrencyId = 79,
+                            InstitutionId = 69,
+                            IsHidden = true,
+                            IsIncludedBalance = false,
+                            Name = "Starting Account"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccountNumber = "0002",
+                            AccountTypeId = 12,
+                            Balance = 0f,
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3462),
+                            CreatedBy = "System",
+                            CurrencyId = 79,
+                            InstitutionId = 69,
+                            IsHidden = true,
+                            IsIncludedBalance = false,
+                            Name = "Income Account"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccountNumber = "0003",
+                            AccountTypeId = 12,
+                            Balance = 0f,
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3463),
+                            CreatedBy = "System",
+                            CurrencyId = 79,
+                            InstitutionId = 69,
+                            IsHidden = true,
+                            IsIncludedBalance = false,
+                            Name = "Expenses Account"
+                        });
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.AccountType", b =>
@@ -126,7 +178,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 1,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9093),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3165),
                             CreatedBy = "System",
                             ImageUrl = "bank.png",
                             Name = "Bank Account"
@@ -135,7 +187,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 2,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9095),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3167),
                             CreatedBy = "System",
                             ImageUrl = "cash.png",
                             Name = "Cash"
@@ -144,7 +196,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 3,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9097),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3169),
                             CreatedBy = "System",
                             ImageUrl = "wallet.png",
                             Name = "Wallet"
@@ -153,7 +205,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 4,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9098),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3170),
                             CreatedBy = "System",
                             ImageUrl = "checking.png",
                             Name = "Checking"
@@ -162,7 +214,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 5,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9100),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3172),
                             CreatedBy = "System",
                             ImageUrl = "savings.png",
                             Name = "Saving"
@@ -171,7 +223,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 6,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9101),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3173),
                             CreatedBy = "System",
                             ImageUrl = "retirement.png",
                             Name = "Retirement"
@@ -180,7 +232,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 7,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9103),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3175),
                             CreatedBy = "System",
                             ImageUrl = "brokerage.png",
                             Name = "Brokerage"
@@ -189,7 +241,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 8,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9104),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3177),
                             CreatedBy = "System",
                             ImageUrl = "investment.png",
                             Name = "Investment"
@@ -198,7 +250,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 9,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9106),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3178),
                             CreatedBy = "System",
                             ImageUrl = "insurance.png",
                             Name = "Insurance"
@@ -207,7 +259,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 10,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9107),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3180),
                             CreatedBy = "System",
                             ImageUrl = "crypto.png",
                             Name = "Crypto"
@@ -216,7 +268,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 11,
                             Classification = "Assets",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9109),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3181),
                             CreatedBy = "System",
                             ImageUrl = "property.png",
                             Name = "Property"
@@ -225,7 +277,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 12,
                             Classification = "OtherAccount",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9111),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3183),
                             CreatedBy = "System",
                             ImageUrl = "bank.png",
                             Name = "Other Account"
@@ -276,7 +328,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8481),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2579),
                             CreatedBy = "System",
                             ImageUrl = "bills.png",
                             Name = "Bills & Utilities"
@@ -284,7 +336,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8483),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2581),
                             CreatedBy = "System",
                             ImageUrl = "drinkanddine.png",
                             Name = "Drink & Dine"
@@ -292,7 +344,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8485),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2583),
                             CreatedBy = "System",
                             ImageUrl = "education.png",
                             Name = "Education"
@@ -300,7 +352,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8486),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2584),
                             CreatedBy = "System",
                             ImageUrl = "entertainment.png",
                             Name = "Entertainment"
@@ -308,7 +360,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8487),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2586),
                             CreatedBy = "System",
                             ImageUrl = "events.png",
                             Name = "Events"
@@ -316,7 +368,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8489),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2587),
                             CreatedBy = "System",
                             ImageUrl = "familycare.png",
                             Name = "Family Care"
@@ -324,7 +376,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8490),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2589),
                             CreatedBy = "System",
                             ImageUrl = "fees.png",
                             Name = "Fees & Charges"
@@ -332,7 +384,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8492),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2591),
                             CreatedBy = "System",
                             ImageUrl = "foodandgrocery.png",
                             Name = "Food & Grocery"
@@ -340,7 +392,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8493),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2592),
                             CreatedBy = "System",
                             ImageUrl = "giftanddonation.png",
                             Name = "Gifts & Donations"
@@ -348,7 +400,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8495),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2594),
                             CreatedBy = "System",
                             ImageUrl = "healthandfitness.png",
                             Name = "Health & Fitness"
@@ -356,7 +408,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 11,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8496),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2595),
                             CreatedBy = "System",
                             ImageUrl = "house.png",
                             Name = "House"
@@ -364,7 +416,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 12,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8498),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2597),
                             CreatedBy = "System",
                             ImageUrl = "insurance.png",
                             Name = "Insurance"
@@ -372,7 +424,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 13,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8499),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2598),
                             CreatedBy = "System",
                             ImageUrl = "investment.png",
                             Name = "Investments"
@@ -380,7 +432,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8500),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2600),
                             CreatedBy = "System",
                             ImageUrl = "kidscare.png",
                             Name = "Kids Care"
@@ -388,7 +440,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 15,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8502),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2601),
                             CreatedBy = "System",
                             ImageUrl = "loan.png",
                             Name = "Loan & Debts"
@@ -396,7 +448,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 16,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8549),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2602),
                             CreatedBy = "System",
                             ImageUrl = "misc.png",
                             Name = "Misc Expenses"
@@ -404,7 +456,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 17,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8550),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2604),
                             CreatedBy = "System",
                             ImageUrl = "office.png",
                             Name = "Office Expenses"
@@ -412,7 +464,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 18,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8552),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2606),
                             CreatedBy = "System",
                             ImageUrl = "personalcare.png",
                             Name = "Personal Care"
@@ -420,7 +472,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 19,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8553),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2607),
                             CreatedBy = "System",
                             ImageUrl = "petcare.png",
                             Name = "Pet Care"
@@ -428,7 +480,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8555),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2608),
                             CreatedBy = "System",
                             ImageUrl = "shopping.png",
                             Name = "Shopping"
@@ -436,7 +488,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 21,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8556),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2610),
                             CreatedBy = "System",
                             ImageUrl = "taxes.png",
                             Name = "Taxes"
@@ -444,7 +496,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 22,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8558),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2611),
                             CreatedBy = "System",
                             ImageUrl = "transfer.png",
                             Name = "Transfer"
@@ -452,7 +504,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 23,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8559),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2613),
                             CreatedBy = "System",
                             ImageUrl = "transport.png",
                             Name = "Transport"
@@ -460,7 +512,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 24,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8561),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2614),
                             CreatedBy = "System",
                             ImageUrl = "travel.png",
                             Name = "Travel & Vacation"
@@ -468,7 +520,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8562),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2615),
                             CreatedBy = "System",
                             ImageUrl = "others.png",
                             Name = "Others"
@@ -476,7 +528,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 26,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8564),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2617),
                             CreatedBy = "System",
                             ImageUrl = "electric.png",
                             Name = "Electricity",
@@ -485,7 +537,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 27,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8565),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2619),
                             CreatedBy = "System",
                             ImageUrl = "gas.png",
                             Name = "Gas",
@@ -494,7 +546,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 28,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8566),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2620),
                             CreatedBy = "System",
                             ImageUrl = "internet.png",
                             Name = "Internet",
@@ -503,7 +555,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 29,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8568),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2621),
                             CreatedBy = "System",
                             ImageUrl = "mobile.png",
                             Name = "Mobile",
@@ -512,7 +564,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 30,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8569),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2623),
                             CreatedBy = "System",
                             ImageUrl = "telephone.png",
                             Name = "Phone",
@@ -521,7 +573,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 31,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8571),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2624),
                             CreatedBy = "System",
                             ImageUrl = "water.png",
                             Name = "Water",
@@ -530,7 +582,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 32,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8572),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2626),
                             CreatedBy = "System",
                             ImageUrl = "alcoholic-drink.png",
                             Name = "Alcohol & Bar",
@@ -539,7 +591,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 33,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8574),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2663),
                             CreatedBy = "System",
                             ImageUrl = "coffee.png",
                             Name = "Coffee shops",
@@ -548,7 +600,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 34,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8575),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2664),
                             CreatedBy = "System",
                             ImageUrl = "fastfood.png",
                             Name = "Fast Food",
@@ -557,7 +609,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 35,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8577),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2666),
                             CreatedBy = "System",
                             ImageUrl = "restaurant.png",
                             Name = "Restaurant",
@@ -566,7 +618,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 36,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8578),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2667),
                             CreatedBy = "System",
                             ImageUrl = "books.png",
                             Name = "Books & Stationery",
@@ -575,7 +627,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 37,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8580),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2669),
                             CreatedBy = "System",
                             ImageUrl = "schoolfee.png",
                             Name = "School Fee",
@@ -584,7 +636,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 38,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8581),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2671),
                             CreatedBy = "System",
                             ImageUrl = "tuition.png",
                             Name = "Tuition Fee",
@@ -593,7 +645,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 39,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8583),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2672),
                             CreatedBy = "System",
                             ImageUrl = "amusement.png",
                             Name = "Amusement",
@@ -602,7 +654,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 40,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8584),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2674),
                             CreatedBy = "System",
                             ImageUrl = "arts.png",
                             Name = "Arts",
@@ -611,7 +663,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 41,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8586),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2676),
                             CreatedBy = "System",
                             ImageUrl = "cable.png",
                             Name = "Cable or DTH",
@@ -620,7 +672,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 42,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8587),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2677),
                             CreatedBy = "System",
                             ImageUrl = "movies.png",
                             Name = "Movies & Cinema",
@@ -629,7 +681,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 43,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8589),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2678),
                             CreatedBy = "System",
                             ImageUrl = "music.png",
                             Name = "Music",
@@ -638,7 +690,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 44,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8590),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2680),
                             CreatedBy = "System",
                             ImageUrl = "newspaper.png",
                             Name = "Newspapers & Magazines",
@@ -647,7 +699,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 45,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8592),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2681),
                             CreatedBy = "System",
                             ImageUrl = "games.png",
                             Name = "Games",
@@ -656,7 +708,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 46,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8593),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2683),
                             CreatedBy = "System",
                             ImageUrl = "happybirthday.png",
                             Name = "Birthday",
@@ -665,7 +717,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 47,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8595),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2684),
                             CreatedBy = "System",
                             ImageUrl = "gettogether.png",
                             Name = "Get Together",
@@ -674,7 +726,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 48,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8596),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2686),
                             CreatedBy = "System",
                             ImageUrl = "wedding.png",
                             Name = "Wedding",
@@ -683,7 +735,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 49,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8598),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2687),
                             CreatedBy = "System",
                             ImageUrl = "kidsactivities.png",
                             Name = "Kids Activities",
@@ -692,7 +744,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 50,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8599),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2689),
                             CreatedBy = "System",
                             ImageUrl = "oldagecare.png",
                             Name = "Old age care",
@@ -701,7 +753,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 51,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8601),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2690),
                             CreatedBy = "System",
                             ImageUrl = "atm.png",
                             Name = "ATM Fee",
@@ -710,7 +762,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 52,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8602),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2692),
                             CreatedBy = "System",
                             ImageUrl = "commission.png",
                             Name = "Commission Fee",
@@ -719,7 +771,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 53,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8605),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2693),
                             CreatedBy = "System",
                             ImageUrl = "latefee.png",
                             Name = "Late Fee",
@@ -728,7 +780,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 54,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8607),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2695),
                             CreatedBy = "System",
                             ImageUrl = "servicefee.png",
                             Name = "Service Fee",
@@ -737,7 +789,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 55,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8608),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2696),
                             CreatedBy = "System",
                             ImageUrl = "charity.png",
                             Name = "Charity",
@@ -746,7 +798,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 56,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8610),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2698),
                             CreatedBy = "System",
                             ImageUrl = "gift.png",
                             Name = "Gift",
@@ -755,7 +807,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 57,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8611),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2699),
                             CreatedBy = "System",
                             ImageUrl = "dentist.png",
                             Name = "Dentist",
@@ -764,7 +816,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 58,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8613),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2701),
                             CreatedBy = "System",
                             ImageUrl = "doctor.png",
                             Name = "Doctor",
@@ -773,7 +825,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 59,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8614),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2702),
                             CreatedBy = "System",
                             ImageUrl = "gym.png",
                             Name = "Gym",
@@ -782,7 +834,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 60,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8616),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2704),
                             CreatedBy = "System",
                             ImageUrl = "pharmacy.png",
                             Name = "Pharmacy",
@@ -791,7 +843,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 61,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8617),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2705),
                             CreatedBy = "System",
                             ImageUrl = "spamassage.png",
                             Name = "Spa & Massage",
@@ -800,7 +852,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 62,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8619),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2707),
                             CreatedBy = "System",
                             ImageUrl = "housemaintenance.png",
                             Name = "House Maintenance",
@@ -809,7 +861,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 63,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8620),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2708),
                             CreatedBy = "System",
                             ImageUrl = "rent.png",
                             Name = "House Rent",
@@ -818,7 +870,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 64,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8622),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2710),
                             CreatedBy = "System",
                             ImageUrl = "autoinsurance.png",
                             Name = "Auto Insurance",
@@ -827,7 +879,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 65,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8652),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2711),
                             CreatedBy = "System",
                             ImageUrl = "healthinsurance.png",
                             Name = "Health Insurance",
@@ -836,7 +888,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 66,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8654),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2713),
                             CreatedBy = "System",
                             ImageUrl = "propertyinsurance.png",
                             Name = "Property Insurance",
@@ -845,7 +897,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 67,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8656),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2714),
                             CreatedBy = "System",
                             ImageUrl = "carloan.png",
                             Name = "Car Loan",
@@ -854,7 +906,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 68,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8658),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2715),
                             CreatedBy = "System",
                             ImageUrl = "credit.png",
                             Name = "Credit Card",
@@ -863,7 +915,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 69,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8659),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2717),
                             CreatedBy = "System",
                             ImageUrl = "homeloan.png",
                             Name = "Home Loan",
@@ -872,7 +924,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 70,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8661),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2718),
                             CreatedBy = "System",
                             ImageUrl = "loan.png",
                             Name = "Loan",
@@ -881,7 +933,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 71,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8663),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2720),
                             CreatedBy = "System",
                             ImageUrl = "hairsalon.png",
                             Name = "Hair & Salon",
@@ -890,7 +942,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 72,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8665),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2722),
                             CreatedBy = "System",
                             ImageUrl = "laundry.png",
                             Name = "Laundry",
@@ -899,7 +951,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 73,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8666),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2723),
                             CreatedBy = "System",
                             ImageUrl = "clothing.png",
                             Name = "Clothing",
@@ -908,7 +960,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 74,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8668),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2725),
                             CreatedBy = "System",
                             ImageUrl = "electronics.png",
                             Name = "Electronics & Accessories",
@@ -917,7 +969,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 75,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8669),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2726),
                             CreatedBy = "System",
                             ImageUrl = "giftstoys.png",
                             Name = "Gifts &  Toys",
@@ -926,7 +978,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 76,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8671),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2728),
                             CreatedBy = "System",
                             ImageUrl = "healthandbeauty.png",
                             Name = "Health & Beauty",
@@ -935,7 +987,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 77,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8672),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2729),
                             CreatedBy = "System",
                             ImageUrl = "homeandfurnishing.png",
                             Name = "Home & furnishing",
@@ -944,7 +996,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 78,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8674),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2730),
                             CreatedBy = "System",
                             ImageUrl = "jewelry.png",
                             Name = "Jewellery",
@@ -953,7 +1005,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 79,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8675),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2732),
                             CreatedBy = "System",
                             ImageUrl = "lawnandgarden.png",
                             Name = "Lawn & Garden",
@@ -962,7 +1014,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 80,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8677),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2733),
                             CreatedBy = "System",
                             ImageUrl = "pets.png",
                             Name = "Pets & Animals",
@@ -971,7 +1023,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 81,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8678),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2735),
                             CreatedBy = "System",
                             ImageUrl = "sports.png",
                             Name = "Sports",
@@ -980,7 +1032,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 82,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8680),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2758),
                             CreatedBy = "System",
                             ImageUrl = "withholdingtaxes.png",
                             Name = "Withholding Tax",
@@ -989,7 +1041,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 83,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8681),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2760),
                             CreatedBy = "System",
                             ImageUrl = "localtaxes.png",
                             Name = "Local Tax",
@@ -998,7 +1050,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 84,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8683),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2762),
                             CreatedBy = "System",
                             ImageUrl = "propertytax.png",
                             Name = "Property Tax",
@@ -1007,7 +1059,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 85,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8684),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2763),
                             CreatedBy = "System",
                             ImageUrl = "salestax.png",
                             Name = "Sales Tax",
@@ -1016,7 +1068,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 86,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8686),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2765),
                             CreatedBy = "System",
                             ImageUrl = "carmaintenance.png",
                             Name = "Car Maintenance",
@@ -1025,7 +1077,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 87,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8687),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2766),
                             CreatedBy = "System",
                             ImageUrl = "fuel.png",
                             Name = "Fuel & Gas",
@@ -1034,7 +1086,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 88,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8688),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2768),
                             CreatedBy = "System",
                             ImageUrl = "publictransport.png",
                             Name = "Public Transport",
@@ -1043,7 +1095,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 89,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8690),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2770),
                             CreatedBy = "System",
                             ImageUrl = "taxi.png",
                             Name = "Taxi",
@@ -1052,7 +1104,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 90,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8691),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2771),
                             CreatedBy = "System",
                             ImageUrl = "tnvs.png",
                             Name = "TNVS",
@@ -1061,7 +1113,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 91,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8693),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2773),
                             CreatedBy = "System",
                             ImageUrl = "airtravel.png",
                             Name = "Air Travel",
@@ -1070,7 +1122,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 92,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8694),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2774),
                             CreatedBy = "System",
                             ImageUrl = "hotel.png",
                             Name = "Hotel",
@@ -1079,7 +1131,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 93,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8696),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2775),
                             CreatedBy = "System",
                             ImageUrl = "seatravel.png",
                             Name = "Sea Travel",
@@ -1088,7 +1140,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 94,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8697),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2777),
                             CreatedBy = "System",
                             ImageUrl = "tnvs.png",
                             Name = "Rental Car",
@@ -1143,7 +1195,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 1,
                             Code = "ALL",
                             CountryCurrency = "Albania Lek",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8824),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2875),
                             CreatedBy = "System",
                             Symbol = "Lek"
                         },
@@ -1152,7 +1204,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 2,
                             Code = "AFN",
                             CountryCurrency = "Afghanistan Afghani",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8825),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2876),
                             CreatedBy = "System",
                             Symbol = "؋"
                         },
@@ -1161,7 +1213,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 3,
                             Code = "ARS",
                             CountryCurrency = "Argentina Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8826),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2877),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1170,7 +1222,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 4,
                             Code = "AWG",
                             CountryCurrency = "Aruba Guilder",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8828),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2879),
                             CreatedBy = "System",
                             Symbol = "ƒ"
                         },
@@ -1179,7 +1231,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 5,
                             Code = "AUD",
                             CountryCurrency = "Australia Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8829),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2880),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1188,7 +1240,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 6,
                             Code = "AZN",
                             CountryCurrency = "Azerbaijan Manat",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8830),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2881),
                             CreatedBy = "System",
                             Symbol = "₼"
                         },
@@ -1197,7 +1249,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 7,
                             Code = "BSD",
                             CountryCurrency = "Bahamas Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8831),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2882),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1206,7 +1258,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 8,
                             Code = "BBD",
                             CountryCurrency = "Barbados Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8832),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2883),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1215,7 +1267,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 9,
                             Code = "BYN",
                             CountryCurrency = "Belarus Ruble",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8834),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2885),
                             CreatedBy = "System",
                             Symbol = "Br"
                         },
@@ -1224,7 +1276,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 10,
                             Code = "BZD",
                             CountryCurrency = "Belize Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8835),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2886),
                             CreatedBy = "System",
                             Symbol = "BZ$"
                         },
@@ -1233,7 +1285,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 11,
                             Code = "BMD",
                             CountryCurrency = "Bermuda Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8836),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2887),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1242,7 +1294,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 12,
                             Code = "BOB",
                             CountryCurrency = "Bolivia Bolíviano",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8837),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2888),
                             CreatedBy = "System",
                             Symbol = "$b"
                         },
@@ -1251,7 +1303,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 13,
                             Code = "BAM",
                             CountryCurrency = "Bosnia and Herzegovina Convertible Mark",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8838),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2890),
                             CreatedBy = "System",
                             Symbol = "KM"
                         },
@@ -1260,7 +1312,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 14,
                             Code = "BWP",
                             CountryCurrency = "Botswana Pula",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8839),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2891),
                             CreatedBy = "System",
                             Symbol = "P"
                         },
@@ -1269,7 +1321,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 15,
                             Code = "BGN",
                             CountryCurrency = "Bulgaria Lev",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8841),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2892),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -1278,7 +1330,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 16,
                             Code = "BRL",
                             CountryCurrency = "Brazil Real",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8842),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2893),
                             CreatedBy = "System",
                             Symbol = "R$"
                         },
@@ -1287,7 +1339,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 17,
                             Code = "BND",
                             CountryCurrency = "Brunei Darussalam Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8843),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2894),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1296,7 +1348,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 18,
                             Code = "KHR",
                             CountryCurrency = "Cambodia Riel",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8844),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2896),
                             CreatedBy = "System",
                             Symbol = "៛"
                         },
@@ -1305,7 +1357,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 19,
                             Code = "CAD",
                             CountryCurrency = "Canada Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8845),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2897),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1314,7 +1366,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 20,
                             Code = "KYD",
                             CountryCurrency = "Cayman Islands Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8846),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2898),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1323,7 +1375,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 21,
                             Code = "CLP",
                             CountryCurrency = "Chile Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8848),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2899),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1332,7 +1384,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 22,
                             Code = "CNY",
                             CountryCurrency = "China Yuan Renminbi",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8849),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2900),
                             CreatedBy = "System",
                             Symbol = "¥"
                         },
@@ -1341,7 +1393,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 23,
                             Code = "COP",
                             CountryCurrency = "Colombia Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8850),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2902),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1350,7 +1402,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 24,
                             Code = "CRC",
                             CountryCurrency = "Costa Rica Colon",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8851),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2903),
                             CreatedBy = "System",
                             Symbol = "₡"
                         },
@@ -1359,7 +1411,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 25,
                             Code = "HRK",
                             CountryCurrency = "Croatia Kuna",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8852),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2904),
                             CreatedBy = "System",
                             Symbol = "kn"
                         },
@@ -1368,7 +1420,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 26,
                             Code = "CUP",
                             CountryCurrency = "Cuba Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8853),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2905),
                             CreatedBy = "System",
                             Symbol = "₱"
                         },
@@ -1377,7 +1429,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 27,
                             Code = "CZK",
                             CountryCurrency = "Czech Republic Koruna",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8854),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2906),
                             CreatedBy = "System",
                             Symbol = "Kč"
                         },
@@ -1386,7 +1438,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 28,
                             Code = "DKK",
                             CountryCurrency = "Denmark Krone",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8856),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2908),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1395,7 +1447,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 29,
                             Code = "DOP",
                             CountryCurrency = "Dominican Republic Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8857),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2909),
                             CreatedBy = "System",
                             Symbol = "RD$"
                         },
@@ -1404,7 +1456,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 30,
                             Code = "XCD",
                             CountryCurrency = "East Caribbean Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8858),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2910),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1413,7 +1465,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 31,
                             Code = "EGP",
                             CountryCurrency = "Egypt Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8859),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2911),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1422,7 +1474,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 32,
                             Code = "SVC",
                             CountryCurrency = "El Salvador Colon",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8860),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2937),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1431,7 +1483,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 33,
                             Code = "EUR",
                             CountryCurrency = "Euro Member Countries",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8861),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2938),
                             CreatedBy = "System",
                             Symbol = "€"
                         },
@@ -1440,7 +1492,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 34,
                             Code = "FKP",
                             CountryCurrency = "Falkland Islands (Malvinas) Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8863),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2940),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1449,7 +1501,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 35,
                             Code = "FJD",
                             CountryCurrency = "Fiji Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8864),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2941),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1458,7 +1510,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 36,
                             Code = "GHS",
                             CountryCurrency = "Ghana Cedi",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8865),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2942),
                             CreatedBy = "System",
                             Symbol = "¢"
                         },
@@ -1467,7 +1519,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 37,
                             Code = "GIP",
                             CountryCurrency = "Gibraltar Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8866),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2943),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1476,7 +1528,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 38,
                             Code = "GTQ",
                             CountryCurrency = "Guatemala Quetzal",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8867),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2945),
                             CreatedBy = "System",
                             Symbol = "Q"
                         },
@@ -1485,7 +1537,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 39,
                             Code = "GGP",
                             CountryCurrency = "Guernsey Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8868),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2946),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1494,7 +1546,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 40,
                             Code = "GYD",
                             CountryCurrency = "Guyana Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8869),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2947),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1503,7 +1555,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 41,
                             Code = "HNL",
                             CountryCurrency = "Honduras Lempira",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8871),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2949),
                             CreatedBy = "System",
                             Symbol = "L"
                         },
@@ -1512,7 +1564,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 42,
                             Code = "HKD",
                             CountryCurrency = "Hong Kong Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8872),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2950),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1521,7 +1573,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 43,
                             Code = "HUF",
                             CountryCurrency = "Hungary Forint",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8873),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2951),
                             CreatedBy = "System",
                             Symbol = "Ft"
                         },
@@ -1530,7 +1582,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 44,
                             Code = "ISK",
                             CountryCurrency = "Iceland Krona",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8874),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2952),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1539,7 +1591,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 45,
                             Code = "INR",
                             CountryCurrency = "India Rupee",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8875),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2954),
                             CreatedBy = "System",
                             Symbol = "₹"
                         },
@@ -1548,7 +1600,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 46,
                             Code = "IDR",
                             CountryCurrency = "Indonesia Rupiah",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8876),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2955),
                             CreatedBy = "System",
                             Symbol = "Rp"
                         },
@@ -1557,7 +1609,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 47,
                             Code = "IRR",
                             CountryCurrency = "Iran Rial",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8878),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2956),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1566,7 +1618,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 48,
                             Code = "IMP",
                             CountryCurrency = "Isle of Man Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8879),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2957),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1575,7 +1627,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 49,
                             Code = "ILS",
                             CountryCurrency = "Israel Shekel",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8880),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2958),
                             CreatedBy = "System",
                             Symbol = "₪"
                         },
@@ -1584,7 +1636,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 50,
                             Code = "JMD",
                             CountryCurrency = "Jamaica Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8881),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2960),
                             CreatedBy = "System",
                             Symbol = "J$"
                         },
@@ -1593,7 +1645,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 51,
                             Code = "JPY",
                             CountryCurrency = "Japan Yen",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8882),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2961),
                             CreatedBy = "System",
                             Symbol = "¥"
                         },
@@ -1602,7 +1654,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 52,
                             Code = "JEP",
                             CountryCurrency = "Jersey Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8883),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2962),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1611,7 +1663,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 53,
                             Code = "KZT",
                             CountryCurrency = "Kazakhstan Tenge",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8885),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2963),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -1620,7 +1672,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 54,
                             Code = "KPW",
                             CountryCurrency = "Korea (North) Won",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8886),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2964),
                             CreatedBy = "System",
                             Symbol = "₩"
                         },
@@ -1629,7 +1681,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 55,
                             Code = "KRW",
                             CountryCurrency = "Korea (South) Won",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8887),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2965),
                             CreatedBy = "System",
                             Symbol = "₩"
                         },
@@ -1638,7 +1690,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 56,
                             Code = "KGS",
                             CountryCurrency = "Kyrgyzstan Som",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8888),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2967),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -1647,7 +1699,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 57,
                             Code = "LAK",
                             CountryCurrency = "Laos Kip",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8889),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2968),
                             CreatedBy = "System",
                             Symbol = "₭"
                         },
@@ -1656,7 +1708,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 58,
                             Code = "LBP",
                             CountryCurrency = "Lebanon Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8890),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2969),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1665,7 +1717,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 59,
                             Code = "LRD",
                             CountryCurrency = "Liberia Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8892),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2970),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1674,7 +1726,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 60,
                             Code = "MKD",
                             CountryCurrency = "Macedonia Denar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8893),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2972),
                             CreatedBy = "System",
                             Symbol = "ден"
                         },
@@ -1683,7 +1735,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 61,
                             Code = "MYR",
                             CountryCurrency = "Malaysia Ringgit",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8894),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2973),
                             CreatedBy = "System",
                             Symbol = "RM"
                         },
@@ -1692,7 +1744,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 62,
                             Code = "MUR",
                             CountryCurrency = "Mauritius Rupee",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8895),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2974),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1701,7 +1753,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 63,
                             Code = "MXN",
                             CountryCurrency = "Mexico Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8897),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2975),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1710,7 +1762,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 64,
                             Code = "MNT",
                             CountryCurrency = "Mongolia Tughrik",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8898),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2976),
                             CreatedBy = "System",
                             Symbol = "₮"
                         },
@@ -1719,7 +1771,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 65,
                             Code = "MNT",
                             CountryCurrency = "Moroccan-dirham",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8899),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2978),
                             CreatedBy = "System",
                             Symbol = " د.إ"
                         },
@@ -1728,7 +1780,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 66,
                             Code = "MZN",
                             CountryCurrency = "Mozambique Metical",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8900),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2979),
                             CreatedBy = "System",
                             Symbol = "MT"
                         },
@@ -1737,7 +1789,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 67,
                             Code = "NAD",
                             CountryCurrency = "Namibia Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8901),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2980),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1746,7 +1798,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 68,
                             Code = "NPR",
                             CountryCurrency = "Nepal Rupee",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8902),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2981),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1755,7 +1807,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 69,
                             Code = "ANG",
                             CountryCurrency = "Netherlands Antilles Guilder",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8903),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2982),
                             CreatedBy = "System",
                             Symbol = "ƒ"
                         },
@@ -1764,7 +1816,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 70,
                             Code = "NZD",
                             CountryCurrency = "New Zealand Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8905),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2984),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1773,7 +1825,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 71,
                             Code = "NIO",
                             CountryCurrency = "Nicaragua Cordoba",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8906),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2985),
                             CreatedBy = "System",
                             Symbol = "C$"
                         },
@@ -1782,7 +1834,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 72,
                             Code = "NGN",
                             CountryCurrency = "Nigeria Naira",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8907),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2986),
                             CreatedBy = "System",
                             Symbol = "₦"
                         },
@@ -1791,7 +1843,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 73,
                             Code = "NOK",
                             CountryCurrency = "Norway Krone",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8908),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2987),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1800,7 +1852,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 74,
                             Code = "OMR",
                             CountryCurrency = "Oman Rial",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8909),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2988),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1809,7 +1861,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 75,
                             Code = "PKR",
                             CountryCurrency = "Pakistan Rupee",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8911),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2990),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1818,7 +1870,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 76,
                             Code = "PAB",
                             CountryCurrency = "Panama Balboa",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8912),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2991),
                             CreatedBy = "System",
                             Symbol = "B/."
                         },
@@ -1827,7 +1879,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 77,
                             Code = "PYG",
                             CountryCurrency = "Paraguay Guarani",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8913),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2992),
                             CreatedBy = "System",
                             Symbol = "Gs"
                         },
@@ -1836,7 +1888,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 78,
                             Code = "PEN",
                             CountryCurrency = "Peru Sol",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8914),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2993),
                             CreatedBy = "System",
                             Symbol = "S/."
                         },
@@ -1845,7 +1897,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 79,
                             Code = "PHP",
                             CountryCurrency = "Philippines Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8915),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2994),
                             CreatedBy = "System",
                             Symbol = "₱"
                         },
@@ -1854,7 +1906,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 80,
                             Code = "PLN",
                             CountryCurrency = "Poland Zloty",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8916),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2995),
                             CreatedBy = "System",
                             Symbol = "zł"
                         },
@@ -1863,7 +1915,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 81,
                             Code = "QAR",
                             CountryCurrency = "Qatar Riyal",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8917),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2997),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1872,7 +1924,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 82,
                             Code = "RON",
                             CountryCurrency = "Romania Leu",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8919),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2998),
                             CreatedBy = "System",
                             Symbol = "lei"
                         },
@@ -1881,7 +1933,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 83,
                             Code = "RUB",
                             CountryCurrency = "Russia Ruble",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8920),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2999),
                             CreatedBy = "System",
                             Symbol = "₽"
                         },
@@ -1890,7 +1942,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 84,
                             Code = "SHP",
                             CountryCurrency = "Saint Helena Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8921),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3000),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1899,7 +1951,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 85,
                             Code = "SAR",
                             CountryCurrency = "Saudi Arabia Riyal",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8922),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3001),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1908,7 +1960,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 86,
                             Code = "RSD",
                             CountryCurrency = "Serbia Dinar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8923),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3003),
                             CreatedBy = "System",
                             Symbol = "Дин."
                         },
@@ -1917,7 +1969,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 87,
                             Code = "SCR",
                             CountryCurrency = "Seychelles Rupee",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8925),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3004),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1926,7 +1978,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 88,
                             Code = "SGD",
                             CountryCurrency = "Singapore Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8926),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3005),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1935,7 +1987,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 89,
                             Code = "SBD",
                             CountryCurrency = "Solomon Islands Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8927),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3006),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1944,7 +1996,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 90,
                             Code = "SOS",
                             CountryCurrency = "Somalia Shilling",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8928),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3007),
                             CreatedBy = "System",
                             Symbol = "S"
                         },
@@ -1953,7 +2005,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 91,
                             Code = "KRW",
                             CountryCurrency = "South Korean Won",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8929),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3008),
                             CreatedBy = "System",
                             Symbol = "₩"
                         },
@@ -1962,7 +2014,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 92,
                             Code = "ZAR",
                             CountryCurrency = "South Africa Rand",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8959),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3010),
                             CreatedBy = "System",
                             Symbol = "R"
                         },
@@ -1971,7 +2023,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 93,
                             Code = "LKR",
                             CountryCurrency = "Sri Lanka Rupee",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8961),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3011),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1980,7 +2032,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 94,
                             Code = "SEK",
                             CountryCurrency = "Sweden Krona",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8962),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3012),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1989,7 +2041,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 95,
                             Code = "CHF",
                             CountryCurrency = "Switzerland Franc",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8963),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3013),
                             CreatedBy = "System",
                             Symbol = "CHF"
                         },
@@ -1998,7 +2050,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 96,
                             Code = "SRD",
                             CountryCurrency = "Suriname Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8964),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3014),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -2007,7 +2059,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 97,
                             Code = "SYP",
                             CountryCurrency = "Syria Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8965),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3016),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -2016,7 +2068,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 98,
                             Code = "TWD",
                             CountryCurrency = "Taiwan New Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8967),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3017),
                             CreatedBy = "System",
                             Symbol = "NT$"
                         },
@@ -2025,7 +2077,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 99,
                             Code = "THB",
                             CountryCurrency = "Thailand Baht",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8968),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3018),
                             CreatedBy = "System",
                             Symbol = "฿"
                         },
@@ -2034,7 +2086,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 100,
                             Code = "TTD",
                             CountryCurrency = "Trinidad and Tobago Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8969),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3019),
                             CreatedBy = "System",
                             Symbol = "TT$"
                         },
@@ -2043,7 +2095,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 101,
                             Code = "TRY",
                             CountryCurrency = "Turkey Lira",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8970),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3020),
                             CreatedBy = "System",
                             Symbol = "₺"
                         },
@@ -2052,7 +2104,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 102,
                             Code = "TVD",
                             CountryCurrency = "Tuvalu Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8971),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3021),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -2061,7 +2113,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 103,
                             Code = "UAH",
                             CountryCurrency = "Ukraine Hryvnia",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8972),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3023),
                             CreatedBy = "System",
                             Symbol = "₴"
                         },
@@ -2070,7 +2122,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 104,
                             Code = "AED",
                             CountryCurrency = "UAE-Dirham",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8974),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3024),
                             CreatedBy = "System",
                             Symbol = " د.إ"
                         },
@@ -2079,7 +2131,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 105,
                             Code = "GBP",
                             CountryCurrency = "United Kingdom Pound",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8975),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3025),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -2088,7 +2140,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 106,
                             Code = "USD",
                             CountryCurrency = "United States Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8976),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3026),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -2097,7 +2149,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 107,
                             Code = "UYU",
                             CountryCurrency = "Uruguay Peso",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8977),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3027),
                             CreatedBy = "System",
                             Symbol = "$U"
                         },
@@ -2106,7 +2158,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 108,
                             Code = "UZS",
                             CountryCurrency = "Uzbekistan Som",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8978),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3029),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -2115,7 +2167,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 109,
                             Code = "VEF",
                             CountryCurrency = "Venezuela Bolívar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8979),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3030),
                             CreatedBy = "System",
                             Symbol = "Bs"
                         },
@@ -2124,7 +2176,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 110,
                             Code = "VND",
                             CountryCurrency = "Viet Nam Dong",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8981),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3031),
                             CreatedBy = "System",
                             Symbol = "₫"
                         },
@@ -2133,7 +2185,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 111,
                             Code = "YER",
                             CountryCurrency = "Yemen Rial",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8982),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3032),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -2142,7 +2194,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 112,
                             Code = "ZWD",
                             CountryCurrency = "Zimbabwe Dollar",
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8983),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3033),
                             CreatedBy = "System",
                             Symbol = "Z$"
                         });
@@ -2293,7 +2345,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9157),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3221),
                             CreatedBy = "System",
                             ImageUrl = "bonus.png",
                             Name = "Bonus"
@@ -2301,7 +2353,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9158),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3222),
                             CreatedBy = "System",
                             ImageUrl = "brokerage.png",
                             Name = "Brokerage"
@@ -2309,7 +2361,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9159),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3223),
                             CreatedBy = "System",
                             ImageUrl = "business.png",
                             Name = "Business & Profession"
@@ -2317,7 +2369,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9160),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3225),
                             CreatedBy = "System",
                             ImageUrl = "coupon.png",
                             Name = "Coupons"
@@ -2325,7 +2377,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9161),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3226),
                             CreatedBy = "System",
                             ImageUrl = "credit.png",
                             Name = "Credit"
@@ -2333,7 +2385,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9162),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3227),
                             CreatedBy = "System",
                             ImageUrl = "gift.png",
                             Name = "Gifts"
@@ -2341,7 +2393,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9164),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3228),
                             CreatedBy = "System",
                             ImageUrl = "interest.png",
                             Name = "Interest"
@@ -2349,7 +2401,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9165),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3229),
                             CreatedBy = "System",
                             ImageUrl = "investment.png",
                             Name = "Investments"
@@ -2357,7 +2409,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9166),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3231),
                             CreatedBy = "System",
                             ImageUrl = "loan.png",
                             Name = "Loan"
@@ -2365,7 +2417,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9167),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3232),
                             CreatedBy = "System",
                             ImageUrl = "gambling.png",
                             Name = "Lottery, Gambling"
@@ -2373,7 +2425,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 11,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9168),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3233),
                             CreatedBy = "System",
                             ImageUrl = "mutualfunds.png",
                             Name = "Mutual Funds"
@@ -2381,7 +2433,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 12,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9169),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3234),
                             CreatedBy = "System",
                             ImageUrl = "refund.png",
                             Name = "Refunds"
@@ -2389,7 +2441,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 13,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9170),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3235),
                             CreatedBy = "System",
                             ImageUrl = "reimbursement.png",
                             Name = "Reimbursement"
@@ -2397,7 +2449,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9172),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3237),
                             CreatedBy = "System",
                             ImageUrl = "rental.png",
                             Name = "Rental Income"
@@ -2405,7 +2457,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 15,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9173),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3238),
                             CreatedBy = "System",
                             ImageUrl = "salary.png",
                             Name = "Salary & Paycheck"
@@ -2413,7 +2465,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 16,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9174),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3239),
                             CreatedBy = "System",
                             ImageUrl = "savings.png",
                             Name = "Savings"
@@ -2421,7 +2473,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 17,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9175),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3240),
                             CreatedBy = "System",
                             ImageUrl = "selling.png",
                             Name = "Selling Income"
@@ -2429,7 +2481,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 18,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9176),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3241),
                             CreatedBy = "System",
                             ImageUrl = "transfer.png",
                             Name = "Transfer"
@@ -2437,7 +2489,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 19,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9177),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3242),
                             CreatedBy = "System",
                             ImageUrl = "wage.png",
                             Name = "Wages & Tips"
@@ -2445,7 +2497,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9178),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3243),
                             CreatedBy = "System",
                             ImageUrl = "others.png",
                             Name = "Others"
@@ -2491,7 +2543,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9274),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3286),
                             CreatedBy = "System",
                             ImageUrl = "abcapital.png",
                             Name = "AB Capital"
@@ -2499,7 +2551,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9276),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3288),
                             CreatedBy = "System",
                             ImageUrl = "aub.png",
                             Name = "AUB"
@@ -2507,7 +2559,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9277),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3289),
                             CreatedBy = "System",
                             ImageUrl = "amex.png",
                             Name = "American Express"
@@ -2515,7 +2567,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9278),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3290),
                             CreatedBy = "System",
                             ImageUrl = "applecard.png",
                             Name = "Apple Card"
@@ -2523,7 +2575,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9279),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3291),
                             CreatedBy = "System",
                             ImageUrl = "atome.jfif",
                             Name = "Atome"
@@ -2531,7 +2583,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9280),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3293),
                             CreatedBy = "System",
                             ImageUrl = "bdo.png",
                             Name = "BDO"
@@ -2539,7 +2591,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9282),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3294),
                             CreatedBy = "System",
                             ImageUrl = "bpi.png",
                             Name = "BPI"
@@ -2547,7 +2599,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9283),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3295),
                             CreatedBy = "System",
                             ImageUrl = "bankofcommerce.jfif",
                             Name = "Bank of Commerce"
@@ -2555,7 +2607,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9284),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3296),
                             CreatedBy = "System",
                             ImageUrl = "bankofmakati.png",
                             Name = "Bank of Makati"
@@ -2563,7 +2615,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9285),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3297),
                             CreatedBy = "System",
                             ImageUrl = "barclays.jfif",
                             Name = "Barclays"
@@ -2571,7 +2623,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 11,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9286),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3299),
                             CreatedBy = "System",
                             ImageUrl = "bayad.png",
                             Name = "Bayad"
@@ -2579,7 +2631,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 12,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9287),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3300),
                             CreatedBy = "System",
                             ImageUrl = "billease.png",
                             Name = "Billease"
@@ -2587,7 +2639,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 13,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9288),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3301),
                             CreatedBy = "System",
                             ImageUrl = "binance.png",
                             Name = "Binance Exchange"
@@ -2595,7 +2647,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9290),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3302),
                             CreatedBy = "System",
                             ImageUrl = "others.jfif",
                             Name = "CARD Bank"
@@ -2603,7 +2655,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 15,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9291),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3304),
                             CreatedBy = "System",
                             ImageUrl = "cimb.png",
                             Name = "CIMB"
@@ -2611,7 +2663,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 16,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9292),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3305),
                             CreatedBy = "System",
                             ImageUrl = "colfinancial.png",
                             Name = "COL Financial"
@@ -2619,7 +2671,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 17,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9293),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3306),
                             CreatedBy = "System",
                             ImageUrl = "cashalo.jfif",
                             Name = "Cashalo"
@@ -2627,7 +2679,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 18,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9294),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3307),
                             CreatedBy = "System",
                             ImageUrl = "cebuana.png",
                             Name = "Cebuana Lhullier"
@@ -2635,7 +2687,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 19,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9295),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3308),
                             CreatedBy = "System",
                             ImageUrl = "chinabank.jfif",
                             Name = "China Bank"
@@ -2643,7 +2695,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9296),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3310),
                             CreatedBy = "System",
                             ImageUrl = "citibank.jfif",
                             Name = "Citibank"
@@ -2651,7 +2703,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 21,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9297),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3311),
                             CreatedBy = "System",
                             ImageUrl = "cliqq.jfif",
                             Name = "CliQQ"
@@ -2659,7 +2711,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 22,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9298),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3333),
                             CreatedBy = "System",
                             ImageUrl = "coinbase.png",
                             Name = "Coinbase"
@@ -2667,7 +2719,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 23,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9299),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3334),
                             CreatedBy = "System",
                             ImageUrl = "coinph.jfif",
                             Name = "Coins.ph"
@@ -2675,7 +2727,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 24,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9301),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3336),
                             CreatedBy = "System",
                             ImageUrl = "deutsche.png",
                             Name = "Deutche"
@@ -2683,7 +2735,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9302),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3337),
                             CreatedBy = "System",
                             ImageUrl = "diskarTech.jfif",
                             Name = "DiskarTech"
@@ -2691,7 +2743,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 26,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9303),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3338),
                             CreatedBy = "System",
                             ImageUrl = "others.jfif",
                             Name = "DragonFi"
@@ -2699,7 +2751,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 27,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9304),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3339),
                             CreatedBy = "System",
                             ImageUrl = "eastwest.jfif",
                             Name = "EastWest Bank"
@@ -2707,7 +2759,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 28,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9305),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3341),
                             CreatedBy = "System",
                             ImageUrl = "ficco.png",
                             Name = "Ficco"
@@ -2715,7 +2767,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 29,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9306),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3342),
                             CreatedBy = "System",
                             ImageUrl = "gcash.png",
                             Name = "Gcash"
@@ -2723,7 +2775,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 30,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9307),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3343),
                             CreatedBy = "System",
                             ImageUrl = "gotrade.png",
                             Name = "GoTrade"
@@ -2731,7 +2783,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 31,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9308),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3344),
                             CreatedBy = "System",
                             ImageUrl = "gotyme.png",
                             Name = "GoTyme Bank"
@@ -2739,7 +2791,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 32,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9310),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3345),
                             CreatedBy = "System",
                             ImageUrl = "grab.jfif",
                             Name = "GrabPay"
@@ -2747,7 +2799,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 33,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9311),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3346),
                             CreatedBy = "System",
                             ImageUrl = "homecredit.jfif",
                             Name = "Home Credit"
@@ -2755,7 +2807,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 34,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9312),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3347),
                             CreatedBy = "System",
                             ImageUrl = "hsbc.png",
                             Name = "HSBC"
@@ -2763,7 +2815,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 35,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9313),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3349),
                             CreatedBy = "System",
                             ImageUrl = "ing.jfif",
                             Name = "ING"
@@ -2771,7 +2823,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 36,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9314),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3350),
                             CreatedBy = "System",
                             ImageUrl = "ing.jfif",
                             Name = "ING Bank"
@@ -2779,7 +2831,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 37,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9315),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3351),
                             CreatedBy = "System",
                             ImageUrl = "komo.jfif",
                             Name = "Komo"
@@ -2787,7 +2839,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 38,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9316),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3352),
                             CreatedBy = "System",
                             ImageUrl = "kucoin.png",
                             Name = "KuCoin"
@@ -2795,7 +2847,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 39,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9317),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3353),
                             CreatedBy = "System",
                             ImageUrl = "landbank.jfif",
                             Name = "Landbank"
@@ -2803,7 +2855,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 40,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9319),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3354),
                             CreatedBy = "System",
                             ImageUrl = "lazada.jfif",
                             Name = "Lazada"
@@ -2811,7 +2863,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 41,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9320),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3356),
                             CreatedBy = "System",
                             ImageUrl = "mastercard.png",
                             Name = "Mastercard"
@@ -2819,7 +2871,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 42,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9321),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3357),
                             CreatedBy = "System",
                             ImageUrl = "maya.png",
                             Name = "Maya"
@@ -2827,7 +2879,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 43,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9322),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3358),
                             CreatedBy = "System",
                             ImageUrl = "maybank.png",
                             Name = "Maybank"
@@ -2835,7 +2887,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 44,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9323),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3359),
                             CreatedBy = "System",
                             ImageUrl = "metrobank.png",
                             Name = "Metrobank"
@@ -2843,7 +2895,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 45,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9324),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3360),
                             CreatedBy = "System",
                             ImageUrl = "netbank.png",
                             Name = "Netbank"
@@ -2851,7 +2903,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 46,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9325),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3361),
                             CreatedBy = "System",
                             ImageUrl = "ownbank.jfif",
                             Name = "OwnBank"
@@ -2859,7 +2911,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 47,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9326),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3363),
                             CreatedBy = "System",
                             ImageUrl = "pbcom.jfif",
                             Name = "PBCOM"
@@ -2867,7 +2919,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 48,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9328),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3364),
                             CreatedBy = "System",
                             ImageUrl = "pnb.png",
                             Name = "PNB"
@@ -2875,7 +2927,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 49,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9329),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3365),
                             CreatedBy = "System",
                             ImageUrl = "psbank.jfif",
                             Name = "PSBank"
@@ -2883,7 +2935,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 50,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9330),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3366),
                             CreatedBy = "System",
                             ImageUrl = "pagibig.jfif",
                             Name = "Pag-Ibig"
@@ -2891,7 +2943,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 51,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9331),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3367),
                             CreatedBy = "System",
                             ImageUrl = "paymaya.png",
                             Name = "PayMaya"
@@ -2899,7 +2951,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 52,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9332),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3368),
                             CreatedBy = "System",
                             ImageUrl = "paypal.png",
                             Name = "PayPal"
@@ -2907,7 +2959,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 53,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9333),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3370),
                             CreatedBy = "System",
                             ImageUrl = "plentina.png",
                             Name = "Pletina"
@@ -2915,7 +2967,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 54,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9334),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3371),
                             CreatedBy = "System",
                             ImageUrl = "rcbc.jfif",
                             Name = "RCBC"
@@ -2923,7 +2975,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 55,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9335),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3372),
                             CreatedBy = "System",
                             ImageUrl = "robinsonsbank.png",
                             Name = "RobinsonsBank"
@@ -2931,7 +2983,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 56,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9336),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3373),
                             CreatedBy = "System",
                             ImageUrl = "seabank.png",
                             Name = "Seabank"
@@ -2939,7 +2991,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 57,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9338),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3374),
                             CreatedBy = "System",
                             ImageUrl = "securitybank.jfif",
                             Name = "Security Bank"
@@ -2947,7 +2999,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 58,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9339),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3375),
                             CreatedBy = "System",
                             ImageUrl = "shopeepay.jfif",
                             Name = "ShopeePay"
@@ -2955,7 +3007,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 59,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9340),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3376),
                             CreatedBy = "System",
                             ImageUrl = "standardchartered.png",
                             Name = "Standard Chartered"
@@ -2963,7 +3015,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 60,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9341),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3378),
                             CreatedBy = "System",
                             ImageUrl = "sterlingbank.jfif",
                             Name = "Sterling Bank"
@@ -2971,7 +3023,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 61,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9342),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3379),
                             CreatedBy = "System",
                             ImageUrl = "tala.png",
                             Name = "Tala"
@@ -2979,7 +3031,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 62,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9343),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3380),
                             CreatedBy = "System",
                             ImageUrl = "tonik.png",
                             Name = "Tonik"
@@ -2987,7 +3039,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 63,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9344),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3381),
                             CreatedBy = "System",
                             ImageUrl = "ucpb.png",
                             Name = "UCPB"
@@ -2995,7 +3047,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 64,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9345),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3382),
                             CreatedBy = "System",
                             ImageUrl = "uno.jfif",
                             Name = "UNO Digital Bank"
@@ -3003,7 +3055,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 65,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9346),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3383),
                             CreatedBy = "System",
                             ImageUrl = "unionbank.jfif",
                             Name = "Unionbank"
@@ -3011,7 +3063,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 66,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9347),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3385),
                             CreatedBy = "System",
                             ImageUrl = "visa.jfif",
                             Name = "Visa"
@@ -3019,7 +3071,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 67,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9349),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3386),
                             CreatedBy = "System",
                             ImageUrl = "wellsfargo.png",
                             Name = "Wells Fargo"
@@ -3027,7 +3079,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 68,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9350),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3387),
                             CreatedBy = "System",
                             ImageUrl = "others.jfif",
                             Name = "ztock"
@@ -3035,11 +3087,88 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 69,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(9351),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(3388),
                             CreatedBy = "System",
                             ImageUrl = "others.jfif",
                             Name = "Others"
                         });
+                });
+
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.JournalEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsDebit")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("JournalEntries");
+                });
+
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transfer", b =>
@@ -3144,7 +3273,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8314),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2372),
                             CreatedBy = "System",
                             Email = "system@yahoo.com",
                             FirstName = "System",
@@ -3156,7 +3285,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 31, 20, 59, 35, 564, DateTimeKind.Local).AddTicks(8326),
+                            Created = new DateTime(2024, 1, 1, 23, 49, 8, 265, DateTimeKind.Local).AddTicks(2384),
                             CreatedBy = "System",
                             Email = "nathan.pascual20@yahoo.com",
                             FirstName = "Nathan",
@@ -3186,6 +3315,10 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .HasForeignKey("InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Transaction", null)
+                        .WithMany("Accounts")
+                        .HasForeignKey("TransactionId");
 
                     b.Navigation("AccountType");
 
@@ -3241,6 +3374,25 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                     b.Navigation("IncomeCategory");
                 });
 
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.JournalEntry", b =>
+                {
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "Account")
+                        .WithMany("JournalEntries")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Transaction", "Transaction")
+                        .WithMany("Entries")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transfer", b =>
                 {
                     b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "Receiver")
@@ -3262,6 +3414,8 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Account", b =>
                 {
+                    b.Navigation("JournalEntries");
+
                     b.Navigation("Receivers");
 
                     b.Navigation("Senders");
@@ -3270,6 +3424,13 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Category", b =>
                 {
                     b.Navigation("ChildCategories");
+                });
+
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transaction", b =>
+                {
+                    b.Navigation("Accounts");
+
+                    b.Navigation("Entries");
                 });
 #pragma warning restore 612, 618
         }

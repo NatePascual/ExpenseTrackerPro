@@ -4,7 +4,6 @@ using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
 

@@ -25,7 +25,7 @@ public class CreateUpdateAccountCommand : IRequest<Result<int>>
 
     public string InstitutionImageUrl { get; set; }
     [Required, Display(Name = "Currency")]
-    public int CurrencyId { get; set; }
+    public int CurrencyId { get; set; } = 79;
 
     [Length(4, 30), Required]
     public string Name { get; set; }

@@ -60,7 +60,7 @@ public class CreateTransaction : ICreateTransaction
     {
         var result = true;
         var initialAccount = await _unitOfWork.Repository<Account>().Entities.FirstOrDefaultAsync(x=>x.Id == Convert.ToInt32(DefaultAccount.Initial));
-        var description = $"New Account : {account.Name} with Number: {account.AccountNumber}";
+        var description = $"New account {account.Name} with Number {account.AccountNumber} has been created.";
 
         if (initialAccount == null)
         {
@@ -106,7 +106,7 @@ public class CreateTransaction : ICreateTransaction
             return false;
         }
 
-        var transaction = new CreateTransactionCommand(transfer.TransactionDate.Value, $"New Transfer from Account  {senderAccount.Name} to Account  {receiverAccount.Name}");
+        var transaction = new CreateTransactionCommand(transfer.TransactionDate.Value, $"Transfer from the account {senderAccount.Name} to account {receiverAccount.Name} has been made.");
         transaction.Entries.AddRange(await CreateJournalEntries(transfer.SenderId, transfer.ReceiverId, transaction.Id, transfer.Amount));
 
         try
@@ -142,7 +142,7 @@ public class CreateTransaction : ICreateTransaction
         var incomeAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(Convert.ToInt32(DefaultAccount.Income));
         var account = await _unitOfWork.Repository<Account>().GetByIdAsync(income.AccountId);
 
-        var desciption = !income.Note.IsNullOrEmpty() ? income.Note : $"New Income for the account { account.Name } with { income.Amount }";
+        var desciption = !income.Note.IsNullOrEmpty() ? income.Note : $"The account {account.Name} has been credited.";
 
         if (incomeAccount == null)
         {
@@ -177,7 +177,7 @@ public class CreateTransaction : ICreateTransaction
         var expenseAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(Convert.ToInt32(DefaultAccount.Expense));
         var account = await _unitOfWork.Repository<Account>().GetByIdAsync(expense.AccountId);
 
-        var desciption = !expense.Note.IsNullOrEmpty() ? expense.Note : $"New Expense for the account {account.Name} with { expense.Provider }";
+        var desciption = !expense.Note.IsNullOrEmpty() ? expense.Note : $"The account {account.Name} was debited for the recent expense from { expense.Provider }";
 
         if (expenseAccount == null)
         {

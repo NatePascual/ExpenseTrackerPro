@@ -118,7 +118,7 @@ public partial class ManageAccount
 
     private async Task Delete(int id)
     {
-        string deleteContent = "Do you really want to delete these records? This process cannot be undone.";
+        string deleteContent = "Do you really want to delete this Account? This process cannot be undone.";
         var parameters = new DialogParameters<Shared.Dialogs.DeleteConfirmation>();
         parameters.Add(x => x.ContentText, deleteContent);
         var options = new DialogOptions { 
@@ -131,20 +131,20 @@ public partial class ManageAccount
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var response = await _mediator.Send(new DeleteAccountCommand(id));
-            if (response.Succeeded)
-            {
-                OnSearch("");
-                _snackBar.Add(response.Messages[0], Severity.Success);
-            }
-            else
-            {
-                OnSearch("");
-                foreach (var message in response.Messages)
-                {
-                    _snackBar.Add(message, Severity.Error);
-                }
-            }
+            //var response = await _mediator.Send(new DeleteAccountCommand(id));
+            //if (response.Succeeded)
+            //{
+            //    OnSearch("");
+            //    _snackBar.Add(response.Messages[0], Severity.Success);
+            //}
+            //else
+            //{
+            //    OnSearch("");
+            //    foreach (var message in response.Messages)
+            //    {
+            //        _snackBar.Add(message, Severity.Error);
+            //    }
+            //}
         }
     }
 }

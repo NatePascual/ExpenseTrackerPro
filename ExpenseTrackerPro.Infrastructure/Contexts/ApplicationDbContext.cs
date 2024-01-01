@@ -460,9 +460,9 @@ public class ApplicationDbContext : DbContext
     private void AddAccount(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>().HasData(
-                new Account(12,69,79,"Initial","0001",0,false,true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
-                new Account(12, 69, 79, "Income", "0002", 0, false, true) { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
-                new Account(12, 69, 79, "Expenses", "0003", 0, false, true) { Id = 3, Created = DateTime.Now, CreatedBy = "System" }
+                new Account(12,69,79,"Starting Account","0001",0,false,true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(12, 69, 79, "Income Account", "0002", 0, false, true) { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(12, 69, 79, "Expenses Account", "0003", 0, false, true) { Id = 3, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 }

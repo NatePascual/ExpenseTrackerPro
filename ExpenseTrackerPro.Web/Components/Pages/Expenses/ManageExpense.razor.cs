@@ -1,4 +1,5 @@
-﻿using ExpenseTrackerPro.Application.Features.Expenses;
+﻿using ExpenseTrackerPro.Application.Features.Accounts;
+using ExpenseTrackerPro.Application.Features.Expenses;
 using MudBlazor;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Expenses;
@@ -124,18 +125,22 @@ public partial class ManageExpense
 
     private async Task Delete(int id)
     {
-        string deleteContent = "Delete Content";
-        var parameters = new DialogParameters
-            {
-                {nameof(Shared.Dialogs.DeleteConfirmation.ContentText), string.Format(deleteContent, id)}
-            };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        string deleteContent = "Do you really want to delete this Expense? This process cannot be undone.";
+        var parameters = new DialogParameters<Shared.Dialogs.DeleteConfirmation>();
+        parameters.Add(x => x.ContentText, deleteContent);
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            Position = DialogPosition.Center,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
         var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            //DeleteAsync(id)
-            //var response = await _mediator.Send();
+            //var response = await _mediator.Send(new DeleteExpenseCommand(id));
             //if (response.Succeeded)
             //{
             //    OnSearch("");
