@@ -232,18 +232,21 @@ public class ApplicationDbContext : DbContext
     private void AddAccountTypes(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccountType>().HasData(
-             new AccountType("Bank Account", Classification.Cash.ToString(), "bank.png") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Bank", Classification.Cash.ToString(), "bank.png") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
              new AccountType("Cash", Classification.Cash.ToString(), "cash.png") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
              new AccountType("Wallet", Classification.Cash.ToString(), "wallet.png") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Checking", Classification.Cash.ToString(), "checking.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Saving", Classification.Cash.ToString(), "savings.png") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Retirement", Classification.Investment.ToString(), "retirement.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Brokerage", Classification.Investment.ToString(), "brokerage.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Investment", Classification.Investment.ToString(), "investment.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Insurance", Classification.Investment.ToString(), "insurance.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Crypto", Classification.Investment.ToString(), "crypto.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Property", Classification.Assets.ToString(), "property.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Other Account", Classification.OtherAccount.ToString(), "bank.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" }
+             new AccountType("E-Wallet", Classification.Cash.ToString(), "e-wallet.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Checking", Classification.Cash.ToString(), "checking.png") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Savings", Classification.Cash.ToString(), "savings.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Income", Classification.Cash.ToString(), "income.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Expense", Classification.Cash.ToString(), "expense.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Retirement", Classification.Investment.ToString(), "retirement.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Brokerage", Classification.Investment.ToString(), "brokerage.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Investment", Classification.Investment.ToString(), "investment.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Insurance", Classification.Investment.ToString(), "insurance.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Crypto", Classification.Investment.ToString(), "crypto.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Property", Classification.Assets.ToString(), "property.png") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Others", Classification.OtherAccount.ToString(), "bank.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 
@@ -461,8 +464,8 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Account>().HasData(
                 new Account(12,69,79,"Starting Account","0001",0,false,true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
-                new Account(12, 69, 79, "Income Account", "0002", 0, false, true) { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
-                new Account(12, 69, 79, "Expenses Account", "0003", 0, false, true) { Id = 3, Created = DateTime.Now, CreatedBy = "System" }
+                new Account(7, 69, 79, "Income Account", "0002", 0, false, true) { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(8, 69, 79, "Expenses Account", "0003", 0, false, true) { Id = 3, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 }
