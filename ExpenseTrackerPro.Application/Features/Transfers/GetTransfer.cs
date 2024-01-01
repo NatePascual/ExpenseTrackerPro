@@ -69,7 +69,7 @@ internal sealed class GetTransferQueryHandler : IRequestHandler<GetTransferQuery
             TransactionDate = e.TransactionDate,
             Note = e.Note,
             IsTransferAsExpense = false,
-            CurrencySymbol = (e.Sender.Currency.Symbol != e.Receiver.Currency.Symbol) ? e.Sender.Currency.Symbol : null,
+            CurrencySymbol = e.Receiver.Currency.Symbol
         };
 
         var filterSpec = new TransferSpecification(request.SearchString);

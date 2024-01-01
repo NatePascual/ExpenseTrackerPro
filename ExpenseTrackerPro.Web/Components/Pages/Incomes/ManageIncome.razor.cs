@@ -112,7 +112,7 @@ public partial class ManageIncome
         {
             CloseButton = true,
             MaxWidth = MaxWidth.Small,
-            Position = DialogPosition.TopLeft,
+            Position = DialogPosition.Center,
             FullWidth = true,
             DisableBackdropClick = true
         };

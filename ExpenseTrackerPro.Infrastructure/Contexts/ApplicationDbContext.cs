@@ -29,7 +29,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<Institution> Institutions => Set<Institution>();
     public DbSet<Currency> Currencies => Set<Currency>();
-
+    public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         foreach (var entry in ChangeTracker.Entries<BaseAuditableEntity>())
@@ -92,6 +93,7 @@ public class ApplicationDbContext : DbContext
         AddAccountTypes(modelBuilder: modelBuilder);    
         AddIncomeCategory(modelBuilder: modelBuilder);
         AddInstitutions(modelBuilder: modelBuilder);
+        AddAccount(modelBuilder: modelBuilder);
 
         modelBuilder.Entity<Transfer>()
             .HasOne(t => t.Sender)
@@ -108,6 +110,7 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
+   
     private void AddCurrencies(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Currency>().HasData(
@@ -452,5 +455,14 @@ public class ApplicationDbContext : DbContext
             new UserProfile("System", "", "system@yahoo.com", "+639267444551", "", true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
             new UserProfile("Nathan", "Pascual", "nathan.pascual20@yahoo.com", "+639267444551", "", true) { Id= 2,Created=DateTime.Now, CreatedBy="System" }
         ); 
+    }
+
+    private void AddAccount(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Account>().HasData(
+                new Account(12,69,79,"Initial","0001",0,false,true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(12, 69, 79, "Income", "0002", 0, false, true) { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(12, 69, 79, "Expenses", "0003", 0, false, true) { Id = 3, Created = DateTime.Now, CreatedBy = "System" }
+        );
     }
 }

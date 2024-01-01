@@ -8,6 +8,8 @@ using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Application.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using ExpenseTrackerPro.Application.Features.Transactions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
 
@@ -40,11 +42,13 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ICreateTransaction _createTransaction;
     private string _message;
-    public CreateUpdateAccountCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateUpdateAccountCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICreateTransaction createTransaction)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _createTransaction= createTransaction;
     }
 
     public async Task<Result<int>> Handle(CreateUpdateAccountCommand command, CancellationToken cancellationToken)
@@ -57,12 +61,21 @@ internal sealed class CreateUpdateAccountCommandHandler : IRequestHandler<Create
         {
             if (!validate)
                 return await Result<int>.FailAsync(_message);
-            
+                
             var entity = _mapper.Map<Account>(command);
             await _unitOfWork.Repository<Account>().AddAsync(entity);
             await _unitOfWork.Commit(cancellationToken);
 
+            var transaction = await _createTransaction.CreateTransactionAccount(entity, cancellationToken);
+
+            if(!transaction)
+            { 
+               await _unitOfWork.Rollback();
+                return await Result<int>.FailAsync(_createTransaction.Message);
+            }
+
             result = await Result<int>.SuccessAsync(entity.Id, Messages.AccountSaved.ToDescriptionString());
+
         }
         else
         {

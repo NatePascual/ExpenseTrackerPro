@@ -5,12 +5,14 @@ using ExpenseTrackerPro.Application.Features.AccountTypes;
 using ExpenseTrackerPro.Application.Features.Currencies;
 using ExpenseTrackerPro.Application.Features.ExpenseCategories;
 using ExpenseTrackerPro.Application.Features.IncomeCategories;
+using ExpenseTrackerPro.Application.Features.Transactions;
 using ExpenseTrackerPro.Application.Infrastructure;
 using ExpenseTrackerPro.Application.Services;
 using ExpenseTrackerPro.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace ExpenseTrackerPro.Infrastructure.Extensions;
 
@@ -34,6 +36,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IIncomeCategoryRepository, IncomeCategoryRepository>();
         services.AddTransient<IInstitutionRepository,InstitutionRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
-        services.AddTransient<IEntryService, EntryService>();
+        services.AddTransient<ICreateTransaction, CreateTransaction>();
+
     }
 }

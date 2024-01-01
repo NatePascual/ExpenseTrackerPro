@@ -30,8 +30,11 @@ public class Account : BaseAuditableEntity
 
     public bool IsIncludedBalance { get; set; } = false;
 
+    public bool IsHidden { get; set; } = false;
+
     public virtual ICollection<Transfer> Senders { get; set; }
     public virtual ICollection<Transfer> Receivers { get; set; }
+    public virtual ICollection<JournalEntry> JournalEntries { get; set; }
 
     public Account(int accountTypeId, 
                    int institutionId, 
@@ -39,7 +42,8 @@ public class Account : BaseAuditableEntity
                    string name, 
                    string accountNumber,               
                    float balance, 
-                   bool isIncludedBalance)
+                   bool isIncludedBalance,
+                   bool isHidden)
     {
         AccountTypeId = accountTypeId;
         InstitutionId = institutionId;
@@ -48,6 +52,7 @@ public class Account : BaseAuditableEntity
         AccountNumber = accountNumber;
         Balance = balance;
         IsIncludedBalance = isIncludedBalance;
+        IsHidden = isHidden;
     }
 
     private Account() { }

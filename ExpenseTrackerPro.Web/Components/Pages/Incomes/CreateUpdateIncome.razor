@@ -32,7 +32,7 @@
                      </MudItem>
                 }
                 <MudItem xs="12" md="12">
-                    <MudTextField Disabled="_isDisabled" For="@(() => CreateUpdateIncomeModel.Amount)" @bind-Value="CreateUpdateIncomeModel.Amount" Label="Amount"
+                    <MudTextField Disabled="_isDisabled" Style="font-size:large;font-weight:600;" For="@(() => CreateUpdateIncomeModel.Amount)" @bind-Value="CreateUpdateIncomeModel.Amount" Label="Amount"
                                   Format="F2" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money" />
                 </MudItem>
                  @if (CreateUpdateIncomeModel.Id != 0)

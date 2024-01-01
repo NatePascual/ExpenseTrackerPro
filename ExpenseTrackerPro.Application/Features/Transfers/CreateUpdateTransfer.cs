@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Extensions;
+using ExpenseTrackerPro.Application.Features.Transactions;
+using ExpenseTrackerPro.Application.Services;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Shared.Wrappers;
@@ -36,14 +38,14 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IEntryService _entryService;
+    private readonly ICreateTransaction _createTransaction;
     private string _message;
 
-    public CreateUpdateTransferCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IEntryService entryService)
+    public CreateUpdateTransferCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICreateTransaction createTransaction)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _entryService = entryService;
+        _createTransaction = createTransaction;
     }
 
     public async Task<Result<int>> Handle(CreateUpdateTransferCommand command, CancellationToken cancellationToken)
@@ -57,24 +59,18 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
         {
             var entity = _mapper.Map<Transfer>(command);
             await _unitOfWork.Repository<Transfer>().AddAsync(entity);
+            await _unitOfWork.Commit(cancellationToken);
 
-            
-            var sender = await _entryService.DebitAccount(_unitOfWork,_mapper,entity.SenderId,entity.Amount,cancellationToken);
-            var receiver = await _entryService.CreditAccount(_unitOfWork,_mapper,entity.ReceiverId,entity.Amount,cancellationToken);
+            var transaction = await _createTransaction.CreateTransactionTransfer(entity, cancellationToken);
 
-            if(sender && receiver)
+            if (!transaction)
             {
-                await _unitOfWork.Commit(cancellationToken);
-
-                result = await Result<int>.SuccessAsync(entity.Id, Messages.TransferSaved.ToDescriptionString());
+                await _unitOfWork.Rollback();
+                return await Result<int>.FailAsync(_createTransaction.Message);
             }
-           else
-            {
-                if (!_entryService.Message.IsNullOrEmpty())
-                    _message = _entryService.Message;
 
-                result = await Result<int>.FailAsync(_message);
-            }
+            result = await Result<int>.SuccessAsync(entity.Id, Messages.TransferSaved.ToDescriptionString());
+
         }
         else
         {
@@ -84,38 +80,6 @@ internal sealed class CreateUpdateTransferCommandHandler : IRequestHandler<Creat
         return result;
     }
 
-    private async Task<bool> Credit(Transfer transfer,CancellationToken cancellationToken)
-    {
-        var sender = await _unitOfWork.Repository<Account>().GetByIdAsync(transfer.SenderId);
-
-        if(sender != null)
-        {
-            sender.Balance -= transfer.Amount;
-            var entity = _mapper.Map<Account>(sender);
-            await _unitOfWork.Repository<Account>().UpdateAsync(entity);
-
-            return true;
-        }
-
-        _message = "";
-        return false;
-    }
-
-    private async Task<bool> Debit(Transfer transfer, CancellationToken cancellationToken)
-    {
-        var receiver = await _unitOfWork.Repository<Account>().GetByIdAsync(transfer.ReceiverId);
-
-        if (receiver != null)
-        {
-            receiver.Balance += transfer.Amount;
-            var entity = _mapper.Map<Account>(receiver);
-            await _unitOfWork.Repository<Account>().UpdateAsync(entity);
-
-            return true;
-        }
-
-        return false;
-    }
 
     private async Task<Result<int>> UpdateTransfer(CreateUpdateTransferCommand command, CancellationToken cancellationToken)
     {

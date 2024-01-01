@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Extensions;
+using ExpenseTrackerPro.Application.Features.Transactions;
+using ExpenseTrackerPro.Application.Services;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Enums;
 using ExpenseTrackerPro.Shared.Wrappers;
@@ -34,13 +36,13 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IEntryService _entryService;
+    private readonly ICreateTransaction _createTransaction;
     private string _message;
-    public CreateUpdateIncomeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IEntryService entryService)
+    public CreateUpdateIncomeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICreateTransaction createTransaction)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _entryService = entryService;
+        _createTransaction = createTransaction;
     }
 
     public async Task<Result<int>> Handle(CreateUpdateIncomeCommand command, CancellationToken cancellationToken)
@@ -51,22 +53,17 @@ internal sealed class CreateUpdateIncomeCommandHandler : IRequestHandler<CreateU
         {
             var entity = _mapper.Map<Income>(command);
             await _unitOfWork.Repository<Income>().AddAsync(entity);
+            await _unitOfWork.Commit(cancellationToken);
 
-            var credit = await _entryService.DebitAccount(_unitOfWork,_mapper, entity.AccountId,entity.Amount, cancellationToken);
+            var transaction = await _createTransaction.CreateTransactionIncome(entity, cancellationToken);
 
-            if(credit)
+            if (!transaction)
             {
-                await _unitOfWork.Commit(cancellationToken);
-
-                result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeSaved.ToDescriptionString());
+                await _unitOfWork.Rollback();
+                return await Result<int>.FailAsync(_createTransaction.Message);
             }
-            else
-            {
-                if (!_entryService.Message.IsNullOrEmpty())
-                    _message = _entryService.Message;
 
-                result = await Result<int>.FailAsync(_message);
-            }
+            result = await Result<int>.SuccessAsync(entity.Id, Messages.IncomeSaved.ToDescriptionString());
 
         }
         else
