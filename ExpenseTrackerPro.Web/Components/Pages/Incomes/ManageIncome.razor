@@ -1,0 +1,64 @@
+﻿@page "/ManageIncome"
+@using ExpenseTrackerPro.Application.Features.Incomes
+@using ExpenseTrackerPro.Shared.Enums
+@using MediatR
+@inject IMediator _mediator
+@inject IDialogService _dialogService
+@inject ISnackbar _snackBar
+<PageTitle>Manage Income</PageTitle>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetIncomeResponse>>>(ServerReload))"
+          GroupBy="@_groupDefinition" Dense="true" Hover="true" @ref="table" RowsPerPage="20">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Manage Income</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <div class="justify-center mud-text-align-right">
+            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
+        </div>
+    </ToolBarContent>
+    <HeaderContent>   
+        <MudTh><MudTableSortLabel SortLabel="incomeCategoryName" T="GetIncomeResponse">Category</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="accountName" T="GetIncomeResponse">Account</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="amount" T="GetIncomeResponse">Amount</MudTableSortLabel></MudTh>      
+        <MudTh Class="ta-r">Actions</MudTh>
+    </HeaderContent>
+    <GroupHeaderTemplate>
+        <MudTh Class="mud-table-cell-custom-group wd-99" colspan="8"><h6>@($"{context.GroupName}: {context.Key}")</h6></MudTh>
+    </GroupHeaderTemplate>
+    <RowTemplate>
+        <MudTd DataLabel="Income Category">
+            <MudImage Src="@(ImageLocation.IncomeCategory.ToString() + context.IncomeCategoryImageUrl)"
+                      Alt="Income Category" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+            <span class="d-none d-md-inline">@context.IncomeCategoryName</span>
+        </MudTd>
+        <MudTd DataLabel="Account">
+            <MudImage Src="@(ImageLocation.Institution.ToString() + context.InstitutionImageUrl)"
+                      Alt="Institution" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+            <span class="d-none d-md-inline">@context.AccountName</span>
+        </MudTd>
+         <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>
+            <MudTd DataLabel="Actions" Class="ta-r">
+            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
+                     IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
+                    <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.Edit">Edit</MudMenuItem>
+                    <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>
+            </MudMenu>
+        </MudTd>
+     </RowTemplate>
+    <GroupFooterTemplate>
+            <MudTh Class="mud-table-cell-custom-group mud-table-cell-custom-group-footer wd-99" colspan="8">Total Per Day : @context.Items.Sum((e) => e.Amount).ToString("#,###.00")</MudTh>
+    </GroupFooterTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

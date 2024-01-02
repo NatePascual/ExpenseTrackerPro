@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ExpenseTrackerPro.Application\ExpenseTrackerPro.Application.csproj" />
     <ProjectReference Include="..\ExpenseTrackerPro.Domain\ExpenseTrackerPro.Domain.csproj" />
+    <ProjectReference Include="..\ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj" />
   </ItemGroup>
 
 </Project>

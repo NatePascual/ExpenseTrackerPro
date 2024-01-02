@@ -6,32 +6,32 @@ namespace ExpenseTrackerPro.Domain.Entities;
 public class Transfer : BaseAuditableEntity
 {
     [ForeignKey(nameof(Account.Id))]
-    public int FromAccountId { get; set; }
-    public Account FromAccount { get; set; }
+    public int SenderId { get; set; }
+    public Account Sender { get; set; }
 
     [ForeignKey(nameof(Account.Id))]
-    public int ToAccountId { get; set; }
-    public Account ToAccount { get; set; }
+    public int ReceiverId { get; set; }
+    public Account Receiver { get; set; }
 
     [Required]
     public float Amount { get; set; }
 
-    public DateOnly TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     [MaxLength(200)]
     public string Note { get; set; }
 
     public bool IsTransferAsExpense { get; set; } = true;
 
-    public Transfer(int fromAccountId,
-                    int toAccountId,
+    public Transfer(int senderId,
+                    int receiverId,
                     float amount,
-                    DateOnly transactionDate,
+                    DateTime? transactionDate,
                     string note,
                     bool isTransferAsExpense)
     {
-        FromAccountId = fromAccountId;
-        ToAccountId = toAccountId;
+        SenderId = senderId;
+        ReceiverId = receiverId;
         Amount = amount;
         TransactionDate = transactionDate;
         Note = note;

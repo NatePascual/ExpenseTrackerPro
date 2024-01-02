@@ -1,6 +1,5 @@
 ﻿
 using ExpenseTrackerPro.Domain.Contracts;
-using ExpenseTrackerPro.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

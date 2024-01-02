@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.WebUI", "ExpenseTrackerPro.WebUI\ExpenseTrackerPro.WebUI.csproj", "{AD5612E3-AE59-40FD-8C0C-089030B25306}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{EF97518B-AFA3-42D9-B95C-3F8A3A68EFCC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{43F83AE4-C5D9-476E-BC8F-DB0A55E4D9CE}"
@@ -13,13 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F31B89EB-25FB-4F5F-B7B3-DCC64E362397}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Application", "ExpenseTrackerPro.Application\ExpenseTrackerPro.Application.csproj", "{9A36F517-503C-423C-B30F-9A86627FB066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Application", "ExpenseTrackerPro.Application\ExpenseTrackerPro.Application.csproj", "{9A36F517-503C-423C-B30F-9A86627FB066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Domain", "ExpenseTrackerPro.Domain\ExpenseTrackerPro.Domain.csproj", "{F957821F-8C68-41AF-ABA5-83D5EDC5D5EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Domain", "ExpenseTrackerPro.Domain\ExpenseTrackerPro.Domain.csproj", "{F957821F-8C68-41AF-ABA5-83D5EDC5D5EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Infrastructure", "ExpenseTrackerPro.Infrastructure\ExpenseTrackerPro.Infrastructure.csproj", "{B0EEE255-1BBA-48AD-83B9-3B484CAB493C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Infrastructure", "ExpenseTrackerPro.Infrastructure\ExpenseTrackerPro.Infrastructure.csproj", "{B0EEE255-1BBA-48AD-83B9-3B484CAB493C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerPro.Shared", "ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj", "{9426A1DF-B23B-4987-9BA9-497C8E05AE03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Shared", "ExpenseTrackerPro.Shared\ExpenseTrackerPro.Shared.csproj", "{9426A1DF-B23B-4987-9BA9-497C8E05AE03}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTrackerPro.Web", "ExpenseTrackerPro.Web\ExpenseTrackerPro.Web.csproj", "{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AD5612E3-AE59-40FD-8C0C-089030B25306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD5612E3-AE59-40FD-8C0C-089030B25306}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD5612E3-AE59-40FD-8C0C-089030B25306}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD5612E3-AE59-40FD-8C0C-089030B25306}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A36F517-503C-423C-B30F-9A86627FB066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A36F517-503C-423C-B30F-9A86627FB066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A36F517-503C-423C-B30F-9A86627FB066}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,16 +43,20 @@ Global
 		{9426A1DF-B23B-4987-9BA9-497C8E05AE03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9426A1DF-B23B-4987-9BA9-497C8E05AE03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9426A1DF-B23B-4987-9BA9-497C8E05AE03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AD5612E3-AE59-40FD-8C0C-089030B25306} = {43F83AE4-C5D9-476E-BC8F-DB0A55E4D9CE}
 		{9A36F517-503C-423C-B30F-9A86627FB066} = {EF97518B-AFA3-42D9-B95C-3F8A3A68EFCC}
 		{F957821F-8C68-41AF-ABA5-83D5EDC5D5EE} = {EF97518B-AFA3-42D9-B95C-3F8A3A68EFCC}
 		{B0EEE255-1BBA-48AD-83B9-3B484CAB493C} = {4E64B200-4206-48B2-B6E4-E28C4A79971C}
 		{9426A1DF-B23B-4987-9BA9-497C8E05AE03} = {F31B89EB-25FB-4F5F-B7B3-DCC64E362397}
+		{2DF5AD66-AC5D-4B6A-894D-8E6B3378EF4A} = {43F83AE4-C5D9-476E-BC8F-DB0A55E4D9CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2685D1FF-AC46-4DF9-81F3-E3B86C5F2374}

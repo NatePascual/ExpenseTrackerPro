@@ -1,0 +1,89 @@
+﻿@using ExpenseTrackerPro.Shared.Enums
+@using MudBlazor
+@using MediatR
+@inject IMediator _mediator
+@inject ISnackbar _snackBar
+<EditForm Model="@CreateUpdateIncomeModel" OnSubmit="SaveAsync">
+    <MudDialog>
+        <TitleContent>
+            @{
+                if(CreateUpdateIncomeModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        Create Income
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        Update Income
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                 @if (CreateUpdateIncomeModel.Id != 0)
+                {
+                    <MudItem xs="12" md="6" Class="visually-hidden">
+                        <MudTextField Disabled For="@(() => CreateUpdateIncomeModel.Id)" @bind-Value="CreateUpdateIncomeModel.Id" Label="Id" Variant="Variant.Outlined" />
+                     </MudItem>
+                }
+                <MudItem xs="12" md="12">
+                    <MudTextField Disabled="_isDisabled" Style="font-size:large;font-weight:600;" For="@(() => CreateUpdateIncomeModel.Amount)" @bind-Value="CreateUpdateIncomeModel.Amount" Label="Amount"
+                                  Format="F2" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money" />
+                </MudItem>
+                 @if (CreateUpdateIncomeModel.Id != 0)
+                {
+                    <MudItem xs="2" md="2">
+                        <MudImage Src="@(ImageLocation.Institution.ToString() + CreateUpdateIncomeModel.InstitutionImageUrl)"
+                                  Alt="Institution" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    </MudItem>
+                }
+                <MudItem xs="_smallSetting" md="_mediumSetting">
+                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120" T="int" Label="Account" For="@(() => CreateUpdateIncomeModel.AccountId)" @bind-Value="CreateUpdateIncomeModel.AccountId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                                     ResetValueOnEmptyText="true" SearchFunc="SearchAccount"
+                                     ToStringFunc="ReturnAccount" 
+                                     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ManageAccounts" />
+                </MudItem>
+                @if (CreateUpdateIncomeModel.Id != 0)
+                {
+                    <MudItem xs="2" md="2">
+                        <MudImage Src="@(ImageLocation.IncomeCategory.ToString() + CreateUpdateIncomeModel.IncomeCategoryImageUrl)"
+                                  Alt="Income Category" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    </MudItem>
+                }
+                <MudItem xs="_smallSetting" md="_mediumSetting">
+                    <MudAutocomplete MaxItems="120" T="int" Label="Category" For="@(() => CreateUpdateIncomeModel.IncomeCategoryId)" @bind-Value="CreateUpdateIncomeModel.IncomeCategoryId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" 
+                                     ResetValueOnEmptyText="true" SearchFunc="SearchIncomeCategory"
+                                     ToStringFunc="@(at => _incomeCategories.FirstOrDefault(x => x.Id == at)?.Name ?? string.Empty)" 
+                                     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Category" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudDatePicker Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateIncomeModel.TransactionDate)" @bind-Date="CreateUpdateIncomeModel.TransactionDate"
+                                   Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="Transaction Date"
+                                   Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => CreateUpdateIncomeModel.Note)" @bind-Value="CreateUpdateIncomeModel.Note" Label="Note"
+                                  Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Notes" />
+                </MudItem>
+            </MudGrid> 
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
+            @if (CreateUpdateIncomeModel.Id != 0)
+            {
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>            
+            }  
+            else
+            {
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" StartIcon="@Icons.Material.Filled.Create">Create</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

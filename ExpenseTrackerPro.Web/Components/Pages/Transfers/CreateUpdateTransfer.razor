@@ -1,0 +1,91 @@
+﻿@using ExpenseTrackerPro.Shared.Enums
+@using MudBlazor
+@using MediatR
+@inject IMediator _mediator
+@inject ISnackbar _snackBar
+
+<EditForm Model="@CreateUpdateTransferModel" OnSubmit="SaveAsync">
+    <MudDialog>
+        <TitleContent>
+            @{
+                if (CreateUpdateTransferModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        Create Transfer
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        Update Transfer
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (CreateUpdateTransferModel.Id != 0)
+                {
+                    <MudItem xs="12" md="6" Class="visually-hidden">
+                        <MudTextField Disabled For="@(() => CreateUpdateTransferModel.Id)" @bind-Value="CreateUpdateTransferModel.Id" Label="Id" Variant="Variant.Outlined" />
+                     </MudItem>
+                }
+                @if (CreateUpdateTransferModel.Id != 0)
+                {
+                    <MudItem xs="2" md="2">
+                        <MudImage Src="@(ImageLocation.Institution.ToString() + CreateUpdateTransferModel.SenderInstitutionImageUrl)"
+                                  Alt="Sender" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    </MudItem>
+                }
+                <MudItem xs="_smallSetting" md="_mediumSetting">
+                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120" T="int" Label="From Account" For="@(() => CreateUpdateTransferModel.SenderId)" @bind-Value="CreateUpdateTransferModel.SenderId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                                     ResetValueOnEmptyText="true" SearchFunc="SearchAccount"
+                                     ToStringFunc="ReturnAccount"
+                                     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ManageAccounts" />
+                </MudItem>
+                @if (CreateUpdateTransferModel.Id != 0)
+                {
+                    <MudItem xs="2" md="2">
+                        <MudImage Src="@(ImageLocation.Institution.ToString() + CreateUpdateTransferModel.ReceiverInstitutionImageUrl)"
+                                  Alt="Receiver" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    </MudItem>
+                }
+                <MudItem xs="_smallSetting" md="_mediumSetting">
+                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120" T="int" Label="To Account" For="@(() => CreateUpdateTransferModel.ReceiverId)" @bind-Value="CreateUpdateTransferModel.ReceiverId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                                     ResetValueOnEmptyText="true" SearchFunc="SearchAccount"
+                                     ToStringFunc="ReturnAccount"
+                                     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ManageAccounts" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField Disabled="_isDisabled" Style="font-size:large;font-weight:600;" For="@(() => CreateUpdateTransferModel.Amount)" @bind-Value="CreateUpdateTransferModel.Amount" Label="Amount"
+                                  Format="F2" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money" />
+                </MudItem>
+               
+                <MudItem xs="12" md="12">
+                    <MudDatePicker Label="Transaction Date" Editable="true" For="@(() => CreateUpdateTransferModel.TransactionDate)" @bind-Date="CreateUpdateTransferModel.TransactionDate"
+                                   Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="Transaction Date"
+                                   Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => CreateUpdateTransferModel.Note)" @bind-Value="CreateUpdateTransferModel.Note" Label="Note"
+                                  Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Notes" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
+            @if (CreateUpdateTransferModel.Id != 0)
+            {
+                 <MudButton  Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton>         
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" StartIcon="@Icons.Material.Filled.Create">Create</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

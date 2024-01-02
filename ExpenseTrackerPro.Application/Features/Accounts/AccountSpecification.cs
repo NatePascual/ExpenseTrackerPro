@@ -16,11 +16,11 @@ public class AccountSpecification:Specification<Account>
             Criteria = p => (p.AccountType != null && p.Institution != null && p.Currency != null) &&
                             (p.Name.Contains(searchString) || p.Institution.Name.Contains(searchString) ||
                              p.AccountType.Name.Contains(searchString) ||  p.Currency.CountryCurrency.Contains(searchString) ||
-                             p.Currency.Code.Contains(searchString));
+                             p.Currency.Code.Contains(searchString)) && p.IsHidden == false;
         }
         else
         {
-            Criteria = p => p.AccountType != null;
+            Criteria = p => p.AccountType != null && p.IsHidden == false;
         }
     }
 }
