@@ -32,8 +32,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AccountTypeId")
                         .HasColumnType("int");
@@ -54,6 +53,9 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                     b.Property<int>("InstitutionId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsHidden")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsIncludedBalance")
                         .HasColumnType("bit");
 
@@ -68,6 +70,9 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TransactionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountTypeId");
@@ -76,7 +81,53 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("InstitutionId");
 
+                    b.HasIndex("TransactionId");
+
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccountNumber = "0001",
+                            AccountTypeId = 12,
+                            Balance = 0f,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1230),
+                            CreatedBy = "System",
+                            CurrencyId = 79,
+                            InstitutionId = 69,
+                            IsHidden = true,
+                            IsIncludedBalance = false,
+                            Name = "Starting Account"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccountNumber = "0002",
+                            AccountTypeId = 7,
+                            Balance = 0f,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1231),
+                            CreatedBy = "System",
+                            CurrencyId = 79,
+                            InstitutionId = 69,
+                            IsHidden = true,
+                            IsIncludedBalance = false,
+                            Name = "Income Account"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccountNumber = "0003",
+                            AccountTypeId = 8,
+                            Balance = 0f,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1232),
+                            CreatedBy = "System",
+                            CurrencyId = 79,
+                            InstitutionId = 69,
+                            IsHidden = true,
+                            IsIncludedBalance = false,
+                            Name = "Expenses Account"
+                        });
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.AccountType", b =>
@@ -124,145 +175,136 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         {
                             Id = 1,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7015),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(875),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\BankAccount.jpg",
-                            Name = "Bank Account"
+                            ImageUrl = "bank.png",
+                            Name = "Bank"
                         },
                         new
                         {
                             Id = 2,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7018),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(876),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Cash.jpg",
+                            ImageUrl = "cash.png",
                             Name = "Cash"
                         },
                         new
                         {
                             Id = 3,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7021),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(878),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Wallet.jpg",
+                            ImageUrl = "wallet.png",
                             Name = "Wallet"
                         },
                         new
                         {
                             Id = 4,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7023),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(880),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Checking.jpg",
-                            Name = "Checking"
+                            ImageUrl = "e-wallet.png",
+                            Name = "E-Wallet"
                         },
                         new
                         {
                             Id = 5,
                             Classification = "Cash",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7025),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(881),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Saving.jpg",
-                            Name = "Saving"
+                            ImageUrl = "checking.png",
+                            Name = "Checking"
                         },
                         new
                         {
                             Id = 6,
-                            Classification = "Credit",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7028),
+                            Classification = "Cash",
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(883),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\CreditCard.jpg",
-                            Name = "Credit Card"
+                            ImageUrl = "savings.png",
+                            Name = "Savings"
                         },
                         new
                         {
                             Id = 7,
-                            Classification = "Credit",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7030),
+                            Classification = "Cash",
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(884),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\LineofCredit.jpg",
-                            Name = "Line of Credit"
+                            ImageUrl = "income.png",
+                            Name = "Income"
                         },
                         new
                         {
                             Id = 8,
-                            Classification = "Investment",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7033),
+                            Classification = "Cash",
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(885),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Retirement.jpg",
-                            Name = "Retirement"
+                            ImageUrl = "expense.png",
+                            Name = "Expense"
                         },
                         new
                         {
                             Id = 9,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7035),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(887),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Brokerage.jpg",
-                            Name = "Brokerage"
+                            ImageUrl = "retirement.png",
+                            Name = "Retirement"
                         },
                         new
                         {
                             Id = 10,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7037),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(888),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Investment.jpg",
-                            Name = "Investment"
+                            ImageUrl = "brokerage.png",
+                            Name = "Brokerage"
                         },
                         new
                         {
                             Id = 11,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7039),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(890),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Insurance.jpg",
-                            Name = "Insurance"
+                            ImageUrl = "investment.png",
+                            Name = "Investment"
                         },
                         new
                         {
                             Id = 12,
                             Classification = "Investment",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7041),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(891),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Crypto.jpg",
-                            Name = "Crypto"
+                            ImageUrl = "insurance.png",
+                            Name = "Insurance"
                         },
                         new
                         {
                             Id = 13,
-                            Classification = "Loans",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7043),
+                            Classification = "Investment",
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(892),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Loan.jpg",
-                            Name = "Loan"
+                            ImageUrl = "crypto.png",
+                            Name = "Crypto"
                         },
                         new
                         {
                             Id = 14,
-                            Classification = "Loans",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7046),
-                            CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Mortgage.jpg",
-                            Name = "Mortgage"
-                        },
-                        new
-                        {
-                            Id = 15,
                             Classification = "Assets",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7048),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(894),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\Property.jpg",
+                            ImageUrl = "property.png",
                             Name = "Property"
                         },
                         new
                         {
-                            Id = 16,
+                            Id = 15,
                             Classification = "OtherAccount",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7050),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(895),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\AccountType\\OtherAccount.jpg",
-                            Name = "Other Account"
+                            ImageUrl = "bank.png",
+                            Name = "Others"
                         });
                 });
 
@@ -310,821 +352,821 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4127),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(279),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "bills.png",
                             Name = "Bills & Utilities"
                         },
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4131),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(281),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "drinkanddine.png",
                             Name = "Drink & Dine"
                         },
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4136),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(283),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "education.png",
                             Name = "Education"
                         },
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4139),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(284),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "entertainment.png",
                             Name = "Entertainment"
                         },
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4141),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(286),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "events.png",
                             Name = "Events"
                         },
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4143),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(287),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "familycare.png",
                             Name = "Family Care"
                         },
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4146),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(288),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "fees.png",
                             Name = "Fees & Charges"
                         },
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4148),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(290),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "foodandgrocery.png",
                             Name = "Food & Grocery"
                         },
                         new
                         {
                             Id = 9,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4150),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(291),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "giftanddonation.png",
                             Name = "Gifts & Donations"
                         },
                         new
                         {
                             Id = 10,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4154),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(292),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "healthandfitness.png",
                             Name = "Health & Fitness"
                         },
                         new
                         {
                             Id = 11,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4156),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(337),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "house.png",
                             Name = "House"
                         },
                         new
                         {
                             Id = 12,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4159),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(338),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "insurance.png",
                             Name = "Insurance"
                         },
                         new
                         {
                             Id = 13,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4162),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(340),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "investment.png",
                             Name = "Investments"
                         },
                         new
                         {
                             Id = 14,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4164),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(341),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "kidscare.png",
                             Name = "Kids Care"
                         },
                         new
                         {
                             Id = 15,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4166),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(342),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "loan.png",
                             Name = "Loan & Debts"
                         },
                         new
                         {
                             Id = 16,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4168),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(344),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "misc.png",
                             Name = "Misc Expenses"
                         },
                         new
                         {
                             Id = 17,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4170),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(345),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "office.png",
                             Name = "Office Expenses"
                         },
                         new
                         {
                             Id = 18,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4173),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(347),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "personalcare.png",
                             Name = "Personal Care"
                         },
                         new
                         {
                             Id = 19,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4175),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(348),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "petcare.png",
                             Name = "Pet Care"
                         },
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4270),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(350),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "shopping.png",
                             Name = "Shopping"
                         },
                         new
                         {
                             Id = 21,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4274),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(351),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "taxes.png",
                             Name = "Taxes"
                         },
                         new
                         {
                             Id = 22,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4276),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(352),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "transfer.png",
                             Name = "Transfer"
                         },
                         new
                         {
                             Id = 23,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4278),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(354),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "transport.png",
                             Name = "Transport"
                         },
                         new
                         {
                             Id = 24,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4280),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(355),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "travel.png",
                             Name = "Travel & Vacation"
                         },
                         new
                         {
                             Id = 25,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4283),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(356),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "others.png",
                             Name = "Others"
                         },
                         new
                         {
                             Id = 26,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4285),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(359),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "electric.png",
                             Name = "Electricity",
                             ParentId = 1
                         },
                         new
                         {
                             Id = 27,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4288),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(360),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "gas.png",
                             Name = "Gas",
                             ParentId = 1
                         },
                         new
                         {
                             Id = 28,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4290),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(362),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "internet.png",
                             Name = "Internet",
                             ParentId = 1
                         },
                         new
                         {
                             Id = 29,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4292),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(363),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "mobile.png",
                             Name = "Mobile",
                             ParentId = 1
                         },
                         new
                         {
                             Id = 30,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4295),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(365),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "telephone.png",
                             Name = "Phone",
                             ParentId = 1
                         },
                         new
                         {
                             Id = 31,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4297),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(366),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "water.png",
                             Name = "Water",
                             ParentId = 1
                         },
                         new
                         {
                             Id = 32,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4300),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(367),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "alcoholic-drink.png",
                             Name = "Alcohol & Bar",
                             ParentId = 2
                         },
                         new
                         {
                             Id = 33,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4302),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(369),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "coffee.png",
                             Name = "Coffee shops",
                             ParentId = 2
                         },
                         new
                         {
                             Id = 34,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4305),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(370),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "fastfood.png",
                             Name = "Fast Food",
                             ParentId = 2
                         },
                         new
                         {
                             Id = 35,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4307),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(372),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "restaurant.png",
                             Name = "Restaurant",
                             ParentId = 2
                         },
                         new
                         {
                             Id = 36,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4310),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(373),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "books.png",
                             Name = "Books & Stationery",
                             ParentId = 3
                         },
                         new
                         {
                             Id = 37,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4312),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(375),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "schoolfee.png",
                             Name = "School Fee",
                             ParentId = 3
                         },
                         new
                         {
                             Id = 38,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4314),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(376),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "tuition.png",
                             Name = "Tuition Fee",
                             ParentId = 3
                         },
                         new
                         {
                             Id = 39,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4316),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(377),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "amusement.png",
                             Name = "Amusement",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 40,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4319),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(379),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "arts.png",
                             Name = "Arts",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 41,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4322),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(380),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "cable.png",
                             Name = "Cable or DTH",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 42,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4324),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(382),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "movies.png",
                             Name = "Movies & Cinema",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 43,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4327),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(383),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "music.png",
                             Name = "Music",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 44,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4329),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(385),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "newspaper.png",
                             Name = "Newspapers & Magazines",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 45,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4331),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(386),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "games.png",
                             Name = "Games",
                             ParentId = 4
                         },
                         new
                         {
                             Id = 46,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4335),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(388),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "happybirthday.png",
                             Name = "Birthday",
                             ParentId = 5
                         },
                         new
                         {
                             Id = 47,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4338),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(389),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "gettogether.png",
                             Name = "Get Together",
                             ParentId = 5
                         },
                         new
                         {
                             Id = 48,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4340),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(391),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "wedding.png",
                             Name = "Wedding",
                             ParentId = 5
                         },
                         new
                         {
                             Id = 49,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4343),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(392),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "kidsactivities.png",
                             Name = "Kids Activities",
                             ParentId = 6
                         },
                         new
                         {
                             Id = 50,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4345),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(394),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "oldagecare.png",
                             Name = "Old age care",
                             ParentId = 6
                         },
                         new
                         {
                             Id = 51,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4347),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(395),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "atm.png",
                             Name = "ATM Fee",
                             ParentId = 7
                         },
                         new
                         {
                             Id = 52,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4349),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(397),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "commission.png",
                             Name = "Commission Fee",
                             ParentId = 7
                         },
                         new
                         {
                             Id = 53,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4352),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(398),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "latefee.png",
                             Name = "Late Fee",
                             ParentId = 7
                         },
                         new
                         {
                             Id = 54,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4354),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(399),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "servicefee.png",
                             Name = "Service Fee",
                             ParentId = 7
                         },
                         new
                         {
                             Id = 55,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4357),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(401),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "charity.png",
                             Name = "Charity",
                             ParentId = 9
                         },
                         new
                         {
                             Id = 56,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4359),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(402),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "gift.png",
                             Name = "Gift",
                             ParentId = 9
                         },
                         new
                         {
                             Id = 57,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4362),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(404),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "dentist.png",
                             Name = "Dentist",
                             ParentId = 10
                         },
                         new
                         {
                             Id = 58,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4364),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(405),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "doctor.png",
                             Name = "Doctor",
                             ParentId = 10
                         },
                         new
                         {
                             Id = 59,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4366),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(407),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "gym.png",
                             Name = "Gym",
                             ParentId = 10
                         },
                         new
                         {
                             Id = 60,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4369),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(438),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "pharmacy.png",
                             Name = "Pharmacy",
                             ParentId = 10
                         },
                         new
                         {
                             Id = 61,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4371),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(439),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "spamassage.png",
                             Name = "Spa & Massage",
                             ParentId = 10
                         },
                         new
                         {
                             Id = 62,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4373),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(441),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "housemaintenance.png",
                             Name = "House Maintenance",
                             ParentId = 11
                         },
                         new
                         {
                             Id = 63,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4376),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(442),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "rent.png",
                             Name = "House Rent",
                             ParentId = 11
                         },
                         new
                         {
                             Id = 64,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4378),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(444),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "autoinsurance.png",
                             Name = "Auto Insurance",
                             ParentId = 12
                         },
                         new
                         {
                             Id = 65,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4380),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(445),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "healthinsurance.png",
                             Name = "Health Insurance",
                             ParentId = 12
                         },
                         new
                         {
                             Id = 66,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4383),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(447),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "propertyinsurance.png",
                             Name = "Property Insurance",
                             ParentId = 12
                         },
                         new
                         {
                             Id = 67,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4385),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(448),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "carloan.png",
                             Name = "Car Loan",
                             ParentId = 15
                         },
                         new
                         {
                             Id = 68,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4387),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(449),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "credit.png",
                             Name = "Credit Card",
                             ParentId = 15
                         },
                         new
                         {
                             Id = 69,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4426),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(451),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "homeloan.png",
                             Name = "Home Loan",
                             ParentId = 15
                         },
                         new
                         {
                             Id = 70,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4430),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(452),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "loan.png",
                             Name = "Loan",
                             ParentId = 15
                         },
                         new
                         {
                             Id = 71,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4433),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(454),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "hairsalon.png",
                             Name = "Hair & Salon",
                             ParentId = 18
                         },
                         new
                         {
                             Id = 72,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4435),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(455),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "laundry.png",
                             Name = "Laundry",
                             ParentId = 18
                         },
                         new
                         {
                             Id = 73,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4438),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(457),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "clothing.png",
                             Name = "Clothing",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 74,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4440),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(458),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "electronics.png",
                             Name = "Electronics & Accessories",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 75,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4443),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(460),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "giftstoys.png",
                             Name = "Gifts &  Toys",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 76,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4445),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(461),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "healthandbeauty.png",
                             Name = "Health & Beauty",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 77,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4447),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(462),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "homeandfurnishing.png",
                             Name = "Home & furnishing",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 78,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4450),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(464),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "jewelry.png",
                             Name = "Jewellery",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 79,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4452),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(465),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "lawnandgarden.png",
                             Name = "Lawn & Garden",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 80,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4454),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(467),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "pets.png",
                             Name = "Pets & Animals",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 81,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4457),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(468),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "sports.png",
                             Name = "Sports",
                             ParentId = 20
                         },
                         new
                         {
                             Id = 82,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4459),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(470),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "withholdingtaxes.png",
                             Name = "Withholding Tax",
                             ParentId = 21
                         },
                         new
                         {
                             Id = 83,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4461),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(471),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "localtaxes.png",
                             Name = "Local Tax",
                             ParentId = 21
                         },
                         new
                         {
                             Id = 84,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4463),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(472),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "propertytax.png",
                             Name = "Property Tax",
                             ParentId = 21
                         },
                         new
                         {
                             Id = 85,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4466),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(474),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "salestax.png",
                             Name = "Sales Tax",
                             ParentId = 21
                         },
                         new
                         {
                             Id = 86,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4468),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(475),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "carmaintenance.png",
                             Name = "Car Maintenance",
                             ParentId = 23
                         },
                         new
                         {
                             Id = 87,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4470),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(477),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "fuel.png",
                             Name = "Fuel & Gas",
                             ParentId = 23
                         },
                         new
                         {
                             Id = 88,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4473),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(478),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "publictransport.png",
                             Name = "Public Transport",
                             ParentId = 23
                         },
                         new
                         {
                             Id = 89,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4475),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(480),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "taxi.png",
                             Name = "Taxi",
                             ParentId = 23
                         },
                         new
                         {
                             Id = 90,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4477),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(481),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "tnvs.png",
                             Name = "TNVS",
                             ParentId = 23
                         },
                         new
                         {
                             Id = 91,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4479),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(483),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "airtravel.png",
                             Name = "Air Travel",
                             ParentId = 24
                         },
                         new
                         {
                             Id = 92,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4482),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(484),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "hotel.png",
                             Name = "Hotel",
                             ParentId = 24
                         },
                         new
                         {
                             Id = 93,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4484),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(485),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "seatravel.png",
                             Name = "Sea Travel",
                             ParentId = 24
                         },
                         new
                         {
                             Id = 94,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4486),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(487),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Category\\",
+                            ImageUrl = "tnvs.png",
                             Name = "Rental Car",
                             ParentId = 24
                         });
@@ -1177,7 +1219,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 1,
                             Code = "ALL",
                             CountryCurrency = "Albania Lek",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4640),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(609),
                             CreatedBy = "System",
                             Symbol = "Lek"
                         },
@@ -1186,7 +1228,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 2,
                             Code = "AFN",
                             CountryCurrency = "Afghanistan Afghani",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4643),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(610),
                             CreatedBy = "System",
                             Symbol = "؋"
                         },
@@ -1195,7 +1237,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 3,
                             Code = "ARS",
                             CountryCurrency = "Argentina Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4645),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(611),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1204,7 +1246,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 4,
                             Code = "AWG",
                             CountryCurrency = "Aruba Guilder",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4646),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(613),
                             CreatedBy = "System",
                             Symbol = "ƒ"
                         },
@@ -1213,7 +1255,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 5,
                             Code = "AUD",
                             CountryCurrency = "Australia Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4648),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(614),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1222,7 +1264,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 6,
                             Code = "AZN",
                             CountryCurrency = "Azerbaijan Manat",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4650),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(615),
                             CreatedBy = "System",
                             Symbol = "₼"
                         },
@@ -1231,7 +1273,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 7,
                             Code = "BSD",
                             CountryCurrency = "Bahamas Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4652),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(616),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1240,7 +1282,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 8,
                             Code = "BBD",
                             CountryCurrency = "Barbados Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(4766),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(617),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1249,7 +1291,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 9,
                             Code = "BYN",
                             CountryCurrency = "Belarus Ruble",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5106),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(619),
                             CreatedBy = "System",
                             Symbol = "Br"
                         },
@@ -1258,7 +1300,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 10,
                             Code = "BZD",
                             CountryCurrency = "Belize Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5115),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(620),
                             CreatedBy = "System",
                             Symbol = "BZ$"
                         },
@@ -1267,7 +1309,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 11,
                             Code = "BMD",
                             CountryCurrency = "Bermuda Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5117),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(621),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1276,7 +1318,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 12,
                             Code = "BOB",
                             CountryCurrency = "Bolivia Bolíviano",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5119),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(623),
                             CreatedBy = "System",
                             Symbol = "$b"
                         },
@@ -1285,7 +1327,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 13,
                             Code = "BAM",
                             CountryCurrency = "Bosnia and Herzegovina Convertible Mark",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5121),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(624),
                             CreatedBy = "System",
                             Symbol = "KM"
                         },
@@ -1294,7 +1336,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 14,
                             Code = "BWP",
                             CountryCurrency = "Botswana Pula",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5123),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(625),
                             CreatedBy = "System",
                             Symbol = "P"
                         },
@@ -1303,7 +1345,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 15,
                             Code = "BGN",
                             CountryCurrency = "Bulgaria Lev",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5125),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(626),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -1312,7 +1354,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 16,
                             Code = "BRL",
                             CountryCurrency = "Brazil Real",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5126),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(627),
                             CreatedBy = "System",
                             Symbol = "R$"
                         },
@@ -1321,7 +1363,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 17,
                             Code = "BND",
                             CountryCurrency = "Brunei Darussalam Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5128),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(629),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1330,7 +1372,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 18,
                             Code = "KHR",
                             CountryCurrency = "Cambodia Riel",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5129),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(630),
                             CreatedBy = "System",
                             Symbol = "៛"
                         },
@@ -1339,7 +1381,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 19,
                             Code = "CAD",
                             CountryCurrency = "Canada Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5131),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(631),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1348,7 +1390,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 20,
                             Code = "KYD",
                             CountryCurrency = "Cayman Islands Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5133),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(632),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1357,7 +1399,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 21,
                             Code = "CLP",
                             CountryCurrency = "Chile Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5134),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(633),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1366,7 +1408,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 22,
                             Code = "CNY",
                             CountryCurrency = "China Yuan Renminbi",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5136),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(634),
                             CreatedBy = "System",
                             Symbol = "¥"
                         },
@@ -1375,7 +1417,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 23,
                             Code = "COP",
                             CountryCurrency = "Colombia Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5138),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(635),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1384,7 +1426,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 24,
                             Code = "CRC",
                             CountryCurrency = "Costa Rica Colon",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5140),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(637),
                             CreatedBy = "System",
                             Symbol = "₡"
                         },
@@ -1393,7 +1435,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 25,
                             Code = "HRK",
                             CountryCurrency = "Croatia Kuna",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5141),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(638),
                             CreatedBy = "System",
                             Symbol = "kn"
                         },
@@ -1402,7 +1444,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 26,
                             Code = "CUP",
                             CountryCurrency = "Cuba Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5143),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(639),
                             CreatedBy = "System",
                             Symbol = "₱"
                         },
@@ -1411,7 +1453,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 27,
                             Code = "CZK",
                             CountryCurrency = "Czech Republic Koruna",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5144),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(640),
                             CreatedBy = "System",
                             Symbol = "Kč"
                         },
@@ -1420,7 +1462,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 28,
                             Code = "DKK",
                             CountryCurrency = "Denmark Krone",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5146),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(641),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1429,7 +1471,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 29,
                             Code = "DOP",
                             CountryCurrency = "Dominican Republic Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5147),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(642),
                             CreatedBy = "System",
                             Symbol = "RD$"
                         },
@@ -1438,7 +1480,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 30,
                             Code = "XCD",
                             CountryCurrency = "East Caribbean Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5149),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(643),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1447,7 +1489,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 31,
                             Code = "EGP",
                             CountryCurrency = "Egypt Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5151),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(645),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1456,7 +1498,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 32,
                             Code = "SVC",
                             CountryCurrency = "El Salvador Colon",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5152),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(646),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1465,7 +1507,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 33,
                             Code = "EUR",
                             CountryCurrency = "Euro Member Countries",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5154),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(647),
                             CreatedBy = "System",
                             Symbol = "€"
                         },
@@ -1474,7 +1516,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 34,
                             Code = "FKP",
                             CountryCurrency = "Falkland Islands (Malvinas) Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5155),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(648),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1483,7 +1525,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 35,
                             Code = "FJD",
                             CountryCurrency = "Fiji Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5157),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(649),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1492,7 +1534,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 36,
                             Code = "GHS",
                             CountryCurrency = "Ghana Cedi",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5158),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(650),
                             CreatedBy = "System",
                             Symbol = "¢"
                         },
@@ -1501,7 +1543,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 37,
                             Code = "GIP",
                             CountryCurrency = "Gibraltar Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5160),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(652),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1510,7 +1552,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 38,
                             Code = "GTQ",
                             CountryCurrency = "Guatemala Quetzal",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5161),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(653),
                             CreatedBy = "System",
                             Symbol = "Q"
                         },
@@ -1519,7 +1561,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 39,
                             Code = "GGP",
                             CountryCurrency = "Guernsey Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5163),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(654),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1528,7 +1570,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 40,
                             Code = "GYD",
                             CountryCurrency = "Guyana Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5165),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(655),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1537,7 +1579,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 41,
                             Code = "HNL",
                             CountryCurrency = "Honduras Lempira",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5166),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(657),
                             CreatedBy = "System",
                             Symbol = "L"
                         },
@@ -1546,7 +1588,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 42,
                             Code = "HKD",
                             CountryCurrency = "Hong Kong Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5168),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(658),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1555,7 +1597,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 43,
                             Code = "HUF",
                             CountryCurrency = "Hungary Forint",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5170),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(659),
                             CreatedBy = "System",
                             Symbol = "Ft"
                         },
@@ -1564,7 +1606,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 44,
                             Code = "ISK",
                             CountryCurrency = "Iceland Krona",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5172),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(660),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1573,7 +1615,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 45,
                             Code = "INR",
                             CountryCurrency = "India Rupee",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5173),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(661),
                             CreatedBy = "System",
                             Symbol = "₹"
                         },
@@ -1582,7 +1624,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 46,
                             Code = "IDR",
                             CountryCurrency = "Indonesia Rupiah",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5175),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(662),
                             CreatedBy = "System",
                             Symbol = "Rp"
                         },
@@ -1591,7 +1633,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 47,
                             Code = "IRR",
                             CountryCurrency = "Iran Rial",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5176),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(663),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1600,7 +1642,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 48,
                             Code = "IMP",
                             CountryCurrency = "Isle of Man Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5178),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(664),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1609,7 +1651,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 49,
                             Code = "ILS",
                             CountryCurrency = "Israel Shekel",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5179),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(665),
                             CreatedBy = "System",
                             Symbol = "₪"
                         },
@@ -1618,7 +1660,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 50,
                             Code = "JMD",
                             CountryCurrency = "Jamaica Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5181),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(667),
                             CreatedBy = "System",
                             Symbol = "J$"
                         },
@@ -1627,7 +1669,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 51,
                             Code = "JPY",
                             CountryCurrency = "Japan Yen",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5183),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(668),
                             CreatedBy = "System",
                             Symbol = "¥"
                         },
@@ -1636,7 +1678,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 52,
                             Code = "JEP",
                             CountryCurrency = "Jersey Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5184),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(669),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1645,7 +1687,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 53,
                             Code = "KZT",
                             CountryCurrency = "Kazakhstan Tenge",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5186),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(670),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -1654,7 +1696,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 54,
                             Code = "KPW",
                             CountryCurrency = "Korea (North) Won",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5188),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(671),
                             CreatedBy = "System",
                             Symbol = "₩"
                         },
@@ -1663,7 +1705,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 55,
                             Code = "KRW",
                             CountryCurrency = "Korea (South) Won",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5189),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(672),
                             CreatedBy = "System",
                             Symbol = "₩"
                         },
@@ -1672,7 +1714,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 56,
                             Code = "KGS",
                             CountryCurrency = "Kyrgyzstan Som",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5191),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(673),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -1681,7 +1723,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 57,
                             Code = "LAK",
                             CountryCurrency = "Laos Kip",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5192),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(674),
                             CreatedBy = "System",
                             Symbol = "₭"
                         },
@@ -1690,7 +1732,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 58,
                             Code = "LBP",
                             CountryCurrency = "Lebanon Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5194),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(675),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1699,7 +1741,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 59,
                             Code = "LRD",
                             CountryCurrency = "Liberia Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5196),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(676),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1708,7 +1750,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 60,
                             Code = "MKD",
                             CountryCurrency = "Macedonia Denar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5197),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(678),
                             CreatedBy = "System",
                             Symbol = "ден"
                         },
@@ -1717,7 +1759,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 61,
                             Code = "MYR",
                             CountryCurrency = "Malaysia Ringgit",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5199),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(679),
                             CreatedBy = "System",
                             Symbol = "RM"
                         },
@@ -1726,7 +1768,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 62,
                             Code = "MUR",
                             CountryCurrency = "Mauritius Rupee",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5200),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(680),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1735,7 +1777,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 63,
                             Code = "MXN",
                             CountryCurrency = "Mexico Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5202),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(681),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1744,7 +1786,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 64,
                             Code = "MNT",
                             CountryCurrency = "Mongolia Tughrik",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5204),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(682),
                             CreatedBy = "System",
                             Symbol = "₮"
                         },
@@ -1753,7 +1795,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 65,
                             Code = "MNT",
                             CountryCurrency = "Moroccan-dirham",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5205),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(683),
                             CreatedBy = "System",
                             Symbol = " د.إ"
                         },
@@ -1762,7 +1804,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 66,
                             Code = "MZN",
                             CountryCurrency = "Mozambique Metical",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5207),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(684),
                             CreatedBy = "System",
                             Symbol = "MT"
                         },
@@ -1771,7 +1813,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 67,
                             Code = "NAD",
                             CountryCurrency = "Namibia Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5208),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(686),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1780,7 +1822,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 68,
                             Code = "NPR",
                             CountryCurrency = "Nepal Rupee",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5210),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(687),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1789,7 +1831,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 69,
                             Code = "ANG",
                             CountryCurrency = "Netherlands Antilles Guilder",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(5212),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(688),
                             CreatedBy = "System",
                             Symbol = "ƒ"
                         },
@@ -1798,7 +1840,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 70,
                             Code = "NZD",
                             CountryCurrency = "New Zealand Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6510),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(689),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1807,7 +1849,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 71,
                             Code = "NIO",
                             CountryCurrency = "Nicaragua Cordoba",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6519),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(690),
                             CreatedBy = "System",
                             Symbol = "C$"
                         },
@@ -1816,7 +1858,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 72,
                             Code = "NGN",
                             CountryCurrency = "Nigeria Naira",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6521),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(691),
                             CreatedBy = "System",
                             Symbol = "₦"
                         },
@@ -1825,7 +1867,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 73,
                             Code = "NOK",
                             CountryCurrency = "Norway Krone",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6522),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(692),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -1834,7 +1876,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 74,
                             Code = "OMR",
                             CountryCurrency = "Oman Rial",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6524),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(693),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1843,7 +1885,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 75,
                             Code = "PKR",
                             CountryCurrency = "Pakistan Rupee",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6526),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(695),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1852,7 +1894,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 76,
                             Code = "PAB",
                             CountryCurrency = "Panama Balboa",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6527),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(696),
                             CreatedBy = "System",
                             Symbol = "B/."
                         },
@@ -1861,7 +1903,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 77,
                             Code = "PYG",
                             CountryCurrency = "Paraguay Guarani",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6529),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(697),
                             CreatedBy = "System",
                             Symbol = "Gs"
                         },
@@ -1870,7 +1912,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 78,
                             Code = "PEN",
                             CountryCurrency = "Peru Sol",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6531),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(698),
                             CreatedBy = "System",
                             Symbol = "S/."
                         },
@@ -1879,7 +1921,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 79,
                             Code = "PHP",
                             CountryCurrency = "Philippines Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6532),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(699),
                             CreatedBy = "System",
                             Symbol = "₱"
                         },
@@ -1888,7 +1930,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 80,
                             Code = "PLN",
                             CountryCurrency = "Poland Zloty",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6534),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(700),
                             CreatedBy = "System",
                             Symbol = "zł"
                         },
@@ -1897,7 +1939,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 81,
                             Code = "QAR",
                             CountryCurrency = "Qatar Riyal",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6536),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(701),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1906,7 +1948,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 82,
                             Code = "RON",
                             CountryCurrency = "Romania Leu",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6537),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(702),
                             CreatedBy = "System",
                             Symbol = "lei"
                         },
@@ -1915,7 +1957,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 83,
                             Code = "RUB",
                             CountryCurrency = "Russia Ruble",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6539),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(733),
                             CreatedBy = "System",
                             Symbol = "₽"
                         },
@@ -1924,7 +1966,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 84,
                             Code = "SHP",
                             CountryCurrency = "Saint Helena Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6541),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(734),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -1933,7 +1975,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 85,
                             Code = "SAR",
                             CountryCurrency = "Saudi Arabia Riyal",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6542),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(735),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -1942,7 +1984,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 86,
                             Code = "RSD",
                             CountryCurrency = "Serbia Dinar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6544),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(736),
                             CreatedBy = "System",
                             Symbol = "Дин."
                         },
@@ -1951,7 +1993,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 87,
                             Code = "SCR",
                             CountryCurrency = "Seychelles Rupee",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6546),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(737),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -1960,7 +2002,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 88,
                             Code = "SGD",
                             CountryCurrency = "Singapore Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6547),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(738),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1969,7 +2011,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 89,
                             Code = "SBD",
                             CountryCurrency = "Solomon Islands Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6549),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(740),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -1978,7 +2020,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 90,
                             Code = "SOS",
                             CountryCurrency = "Somalia Shilling",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6551),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(741),
                             CreatedBy = "System",
                             Symbol = "S"
                         },
@@ -1987,7 +2029,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 91,
                             Code = "KRW",
                             CountryCurrency = "South Korean Won",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6553),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(742),
                             CreatedBy = "System",
                             Symbol = "₩"
                         },
@@ -1996,7 +2038,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 92,
                             Code = "ZAR",
                             CountryCurrency = "South Africa Rand",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6554),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(743),
                             CreatedBy = "System",
                             Symbol = "R"
                         },
@@ -2005,7 +2047,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 93,
                             Code = "LKR",
                             CountryCurrency = "Sri Lanka Rupee",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6556),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(744),
                             CreatedBy = "System",
                             Symbol = "₨"
                         },
@@ -2014,7 +2056,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 94,
                             Code = "SEK",
                             CountryCurrency = "Sweden Krona",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6558),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(745),
                             CreatedBy = "System",
                             Symbol = "kr"
                         },
@@ -2023,7 +2065,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 95,
                             Code = "CHF",
                             CountryCurrency = "Switzerland Franc",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6559),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(746),
                             CreatedBy = "System",
                             Symbol = "CHF"
                         },
@@ -2032,7 +2074,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 96,
                             Code = "SRD",
                             CountryCurrency = "Suriname Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6561),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(747),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -2041,7 +2083,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 97,
                             Code = "SYP",
                             CountryCurrency = "Syria Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6563),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(748),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -2050,7 +2092,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 98,
                             Code = "TWD",
                             CountryCurrency = "Taiwan New Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6564),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(750),
                             CreatedBy = "System",
                             Symbol = "NT$"
                         },
@@ -2059,7 +2101,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 99,
                             Code = "THB",
                             CountryCurrency = "Thailand Baht",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6566),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(751),
                             CreatedBy = "System",
                             Symbol = "฿"
                         },
@@ -2068,7 +2110,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 100,
                             Code = "TTD",
                             CountryCurrency = "Trinidad and Tobago Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6568),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(752),
                             CreatedBy = "System",
                             Symbol = "TT$"
                         },
@@ -2077,7 +2119,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 101,
                             Code = "TRY",
                             CountryCurrency = "Turkey Lira",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6651),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(753),
                             CreatedBy = "System",
                             Symbol = "₺"
                         },
@@ -2086,7 +2128,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 102,
                             Code = "TVD",
                             CountryCurrency = "Tuvalu Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6653),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(754),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -2095,7 +2137,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 103,
                             Code = "UAH",
                             CountryCurrency = "Ukraine Hryvnia",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6655),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(755),
                             CreatedBy = "System",
                             Symbol = "₴"
                         },
@@ -2104,7 +2146,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 104,
                             Code = "AED",
                             CountryCurrency = "UAE-Dirham",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6657),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(756),
                             CreatedBy = "System",
                             Symbol = " د.إ"
                         },
@@ -2113,7 +2155,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 105,
                             Code = "GBP",
                             CountryCurrency = "United Kingdom Pound",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6659),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(758),
                             CreatedBy = "System",
                             Symbol = "£"
                         },
@@ -2122,7 +2164,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 106,
                             Code = "USD",
                             CountryCurrency = "United States Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6661),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(759),
                             CreatedBy = "System",
                             Symbol = "$"
                         },
@@ -2131,7 +2173,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 107,
                             Code = "UYU",
                             CountryCurrency = "Uruguay Peso",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6663),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(760),
                             CreatedBy = "System",
                             Symbol = "$U"
                         },
@@ -2140,7 +2182,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 108,
                             Code = "UZS",
                             CountryCurrency = "Uzbekistan Som",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6665),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(761),
                             CreatedBy = "System",
                             Symbol = "лв"
                         },
@@ -2149,7 +2191,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 109,
                             Code = "VEF",
                             CountryCurrency = "Venezuela Bolívar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6666),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(762),
                             CreatedBy = "System",
                             Symbol = "Bs"
                         },
@@ -2158,7 +2200,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 110,
                             Code = "VND",
                             CountryCurrency = "Viet Nam Dong",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6668),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(763),
                             CreatedBy = "System",
                             Symbol = "₫"
                         },
@@ -2167,7 +2209,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 111,
                             Code = "YER",
                             CountryCurrency = "Yemen Rial",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6669),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(764),
                             CreatedBy = "System",
                             Symbol = "﷼"
                         },
@@ -2176,7 +2218,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                             Id = 112,
                             Code = "ZWD",
                             CountryCurrency = "Zimbabwe Dollar",
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(6671),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(765),
                             CreatedBy = "System",
                             Symbol = "Z$"
                         });
@@ -2224,12 +2266,9 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                     b.Property<string>("Provider")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateOnly>("TransactionDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("TransactionDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -2279,8 +2318,8 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateOnly>("TransactionDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("TransactionDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -2330,161 +2369,161 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7130),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(938),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Bonus.jpg",
+                            ImageUrl = "bonus.png",
                             Name = "Bonus"
                         },
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7132),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(939),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Brokerage.jpg",
+                            ImageUrl = "brokerage.png",
                             Name = "Brokerage"
                         },
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7134),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(940),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\BusinessAndProfession.jpg",
+                            ImageUrl = "business.png",
                             Name = "Business & Profession"
                         },
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7136),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(942),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Coupons.jpg",
+                            ImageUrl = "coupon.png",
                             Name = "Coupons"
                         },
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7137),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(943),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Credit.jpg",
+                            ImageUrl = "credit.png",
                             Name = "Credit"
                         },
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7139),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(944),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Gifts.jpg",
+                            ImageUrl = "gift.png",
                             Name = "Gifts"
                         },
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7141),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(945),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Interest.jpg",
+                            ImageUrl = "interest.png",
                             Name = "Interest"
                         },
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7142),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(946),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Investments.jpg",
+                            ImageUrl = "investment.png",
                             Name = "Investments"
                         },
                         new
                         {
                             Id = 9,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7144),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(967),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Loan.jpg",
+                            ImageUrl = "loan.png",
                             Name = "Loan"
                         },
                         new
                         {
                             Id = 10,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7146),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(969),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\LotteryGambling.jpg",
+                            ImageUrl = "gambling.png",
                             Name = "Lottery, Gambling"
                         },
                         new
                         {
                             Id = 11,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7147),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(970),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\MutualFunds.jpg",
+                            ImageUrl = "mutualfunds.png",
                             Name = "Mutual Funds"
                         },
                         new
                         {
                             Id = 12,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7149),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(971),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Refunds.jpg",
+                            ImageUrl = "refund.png",
                             Name = "Refunds"
                         },
                         new
                         {
                             Id = 13,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7151),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(972),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Reimbursement.jpg",
+                            ImageUrl = "reimbursement.png",
                             Name = "Reimbursement"
                         },
                         new
                         {
                             Id = 14,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7152),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(973),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\RentalIncome.jpg",
+                            ImageUrl = "rental.png",
                             Name = "Rental Income"
                         },
                         new
                         {
                             Id = 15,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7154),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(975),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\SalaryAndPaycheck.jpg",
+                            ImageUrl = "salary.png",
                             Name = "Salary & Paycheck"
                         },
                         new
                         {
                             Id = 16,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7155),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(976),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Savings.jpg",
+                            ImageUrl = "savings.png",
                             Name = "Savings"
                         },
                         new
                         {
                             Id = 17,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7157),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(977),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\SellingIncome.jpg",
+                            ImageUrl = "selling.png",
                             Name = "Selling Income"
                         },
                         new
                         {
                             Id = 18,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7159),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(978),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Transfer.jpg",
+                            ImageUrl = "transfer.png",
                             Name = "Transfer"
                         },
                         new
                         {
                             Id = 19,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7160),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(979),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\WagesAndTips.jpg",
+                            ImageUrl = "wage.png",
                             Name = "Wages & Tips"
                         },
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7162),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(980),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\IncomeCategory\\Others.jpg",
+                            ImageUrl = "others.png",
                             Name = "Others"
                         });
                 });
@@ -2528,563 +2567,632 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7362),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1026),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\ABCapital.jpg",
+                            ImageUrl = "abcapital.png",
                             Name = "AB Capital"
                         },
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7366),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1027),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\AUB.jpg",
+                            ImageUrl = "aub.png",
                             Name = "AUB"
                         },
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7368),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1028),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\AmericanExpress.jpg",
+                            ImageUrl = "amex.png",
                             Name = "American Express"
                         },
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7370),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1029),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\AppleCard.jpg",
+                            ImageUrl = "applecard.png",
                             Name = "Apple Card"
                         },
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7371),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1030),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Atome.jpg",
+                            ImageUrl = "atome.jfif",
                             Name = "Atome"
                         },
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7373),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1031),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\BDO.jpg",
+                            ImageUrl = "bdo.png",
                             Name = "BDO"
                         },
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7375),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1033),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\BPI.jpg",
+                            ImageUrl = "bpi.png",
                             Name = "BPI"
                         },
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7376),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1034),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\BankofCommerce.jpg",
+                            ImageUrl = "bankofcommerce.jfif",
                             Name = "Bank of Commerce"
                         },
                         new
                         {
                             Id = 9,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7378),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1035),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\BankofMakati.jpg",
+                            ImageUrl = "bankofmakati.png",
                             Name = "Bank of Makati"
                         },
                         new
                         {
                             Id = 10,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7380),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1036),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Barclays.jpg",
+                            ImageUrl = "barclays.jfif",
                             Name = "Barclays"
                         },
                         new
                         {
                             Id = 11,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7381),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1037),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Bayad.jpg",
+                            ImageUrl = "bayad.png",
                             Name = "Bayad"
                         },
                         new
                         {
                             Id = 12,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7383),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1038),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Billease.jpg",
+                            ImageUrl = "billease.png",
                             Name = "Billease"
                         },
                         new
                         {
                             Id = 13,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7384),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1039),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\BinanceExchange.jpg",
+                            ImageUrl = "binance.png",
                             Name = "Binance Exchange"
                         },
                         new
                         {
                             Id = 14,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7386),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1040),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\CARDBank.jpg",
+                            ImageUrl = "others.jfif",
                             Name = "CARD Bank"
                         },
                         new
                         {
                             Id = 15,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7388),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1041),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\CIMB.jpg",
+                            ImageUrl = "cimb.png",
                             Name = "CIMB"
                         },
                         new
                         {
                             Id = 16,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7390),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1042),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\COLFinancial.jpg",
+                            ImageUrl = "colfinancial.png",
                             Name = "COL Financial"
                         },
                         new
                         {
                             Id = 17,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7391),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1044),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Cashalo.jpg",
+                            ImageUrl = "cashalo.jfif",
                             Name = "Cashalo"
                         },
                         new
                         {
                             Id = 18,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7393),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1045),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\CebuanaLhullier.jpg",
+                            ImageUrl = "cebuana.png",
                             Name = "Cebuana Lhullier"
                         },
                         new
                         {
                             Id = 19,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7394),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1046),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\ChinaBank.jpg",
+                            ImageUrl = "chinabank.jfif",
                             Name = "China Bank"
                         },
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7396),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1047),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Citibank.jpg",
+                            ImageUrl = "citibank.jfif",
                             Name = "Citibank"
                         },
                         new
                         {
                             Id = 21,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7398),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1048),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\CliQQ.jpg",
+                            ImageUrl = "cliqq.jfif",
                             Name = "CliQQ"
                         },
                         new
                         {
                             Id = 22,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7399),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1049),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Coinbase.jpg",
+                            ImageUrl = "coinbase.png",
                             Name = "Coinbase"
                         },
                         new
                         {
                             Id = 23,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7401),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1050),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Coins.ph.jpg",
+                            ImageUrl = "coinph.jfif",
                             Name = "Coins.ph"
                         },
                         new
                         {
                             Id = 24,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7403),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1051),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Deutche.jpg",
+                            ImageUrl = "deutsche.png",
                             Name = "Deutche"
                         },
                         new
                         {
                             Id = 25,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7404),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1052),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\DiskarTech.jpg",
+                            ImageUrl = "diskarTech.jfif",
                             Name = "DiskarTech"
                         },
                         new
                         {
                             Id = 26,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7406),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1053),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\DragonFi.jpg",
+                            ImageUrl = "others.jfif",
                             Name = "DragonFi"
                         },
                         new
                         {
                             Id = 27,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7408),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1054),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\EastWestBank.jpg",
+                            ImageUrl = "eastwest.jfif",
                             Name = "EastWest Bank"
                         },
                         new
                         {
                             Id = 28,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7409),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1056),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Ficco.jpg",
+                            ImageUrl = "ficco.png",
                             Name = "Ficco"
                         },
                         new
                         {
                             Id = 29,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7411),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1057),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Gcash.jpg",
+                            ImageUrl = "gcash.png",
                             Name = "Gcash"
                         },
                         new
                         {
                             Id = 30,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7412),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1058),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\GoTrade.jpg",
+                            ImageUrl = "gotrade.png",
                             Name = "GoTrade"
                         },
                         new
                         {
                             Id = 31,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7415),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1059),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\GoTymeBank.jpg",
+                            ImageUrl = "gotyme.png",
                             Name = "GoTyme Bank"
                         },
                         new
                         {
                             Id = 32,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7416),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1060),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\GrabPay.jpg",
+                            ImageUrl = "grab.jfif",
                             Name = "GrabPay"
                         },
                         new
                         {
                             Id = 33,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7418),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1061),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\HomeCredit.jpg",
+                            ImageUrl = "homecredit.jfif",
                             Name = "Home Credit"
                         },
                         new
                         {
                             Id = 34,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7419),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1062),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\HSBC.jpg",
+                            ImageUrl = "hsbc.png",
                             Name = "HSBC"
                         },
                         new
                         {
                             Id = 35,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7421),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1063),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\ING.jpg",
+                            ImageUrl = "ing.jfif",
                             Name = "ING"
                         },
                         new
                         {
                             Id = 36,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7423),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1064),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\ING Bank.jpg",
+                            ImageUrl = "ing.jfif",
                             Name = "ING Bank"
                         },
                         new
                         {
                             Id = 37,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7424),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1065),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Komo.jpg",
+                            ImageUrl = "komo.jfif",
                             Name = "Komo"
                         },
                         new
                         {
                             Id = 38,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7426),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1067),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\KuCoin.jpg",
+                            ImageUrl = "kucoin.png",
                             Name = "KuCoin"
                         },
                         new
                         {
                             Id = 39,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7428),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1068),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Landbank.jpg",
+                            ImageUrl = "landbank.jfif",
                             Name = "Landbank"
                         },
                         new
                         {
                             Id = 40,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7429),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1069),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Lazada.jpg",
+                            ImageUrl = "lazada.jfif",
                             Name = "Lazada"
                         },
                         new
                         {
                             Id = 41,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7431),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1070),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Mastercard.jpg",
+                            ImageUrl = "mastercard.png",
                             Name = "Mastercard"
                         },
                         new
                         {
                             Id = 42,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7433),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1071),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Maya.jpg",
+                            ImageUrl = "maya.png",
                             Name = "Maya"
                         },
                         new
                         {
                             Id = 43,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7434),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1072),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Maybank.jpg",
+                            ImageUrl = "maybank.png",
                             Name = "Maybank"
                         },
                         new
                         {
                             Id = 44,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7436),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1073),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Metrobank.jpg",
+                            ImageUrl = "metrobank.png",
                             Name = "Metrobank"
                         },
                         new
                         {
                             Id = 45,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7438),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1074),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Netbank.jpg",
+                            ImageUrl = "netbank.png",
                             Name = "Netbank"
                         },
                         new
                         {
                             Id = 46,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7439),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1075),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\OwnBank.jpg",
+                            ImageUrl = "ownbank.jfif",
                             Name = "OwnBank"
                         },
                         new
                         {
                             Id = 47,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7441),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1076),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\PBCOM.jpg",
+                            ImageUrl = "pbcom.jfif",
                             Name = "PBCOM"
                         },
                         new
                         {
                             Id = 48,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7442),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1077),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\PNB.jpg",
+                            ImageUrl = "pnb.png",
                             Name = "PNB"
                         },
                         new
                         {
                             Id = 49,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7444),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1078),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\PSBank.jpg",
+                            ImageUrl = "psbank.jfif",
                             Name = "PSBank"
                         },
                         new
                         {
                             Id = 50,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7446),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1080),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Pag-Ibig.jpg",
+                            ImageUrl = "pagibig.jfif",
                             Name = "Pag-Ibig"
                         },
                         new
                         {
                             Id = 51,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7447),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1081),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\PayMaya.jpg",
+                            ImageUrl = "paymaya.png",
                             Name = "PayMaya"
                         },
                         new
                         {
                             Id = 52,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7449),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1082),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\PayPal.jpg",
+                            ImageUrl = "paypal.png",
                             Name = "PayPal"
                         },
                         new
                         {
                             Id = 53,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7451),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1083),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\PNB.jpg",
-                            Name = "PNB"
-                        },
-                        new
-                        {
-                            Id = 54,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7452),
-                            CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Pletina.jpg",
+                            ImageUrl = "plentina.png",
                             Name = "Pletina"
                         },
                         new
                         {
-                            Id = 55,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7454),
+                            Id = 54,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1084),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\RCBC.jpg",
+                            ImageUrl = "rcbc.jfif",
                             Name = "RCBC"
                         },
                         new
                         {
-                            Id = 56,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7456),
+                            Id = 55,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1085),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\RobinsonsBank.jpg",
+                            ImageUrl = "robinsonsbank.png",
                             Name = "RobinsonsBank"
                         },
                         new
                         {
-                            Id = 57,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7457),
+                            Id = 56,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1086),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Seabank.jpg",
+                            ImageUrl = "seabank.png",
                             Name = "Seabank"
                         },
                         new
                         {
-                            Id = 58,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7459),
+                            Id = 57,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1087),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\SecurityBank.jpg",
+                            ImageUrl = "securitybank.jfif",
                             Name = "Security Bank"
                         },
                         new
                         {
-                            Id = 59,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7460),
+                            Id = 58,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1088),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\ShopeePay.jpg",
+                            ImageUrl = "shopeepay.jfif",
                             Name = "ShopeePay"
                         },
                         new
                         {
-                            Id = 60,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7462),
+                            Id = 59,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1089),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\StandardChartered.jpg",
+                            ImageUrl = "standardchartered.png",
                             Name = "Standard Chartered"
                         },
                         new
                         {
-                            Id = 61,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7463),
+                            Id = 60,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1090),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\SterlingBank.jpg",
+                            ImageUrl = "sterlingbank.jfif",
                             Name = "Sterling Bank"
                         },
                         new
                         {
-                            Id = 62,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7465),
+                            Id = 61,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1091),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Tala.jpg",
+                            ImageUrl = "tala.png",
                             Name = "Tala"
                         },
                         new
                         {
-                            Id = 63,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7467),
+                            Id = 62,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1093),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Tonik.jpg",
+                            ImageUrl = "tonik.png",
                             Name = "Tonik"
                         },
                         new
                         {
-                            Id = 64,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7468),
+                            Id = 63,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1094),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\UCPB.jpg",
+                            ImageUrl = "ucpb.png",
                             Name = "UCPB"
                         },
                         new
                         {
-                            Id = 65,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7470),
+                            Id = 64,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1095),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\UNODigitalBank.jpg",
+                            ImageUrl = "uno.jfif",
                             Name = "UNO Digital Bank"
                         },
                         new
                         {
-                            Id = 66,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7472),
+                            Id = 65,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1096),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Unionbank.jpg",
+                            ImageUrl = "unionbank.jfif",
                             Name = "Unionbank"
                         },
                         new
                         {
-                            Id = 67,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7473),
+                            Id = 66,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1097),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Visa.jpg",
+                            ImageUrl = "visa.jfif",
                             Name = "Visa"
                         },
                         new
                         {
-                            Id = 68,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7475),
+                            Id = 67,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1098),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Wells Fargo.jpg",
+                            ImageUrl = "wellsfargo.png",
                             Name = "Wells Fargo"
                         },
                         new
                         {
-                            Id = 69,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7477),
+                            Id = 68,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1099),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\ztock.jpg",
+                            ImageUrl = "others.jfif",
                             Name = "ztock"
                         },
                         new
                         {
-                            Id = 70,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(7478),
+                            Id = 69,
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(1100),
                             CreatedBy = "System",
-                            ImageUrl = "Images\\Institution\\Others.jpg",
+                            ImageUrl = "others.jfif",
                             Name = "Others"
                         });
+                });
+
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.JournalEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Amount")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsDebit")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("JournalEntries");
+                });
+
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transfer", b =>
@@ -3105,9 +3213,6 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("FromAccountId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsTransferAsExpense")
                         .HasColumnType("bit");
 
@@ -3122,17 +3227,20 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ToAccountId")
+                    b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("TransactionDate")
-                        .HasColumnType("date");
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("TransactionDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FromAccountId");
+                    b.HasIndex("ReceiverId");
 
-                    b.HasIndex("ToAccountId");
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Transfers");
                 });
@@ -3189,7 +3297,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(3735),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(95),
                             CreatedBy = "System",
                             Email = "system@yahoo.com",
                             FirstName = "System",
@@ -3201,7 +3309,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2023, 12, 20, 2, 19, 46, 198, DateTimeKind.Local).AddTicks(3753),
+                            Created = new DateTime(2024, 1, 2, 11, 19, 29, 226, DateTimeKind.Local).AddTicks(105),
                             CreatedBy = "System",
                             Email = "nathan.pascual20@yahoo.com",
                             FirstName = "Nathan",
@@ -3231,6 +3339,10 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                         .HasForeignKey("InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Transaction", null)
+                        .WithMany("Accounts")
+                        .HasForeignKey("TransactionId");
 
                     b.Navigation("AccountType");
 
@@ -3286,35 +3398,63 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
                     b.Navigation("IncomeCategory");
                 });
 
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.JournalEntry", b =>
+                {
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "Account")
+                        .WithMany("JournalEntries")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Transaction", "Transaction")
+                        .WithMany("Entries")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transfer", b =>
                 {
-                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "FromAccount")
-                        .WithMany("TransfersFrom")
-                        .HasForeignKey("FromAccountId")
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "Receiver")
+                        .WithMany("Receivers")
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "ToAccount")
-                        .WithMany("TransfersTo")
-                        .HasForeignKey("ToAccountId")
+                    b.HasOne("ExpenseTrackerPro.Domain.Entities.Account", "Sender")
+                        .WithMany("Senders")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FromAccount");
+                    b.Navigation("Receiver");
 
-                    b.Navigation("ToAccount");
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Account", b =>
                 {
-                    b.Navigation("TransfersFrom");
+                    b.Navigation("JournalEntries");
 
-                    b.Navigation("TransfersTo");
+                    b.Navigation("Receivers");
+
+                    b.Navigation("Senders");
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Category", b =>
                 {
                     b.Navigation("ChildCategories");
+                });
+
+            modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transaction", b =>
+                {
+                    b.Navigation("Accounts");
+
+                    b.Navigation("Entries");
                 });
 #pragma warning restore 612, 618
         }

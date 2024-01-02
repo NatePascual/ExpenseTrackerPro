@@ -1,0 +1,36 @@
+﻿@page "/IncomeCategoryOverview"
+@using ExpenseTrackerPro.Application.Features.IncomeCategories
+@using ExpenseTrackerPro.Shared.Enums
+@using MediatR
+@inject IMediator mediator
+<PageTitle>Income Category Overview</PageTitle>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetIncomeCategoryResponse>>>(ServerReload))"
+          Dense="false" Hover="true" @ref="table" RowsPerPage="10">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Category Overview</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>    
+        <MudTh Class="wd-5"></MudTh>
+        <MudTh Class="wd-95"><MudTableSortLabel SortLabel="category" T="GetIncomeCategoryResponse">Description</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="wd-5">
+            <MudImage Src="@(ImageLocation.IncomeCategory.ToString() + context.ImageUrl)"
+                 Alt="@context.Name" Elevation="25" Class="rounded-sm" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+        </MudTd>
+        <MudTd DataLabel="Name" Class="wd-95">@context.Name</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+ </MudTable>

@@ -1,0 +1,93 @@
+﻿@using ExpenseTrackerPro.Shared.Enums
+@using MudBlazor
+@using MediatR
+@inject IMediator _mediator
+@inject ISnackbar _snackBar
+<EditForm Model="@CreateUpdateExpenseModel" OnSubmit="SaveAsync">
+    <MudDialog>
+        <TitleContent>
+            @{
+                if (CreateUpdateExpenseModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        Create Expense
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        Update Expense
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (CreateUpdateExpenseModel.Id != 0)
+                {
+                    <MudItem xs="12" md="6" Class="visually-hidden">
+                        <MudTextField Disabled For="@(() => CreateUpdateExpenseModel.Id)" @bind-Value="CreateUpdateExpenseModel.Id" Label="Id" Variant="Variant.Outlined" />
+                     </MudItem>
+                }
+                <MudItem xs="12" md="12">
+                    <MudTextField Disabled="_isDisabled" Style="font-size:large;font-weight:600;" For="@(() => CreateUpdateExpenseModel.Amount)" @bind-Value="CreateUpdateExpenseModel.Amount" Label="Amount"
+                                  Format="F2" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money" />
+                </MudItem>
+                @if (CreateUpdateExpenseModel.Id != 0)
+                {
+                    <MudItem xs="2" md="2">
+                        <MudImage Src="@(ImageLocation.Category.ToString() + CreateUpdateExpenseModel.CategoryImageUrl)"
+                                  Alt="Category" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    </MudItem>
+                }
+                <MudItem xs="_smallSetting" md="_mediumSetting">
+                    <MudAutocomplete MaxItems="120" T="int" Label="Category" For="@(() => CreateUpdateExpenseModel.CategoryId)" @bind-Value="CreateUpdateExpenseModel.CategoryId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                                     ResetValueOnEmptyText="true" SearchFunc="SearchIncomeCategory"
+                                     ToStringFunc="ReturnCategory"
+                                     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Category" />
+                </MudItem>
+                @if (CreateUpdateExpenseModel.Id != 0)
+                {
+                    <MudItem xs="2" md="2">
+                        <MudImage Src="@(ImageLocation.Institution.ToString() + CreateUpdateExpenseModel.InstitutionImageUrl)"
+                                  Alt="Institution" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    </MudItem>
+                }
+                <MudItem xs="_smallSetting" md="_mediumSetting">
+                    <MudAutocomplete Disabled="_isDisabled" MaxItems="120" T="int" Label="Account" For="@(() => CreateUpdateExpenseModel.AccountId)" @bind-Value="CreateUpdateExpenseModel.AccountId"
+                                     Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                                     ResetValueOnEmptyText="true" SearchFunc="SearchAccount"
+                                     ToStringFunc="ReturnAccount"
+                                     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.ManageAccounts" />
+                </MudItem>   
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => CreateUpdateExpenseModel.Provider)" @bind-Value="CreateUpdateExpenseModel.Provider" Label="Biller / Provider"
+                                  Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Subscriptions" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudDatePicker Label="MM/dd/yyyy" Editable="true" For="@(() => CreateUpdateExpenseModel.TransactionDate)" @bind-Date="CreateUpdateExpenseModel.TransactionDate"
+                                   Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="Transaction Date" 
+                                   Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
+                </MudItem>
+                <MudItem xs="12" md="12">
+                    <MudTextField For="@(() => CreateUpdateExpenseModel.Note)" @bind-Value="CreateUpdateExpenseModel.Note" Label="Note"
+                                  Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Notes" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel" StartIcon="@Icons.Material.Filled.Cancel">Cancel</MudButton>
+            @if (CreateUpdateExpenseModel.Id != 0)
+            {
+                 <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info" StartIcon="@Icons.Material.Filled.Update">Update</MudButton> 
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" StartIcon="@Icons.Material.Filled.Create">Create</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

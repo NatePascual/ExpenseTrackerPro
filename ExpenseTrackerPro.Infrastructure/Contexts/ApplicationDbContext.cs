@@ -1,9 +1,8 @@
 ﻿using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Domain.Contracts;
 using ExpenseTrackerPro.Domain.Entities;
-using ExpenseTrackerPro.Domain.Enums;
+using ExpenseTrackerPro.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace ExpenseTrackerPro.Infrastructure.Contexts;
 
@@ -20,7 +19,6 @@ public class ApplicationDbContext : DbContext
         _dateTime = dateTime;
     }
 
-
     public DbSet<AccountType> AccountTypes => Set<AccountType>();
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<Expense> Expenses => Set<Expense>();
@@ -31,7 +29,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<Institution> Institutions => Set<Institution>();
     public DbSet<Currency> Currencies => Set<Currency>();
-
+    public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         foreach (var entry in ChangeTracker.Entries<BaseAuditableEntity>())
@@ -94,22 +93,24 @@ public class ApplicationDbContext : DbContext
         AddAccountTypes(modelBuilder: modelBuilder);    
         AddIncomeCategory(modelBuilder: modelBuilder);
         AddInstitutions(modelBuilder: modelBuilder);
+        AddAccount(modelBuilder: modelBuilder);
 
         modelBuilder.Entity<Transfer>()
-            .HasOne(t => t.FromAccount)
-            .WithMany(a => a.TransfersFrom)
-            .HasForeignKey(t => t.FromAccountId)
+            .HasOne(t => t.Sender)
+            .WithMany(a => a.Senders)
+            .HasForeignKey(t => t.SenderId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Transfer>()
-            .HasOne(t => t.ToAccount)
-            .WithMany(a => a.TransfersTo)
-            .HasForeignKey(t => t.ToAccountId)
+            .HasOne(t => t.Receiver)
+            .WithMany(a => a.Receivers)
+            .HasForeignKey(t => t.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);
     }
 
+   
     private void AddCurrencies(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Currency>().HasData(
@@ -231,224 +232,223 @@ public class ApplicationDbContext : DbContext
     private void AddAccountTypes(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccountType>().HasData(
-             new AccountType("Bank Account", Classification.Cash.ToString(), "Images\\AccountType\\BankAccount.jpg") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Cash", Classification.Cash.ToString(), "Images\\AccountType\\Cash.jpg") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Wallet", Classification.Cash.ToString(), "Images\\AccountType\\Wallet.jpg") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Checking", Classification.Cash.ToString(), "Images\\AccountType\\Checking.jpg") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Saving", Classification.Cash.ToString(), "Images\\AccountType\\Saving.jpg") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Credit Card", Classification.Credit.ToString(), "Images\\AccountType\\CreditCard.jpg") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Line of Credit", Classification.Credit.ToString(), "Images\\AccountType\\LineofCredit.jpg") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Retirement", Classification.Investment.ToString(), "Images\\AccountType\\Retirement.jpg") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Brokerage", Classification.Investment.ToString(), "Images\\AccountType\\Brokerage.jpg") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Investment", Classification.Investment.ToString(), "Images\\AccountType\\Investment.jpg") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Insurance", Classification.Investment.ToString(), "Images\\AccountType\\Insurance.jpg") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Crypto", Classification.Investment.ToString(), "Images\\AccountType\\Crypto.jpg") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Loan", Classification.Loans.ToString(), "Images\\AccountType\\Loan.jpg") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Mortgage", Classification.Loans.ToString(), "Images\\AccountType\\Mortgage.jpg") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Property", Classification.Assets.ToString(), "Images\\AccountType\\Property.jpg") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
-             new AccountType("Other Account", Classification.OtherAccount.ToString(), "Images\\AccountType\\OtherAccount.jpg") { Id = 16, Created = DateTime.Now, CreatedBy = "System" }
+             new AccountType("Bank", Classification.Cash.ToString(), "bank.png") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Cash", Classification.Cash.ToString(), "cash.png") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Wallet", Classification.Cash.ToString(), "wallet.png") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("E-Wallet", Classification.Cash.ToString(), "e-wallet.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Checking", Classification.Cash.ToString(), "checking.png") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Savings", Classification.Cash.ToString(), "savings.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Income", Classification.Cash.ToString(), "income.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Expense", Classification.Cash.ToString(), "expense.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Retirement", Classification.Investment.ToString(), "retirement.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Brokerage", Classification.Investment.ToString(), "brokerage.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Investment", Classification.Investment.ToString(), "investment.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Insurance", Classification.Investment.ToString(), "insurance.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Crypto", Classification.Investment.ToString(), "crypto.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Property", Classification.Assets.ToString(), "property.png") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
+             new AccountType("Others", Classification.OtherAccount.ToString(), "bank.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 
     private void AddInstitutions(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Institution>().HasData(
-            new Institution("AB Capital", "Images\\Institution\\ABCapital.jpg") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("AUB", "Images\\Institution\\AUB.jpg") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("American Express", "Images\\Institution\\AmericanExpress.jpg") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Apple Card", "Images\\Institution\\AppleCard.jpg") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Atome", "Images\\Institution\\Atome.jpg") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("BDO", "Images\\Institution\\BDO.jpg") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("BPI", "Images\\Institution\\BPI.jpg") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Bank of Commerce", "Images\\Institution\\BankofCommerce.jpg") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Bank of Makati", "Images\\Institution\\BankofMakati.jpg") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Barclays", "Images\\Institution\\Barclays.jpg") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Bayad", "Images\\Institution\\Bayad.jpg") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Billease", "Images\\Institution\\Billease.jpg") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Binance Exchange", "Images\\Institution\\BinanceExchange.jpg") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("CARD Bank", "Images\\Institution\\CARDBank.jpg") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("CIMB", "Images\\Institution\\CIMB.jpg") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("COL Financial", "Images\\Institution\\COLFinancial.jpg") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Cashalo", "Images\\Institution\\Cashalo.jpg") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Cebuana Lhullier", "Images\\Institution\\CebuanaLhullier.jpg") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("China Bank", "Images\\Institution\\ChinaBank.jpg") { Id = 19, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Citibank", "Images\\Institution\\Citibank.jpg") { Id = 20, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("CliQQ", "Images\\Institution\\CliQQ.jpg") { Id = 21, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Coinbase", "Images\\Institution\\Coinbase.jpg") { Id = 22, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Coins.ph", "Images\\Institution\\Coins.ph.jpg") { Id = 23, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Deutche", "Images\\Institution\\Deutche.jpg") { Id = 24, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("DiskarTech", "Images\\Institution\\DiskarTech.jpg") { Id = 25, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("DragonFi", "Images\\Institution\\DragonFi.jpg") { Id = 26, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("EastWest Bank", "Images\\Institution\\EastWestBank.jpg") { Id = 27, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Ficco", "Images\\Institution\\Ficco.jpg") { Id = 28, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Gcash", "Images\\Institution\\Gcash.jpg") { Id = 29, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("GoTrade", "Images\\Institution\\GoTrade.jpg") { Id = 30, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("GoTyme Bank", "Images\\Institution\\GoTymeBank.jpg") { Id = 31, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("GrabPay", "Images\\Institution\\GrabPay.jpg") { Id = 32, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Home Credit", "Images\\Institution\\HomeCredit.jpg") { Id = 33, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("HSBC", "Images\\Institution\\HSBC.jpg") { Id = 34, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("ING", "Images\\Institution\\ING.jpg") { Id = 35, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("ING Bank", "Images\\Institution\\ING Bank.jpg") { Id = 36, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Komo", "Images\\Institution\\Komo.jpg") { Id = 37, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("KuCoin", "Images\\Institution\\KuCoin.jpg") { Id = 38, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Landbank", "Images\\Institution\\Landbank.jpg") { Id = 39, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Lazada", "Images\\Institution\\Lazada.jpg") { Id = 40, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Mastercard", "Images\\Institution\\Mastercard.jpg") { Id = 41, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Maya", "Images\\Institution\\Maya.jpg") { Id = 42, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Maybank", "Images\\Institution\\Maybank.jpg") { Id = 43, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Metrobank", "Images\\Institution\\Metrobank.jpg") { Id = 44, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Netbank", "Images\\Institution\\Netbank.jpg") { Id = 45, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("OwnBank", "Images\\Institution\\OwnBank.jpg") { Id = 46, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("PBCOM", "Images\\Institution\\PBCOM.jpg") { Id = 47, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("PNB", "Images\\Institution\\PNB.jpg") { Id = 48, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("PSBank", "Images\\Institution\\PSBank.jpg") { Id = 49, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Pag-Ibig", "Images\\Institution\\Pag-Ibig.jpg") { Id = 50, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("PayMaya", "Images\\Institution\\PayMaya.jpg") { Id = 51, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("PayPal", "Images\\Institution\\PayPal.jpg") { Id = 52, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("PNB", "Images\\Institution\\PNB.jpg") { Id = 53, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Pletina", "Images\\Institution\\Pletina.jpg") { Id = 54, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("RCBC", "Images\\Institution\\RCBC.jpg") { Id = 55, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("RobinsonsBank", "Images\\Institution\\RobinsonsBank.jpg") { Id = 56, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Seabank", "Images\\Institution\\Seabank.jpg") { Id = 57, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Security Bank", "Images\\Institution\\SecurityBank.jpg") { Id = 58, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("ShopeePay", "Images\\Institution\\ShopeePay.jpg") { Id = 59, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Standard Chartered", "Images\\Institution\\StandardChartered.jpg") { Id = 60, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Sterling Bank", "Images\\Institution\\SterlingBank.jpg") { Id = 61, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Tala", "Images\\Institution\\Tala.jpg") { Id = 62, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Tonik", "Images\\Institution\\Tonik.jpg") { Id = 63, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("UCPB", "Images\\Institution\\UCPB.jpg") { Id = 64, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("UNO Digital Bank", "Images\\Institution\\UNODigitalBank.jpg") { Id = 65, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Unionbank", "Images\\Institution\\Unionbank.jpg") { Id = 66, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Visa", "Images\\Institution\\Visa.jpg") { Id = 67, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Wells Fargo", "Images\\Institution\\Wells Fargo.jpg") { Id = 68, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("ztock", "Images\\Institution\\ztock.jpg") { Id = 69, Created = DateTime.Now, CreatedBy = "System" },
-            new Institution("Others", "Images\\Institution\\Others.jpg") { Id = 70, Created = DateTime.Now, CreatedBy = "System" }
+             new Institution("AB Capital", "abcapital.png") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("AUB", "aub.png") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("American Express", "amex.png") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Apple Card", "applecard.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Atome", "atome.jfif") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("BDO", "bdo.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("BPI", "bpi.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Bank of Commerce", "bankofcommerce.jfif") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Bank of Makati", "bankofmakati.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Barclays", "barclays.jfif") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Bayad", "bayad.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Billease", "billease.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Binance Exchange", "binance.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("CARD Bank", "others.jfif") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("CIMB", "cimb.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("COL Financial", "colfinancial.png") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Cashalo", "cashalo.jfif") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Cebuana Lhullier", "cebuana.png") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("China Bank", "chinabank.jfif") { Id = 19, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Citibank", "citibank.jfif") { Id = 20, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("CliQQ", "cliqq.jfif") { Id = 21, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Coinbase", "coinbase.png") { Id = 22, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Coins.ph", "coinph.jfif") { Id = 23, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Deutche", "deutsche.png") { Id = 24, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("DiskarTech", "diskarTech.jfif") { Id = 25, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("DragonFi", "others.jfif") { Id = 26, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("EastWest Bank", "eastwest.jfif") { Id = 27, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Ficco", "ficco.png") { Id = 28, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Gcash", "gcash.png") { Id = 29, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("GoTrade", "gotrade.png") { Id = 30, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("GoTyme Bank", "gotyme.png") { Id = 31, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("GrabPay", "grab.jfif") { Id = 32, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Home Credit", "homecredit.jfif") { Id = 33, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("HSBC", "hsbc.png") { Id = 34, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("ING", "ing.jfif") { Id = 35, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("ING Bank", "ing.jfif") { Id = 36, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Komo", "komo.jfif") { Id = 37, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("KuCoin", "kucoin.png") { Id = 38, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Landbank", "landbank.jfif") { Id = 39, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Lazada", "lazada.jfif") { Id = 40, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Mastercard", "mastercard.png") { Id = 41, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Maya", "maya.png") { Id = 42, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Maybank", "maybank.png") { Id = 43, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Metrobank", "metrobank.png") { Id = 44, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Netbank", "netbank.png") { Id = 45, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("OwnBank", "ownbank.jfif") { Id = 46, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("PBCOM", "pbcom.jfif") { Id = 47, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("PNB", "pnb.png") { Id = 48, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("PSBank", "psbank.jfif") { Id = 49, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Pag-Ibig", "pagibig.jfif") { Id = 50, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("PayMaya", "paymaya.png") { Id = 51, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("PayPal", "paypal.png") { Id = 52, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Pletina", "plentina.png") { Id = 53, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("RCBC", "rcbc.jfif") { Id = 54, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("RobinsonsBank", "robinsonsbank.png") { Id = 55, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Seabank", "seabank.png") { Id = 56, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Security Bank", "securitybank.jfif") { Id = 57, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("ShopeePay", "shopeepay.jfif") { Id = 58, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Standard Chartered", "standardchartered.png") { Id = 59, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Sterling Bank", "sterlingbank.jfif") { Id = 60, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Tala", "tala.png") { Id = 61, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Tonik", "tonik.png") { Id = 62, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("UCPB", "ucpb.png") { Id = 63, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("UNO Digital Bank", "uno.jfif") { Id = 64, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Unionbank", "unionbank.jfif") { Id = 65, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Visa", "visa.jfif") { Id = 66, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Wells Fargo", "wellsfargo.png") { Id = 67, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("ztock", "others.jfif") { Id = 68, Created = DateTime.Now, CreatedBy = "System" },
+            new Institution("Others", "others.jfif") { Id = 69, Created = DateTime.Now, CreatedBy = "System" }
+
         );
     }
 
     private void AddIncomeCategory(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<IncomeCategory>().HasData(
-            new IncomeCategory("Bonus", "Images\\IncomeCategory\\Bonus.jpg") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Brokerage", "Images\\IncomeCategory\\Brokerage.jpg") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Business & Profession", "Images\\IncomeCategory\\BusinessAndProfession.jpg") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Coupons", "Images\\IncomeCategory\\Coupons.jpg") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Credit", "Images\\IncomeCategory\\Credit.jpg") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Gifts", "Images\\IncomeCategory\\Gifts.jpg") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Interest", "Images\\IncomeCategory\\Interest.jpg") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Investments", "Images\\IncomeCategory\\Investments.jpg") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Loan", "Images\\IncomeCategory\\Loan.jpg") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Lottery, Gambling", "Images\\IncomeCategory\\LotteryGambling.jpg") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Mutual Funds", "Images\\IncomeCategory\\MutualFunds.jpg") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Refunds", "Images\\IncomeCategory\\Refunds.jpg") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Reimbursement", "Images\\IncomeCategory\\Reimbursement.jpg") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Rental Income", "Images\\IncomeCategory\\RentalIncome.jpg") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Salary & Paycheck", "Images\\IncomeCategory\\SalaryAndPaycheck.jpg") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Savings", "Images\\IncomeCategory\\Savings.jpg") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Selling Income", "Images\\IncomeCategory\\SellingIncome.jpg") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Transfer", "Images\\IncomeCategory\\Transfer.jpg") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Wages & Tips", "Images\\IncomeCategory\\WagesAndTips.jpg") { Id = 19, Created = DateTime.Now, CreatedBy = "System" },
-            new IncomeCategory("Others", "Images\\IncomeCategory\\Others.jpg") { Id = 20, Created = DateTime.Now, CreatedBy = "System" }
+            new IncomeCategory("Bonus", "bonus.png") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Brokerage", "brokerage.png") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Business & Profession", "business.png") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Coupons", "coupon.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Credit", "credit.png") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Gifts", "gift.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Interest", "interest.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Investments", "investment.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Loan", "loan.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Lottery, Gambling", "gambling.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Mutual Funds", "mutualfunds.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Refunds", "refund.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Reimbursement", "reimbursement.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Rental Income", "rental.png") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Salary & Paycheck", "salary.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Savings", "savings.png") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Selling Income", "selling.png") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Transfer", "transfer.png") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Wages & Tips", "wage.png") { Id = 19, Created = DateTime.Now, CreatedBy = "System" },
+            new IncomeCategory("Others", "others.png") { Id = 20, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 
     private void AddCategory(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>().HasData(
-           new Category(null, "Bills & Utilities", "Images\\Category\\") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Drink & Dine", "Images\\Category\\") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Education", "Images\\Category\\") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Entertainment", "Images\\Category\\") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Events", "Images\\Category\\") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Family Care", "Images\\Category\\") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Fees & Charges", "Images\\Category\\") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Food & Grocery", "Images\\Category\\") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Gifts & Donations", "Images\\Category\\") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Health & Fitness", "Images\\Category\\") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "House", "Images\\Category\\") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Insurance", "Images\\Category\\") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Investments", "Images\\Category\\") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Kids Care", "Images\\Category\\") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Loan & Debts", "Images\\Category\\") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Misc Expenses", "Images\\Category\\") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Office Expenses", "Images\\Category\\") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Personal Care", "Images\\Category\\") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Pet Care", "Images\\Category\\") { Id = 19, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Shopping", "Images\\Category\\") { Id = 20, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Taxes", "Images\\Category\\") { Id = 21, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Transfer", "Images\\Category\\") { Id = 22, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Transport", "Images\\Category\\") { Id = 23, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Travel & Vacation", "Images\\Category\\") { Id = 24, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(null, "Others", "Images\\Category\\") { Id = 25, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(1, "Electricity", "Images\\Category\\") { Id = 26, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(1, "Gas", "Images\\Category\\") { Id = 27, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(1, "Internet", "Images\\Category\\") { Id = 28, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(1, "Mobile", "Images\\Category\\") { Id = 29, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(1, "Phone", "Images\\Category\\") { Id = 30, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(1, "Water", "Images\\Category\\") { Id = 31, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(2, "Alcohol & Bar", "Images\\Category\\") { Id = 32, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(2, "Coffee shops", "Images\\Category\\") { Id = 33, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(2, "Fast Food", "Images\\Category\\") { Id = 34, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(2, "Restaurant", "Images\\Category\\") { Id = 35, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(3, "Books & Stationery", "Images\\Category\\") { Id = 36, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(3, "School Fee", "Images\\Category\\") { Id = 37, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(3, "Tuition Fee", "Images\\Category\\") { Id = 38, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Amusement", "Images\\Category\\") { Id = 39, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Arts", "Images\\Category\\") { Id = 40, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Cable or DTH", "Images\\Category\\") { Id = 41, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Movies & Cinema", "Images\\Category\\") { Id = 42, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Music", "Images\\Category\\") { Id = 43, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Newspapers & Magazines", "Images\\Category\\") { Id = 44, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(4, "Games", "Images\\Category\\") { Id = 45, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(5, "Birthday", "Images\\Category\\") { Id = 46, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(5, "Get Together", "Images\\Category\\") { Id = 47, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(5, "Wedding", "Images\\Category\\") { Id = 48, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(6, "Kids Activities", "Images\\Category\\") { Id = 49, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(6, "Old age care", "Images\\Category\\") { Id = 50, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(7, "ATM Fee", "Images\\Category\\") { Id = 51, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(7, "Commission Fee", "Images\\Category\\") { Id = 52, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(7, "Late Fee", "Images\\Category\\") { Id = 53, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(7, "Service Fee", "Images\\Category\\") { Id = 54, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(9, "Charity", "Images\\Category\\") { Id = 55, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(9, "Gift", "Images\\Category\\") { Id = 56, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(10, "Dentist", "Images\\Category\\") { Id = 57, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(10, "Doctor", "Images\\Category\\") { Id = 58, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(10, "Gym", "Images\\Category\\") { Id = 59, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(10, "Pharmacy", "Images\\Category\\") { Id = 60, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(10, "Spa & Massage", "Images\\Category\\") { Id = 61, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(11, "House Maintenance", "Images\\Category\\") { Id = 62, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(11, "House Rent", "Images\\Category\\") { Id = 63, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(12, "Auto Insurance", "Images\\Category\\") { Id = 64, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(12, "Health Insurance", "Images\\Category\\") { Id = 65, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(12, "Property Insurance", "Images\\Category\\") { Id = 66, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(15, "Car Loan", "Images\\Category\\") { Id = 67, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(15, "Credit Card", "Images\\Category\\") { Id = 68, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(15, "Home Loan", "Images\\Category\\") { Id = 69, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(15, "Loan", "Images\\Category\\") { Id = 70, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(18, "Hair & Salon", "Images\\Category\\") { Id = 71, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(18, "Laundry", "Images\\Category\\") { Id = 72, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Clothing", "Images\\Category\\") { Id = 73, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Electronics & Accessories", "Images\\Category\\") { Id = 74, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Gifts &  Toys", "Images\\Category\\") { Id = 75, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Health & Beauty", "Images\\Category\\") { Id = 76, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Home & furnishing", "Images\\Category\\") { Id = 77, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Jewellery", "Images\\Category\\") { Id = 78, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Lawn & Garden", "Images\\Category\\") { Id = 79, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Pets & Animals", "Images\\Category\\") { Id = 80, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(20, "Sports", "Images\\Category\\") { Id = 81, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(21, "Withholding Tax", "Images\\Category\\") { Id = 82, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(21, "Local Tax", "Images\\Category\\") { Id = 83, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(21, "Property Tax", "Images\\Category\\") { Id = 84, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(21, "Sales Tax", "Images\\Category\\") { Id = 85, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(23, "Car Maintenance", "Images\\Category\\") { Id = 86, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(23, "Fuel & Gas", "Images\\Category\\") { Id = 87, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(23, "Public Transport", "Images\\Category\\") { Id = 88, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(23, "Taxi", "Images\\Category\\") { Id = 89, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(23, "TNVS", "Images\\Category\\") { Id = 90, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(24, "Air Travel", "Images\\Category\\") { Id = 91, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(24, "Hotel", "Images\\Category\\") { Id = 92, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(24, "Sea Travel", "Images\\Category\\") { Id = 93, Created = DateTime.Now, CreatedBy = "System" },
-            new Category(24, "Rental Car", "Images\\Category\\") { Id = 94, Created = DateTime.Now, CreatedBy = "System" }
+           new Category(null, "Bills & Utilities", "bills.png") { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Drink & Dine", "drinkanddine.png") { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Education", "education.png") { Id = 3, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Entertainment", "entertainment.png") { Id = 4, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Events", "events.png") { Id = 5, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Family Care", "familycare.png") { Id = 6, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Fees & Charges", "fees.png") { Id = 7, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Food & Grocery", "foodandgrocery.png") { Id = 8, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Gifts & Donations", "giftanddonation.png") { Id = 9, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Health & Fitness", "healthandfitness.png") { Id = 10, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "House", "house.png") { Id = 11, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Insurance", "insurance.png") { Id = 12, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Investments", "investment.png") { Id = 13, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Kids Care", "kidscare.png") { Id = 14, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Loan & Debts", "loan.png") { Id = 15, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Misc Expenses", "misc.png") { Id = 16, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Office Expenses", "office.png") { Id = 17, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Personal Care", "personalcare.png") { Id = 18, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Pet Care", "petcare.png") { Id = 19, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Shopping", "shopping.png") { Id = 20, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Taxes", "taxes.png") { Id = 21, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Transfer", "transfer.png") { Id = 22, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Transport", "transport.png") { Id = 23, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Travel & Vacation", "travel.png") { Id = 24, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(null, "Others", "others.png") { Id = 25, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(1, "Electricity", "electric.png") { Id = 26, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(1, "Gas", "gas.png") { Id = 27, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(1, "Internet", "internet.png") { Id = 28, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(1, "Mobile", "mobile.png") { Id = 29, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(1, "Phone", "telephone.png") { Id = 30, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(1, "Water", "water.png") { Id = 31, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(2, "Alcohol & Bar", "alcoholic-drink.png") { Id = 32, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(2, "Coffee shops", "coffee.png") { Id = 33, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(2, "Fast Food", "fastfood.png") { Id = 34, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(2, "Restaurant", "restaurant.png") { Id = 35, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(3, "Books & Stationery", "books.png") { Id = 36, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(3, "School Fee", "schoolfee.png") { Id = 37, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(3, "Tuition Fee", "tuition.png") { Id = 38, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Amusement", "amusement.png") { Id = 39, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Arts", "arts.png") { Id = 40, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Cable or DTH", "cable.png") { Id = 41, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Movies & Cinema", "movies.png") { Id = 42, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Music", "music.png") { Id = 43, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Newspapers & Magazines", "newspaper.png") { Id = 44, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(4, "Games", "games.png") { Id = 45, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(5, "Birthday", "happybirthday.png") { Id = 46, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(5, "Get Together", "gettogether.png") { Id = 47, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(5, "Wedding", "wedding.png") { Id = 48, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(6, "Kids Activities", "kidsactivities.png") { Id = 49, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(6, "Old age care", "oldagecare.png") { Id = 50, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(7, "ATM Fee", "atm.png") { Id = 51, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(7, "Commission Fee", "commission.png") { Id = 52, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(7, "Late Fee", "latefee.png") { Id = 53, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(7, "Service Fee", "servicefee.png") { Id = 54, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(9, "Charity", "charity.png") { Id = 55, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(9, "Gift", "gift.png") { Id = 56, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(10, "Dentist", "dentist.png") { Id = 57, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(10, "Doctor", "doctor.png") { Id = 58, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(10, "Gym", "gym.png") { Id = 59, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(10, "Pharmacy", "pharmacy.png") { Id = 60, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(10, "Spa & Massage", "spamassage.png") { Id = 61, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(11, "House Maintenance", "housemaintenance.png") { Id = 62, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(11, "House Rent", "rent.png") { Id = 63, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(12, "Auto Insurance", "autoinsurance.png") { Id = 64, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(12, "Health Insurance", "healthinsurance.png") { Id = 65, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(12, "Property Insurance", "propertyinsurance.png") { Id = 66, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(15, "Car Loan", "carloan.png") { Id = 67, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(15, "Credit Card", "credit.png") { Id = 68, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(15, "Home Loan", "homeloan.png") { Id = 69, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(15, "Loan", "loan.png") { Id = 70, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(18, "Hair & Salon", "hairsalon.png") { Id = 71, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(18, "Laundry", "laundry.png") { Id = 72, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Clothing", "clothing.png") { Id = 73, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Electronics & Accessories", "electronics.png") { Id = 74, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Gifts &  Toys", "giftstoys.png") { Id = 75, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Health & Beauty", "healthandbeauty.png") { Id = 76, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Home & furnishing", "homeandfurnishing.png") { Id = 77, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Jewellery", "jewelry.png") { Id = 78, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Lawn & Garden", "lawnandgarden.png") { Id = 79, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Pets & Animals", "pets.png") { Id = 80, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(20, "Sports", "sports.png") { Id = 81, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(21, "Withholding Tax", "withholdingtaxes.png") { Id = 82, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(21, "Local Tax", "localtaxes.png") { Id = 83, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(21, "Property Tax", "propertytax.png") { Id = 84, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(21, "Sales Tax", "salestax.png") { Id = 85, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(23, "Car Maintenance", "carmaintenance.png") { Id = 86, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(23, "Fuel & Gas", "fuel.png") { Id = 87, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(23, "Public Transport", "publictransport.png") { Id = 88, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(23, "Taxi", "taxi.png") { Id = 89, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(23, "TNVS", "tnvs.png") { Id = 90, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(24, "Air Travel", "airtravel.png") { Id = 91, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(24, "Hotel", "hotel.png") { Id = 92, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(24, "Sea Travel", "seatravel.png") { Id = 93, Created = DateTime.Now, CreatedBy = "System" },
+            new Category(24, "Rental Car", "tnvs.png") { Id = 94, Created = DateTime.Now, CreatedBy = "System" }
         );
     }
 
@@ -458,5 +458,14 @@ public class ApplicationDbContext : DbContext
             new UserProfile("System", "", "system@yahoo.com", "+639267444551", "", true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
             new UserProfile("Nathan", "Pascual", "nathan.pascual20@yahoo.com", "+639267444551", "", true) { Id= 2,Created=DateTime.Now, CreatedBy="System" }
         ); 
+    }
+
+    private void AddAccount(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Account>().HasData(
+                new Account(12,69,79,"Starting Account","0001",0,false,true) { Id = 1, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(7, 69, 79, "Income Account", "0002", 0, false, true) { Id = 2, Created = DateTime.Now, CreatedBy = "System" },
+                new Account(8, 69, 79, "Expenses Account", "0003", 0, false, true) { Id = 3, Created = DateTime.Now, CreatedBy = "System" }
+        );
     }
 }

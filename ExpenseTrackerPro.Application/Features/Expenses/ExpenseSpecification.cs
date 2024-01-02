@@ -1,10 +1,5 @@
 ﻿using ExpenseTrackerPro.Application.Specifications;
 using ExpenseTrackerPro.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTrackerPro.Application.Features.Expenses;
 
@@ -18,7 +13,7 @@ public class ExpenseSpecification : Specification<Expense>
         if (!string.IsNullOrEmpty(searchString))
         {
             Criteria = p => (p.Account != null &&  p.ExpenseCategory != null) && 
-                            (p.Title.Contains(searchString) || p.Provider.Contains(searchString) || p.Account.Name.Contains(searchString)); 
+                            ( p.Provider.Contains(searchString) || p.Account.Name.Contains(searchString) || p.ExpenseCategory.Name.Contains(searchString)); 
         }
         else
         {

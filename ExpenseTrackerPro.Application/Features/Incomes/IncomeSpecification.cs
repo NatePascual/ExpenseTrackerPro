@@ -1,10 +1,5 @@
 ﻿using ExpenseTrackerPro.Application.Specifications;
 using ExpenseTrackerPro.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTrackerPro.Application.Features.Incomes;
 

@@ -1,0 +1,36 @@
+﻿@page "/InstitutionOverview"
+@using ExpenseTrackerPro.Application.Features.Institutions
+@using ExpenseTrackerPro.Shared.Enums
+@using MediatR
+@inject IMediator mediator
+<PageTitle>Institution Overview</PageTitle>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<GetInstitutionResponse>>>(ServerReload))"
+          Dense="false" Hover="true" @ref="table" RowsPerPage="10">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Institution Overview</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>    
+        <MudTh Class="wd-5"></MudTh>
+        <MudTh Class="wd-95"><MudTableSortLabel SortLabel="name" T="GetInstitutionResponse">Description</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>  
+        <MudTd>
+            <MudImage Src="@(ImageLocation.Institution.ToString() + context.ImageUrl)"
+                      Alt="@context.Name" Elevation="25" Class="rounded-sm" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+        </MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+ </MudTable>

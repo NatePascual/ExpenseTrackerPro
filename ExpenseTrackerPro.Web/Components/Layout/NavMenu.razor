@@ -1,0 +1,90 @@
+﻿
+<style>
+    .mud-appbar, .mud-mobile {
+        background-color: var(--mud-palette-dark-darken) !important;
+    }
+
+    .mud-expand-panel, .muudstrap-navbar-expand {
+        color: var(--mud-palette-dark-text);
+        background-color: var(--mud-palette-dark-darken);
+    }
+
+    .muudstrap-navbar .mud-button {
+        text-transform: none;
+
+    }
+
+    .muudstrap-navbar .mud-expand-panel-header {
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        flex: none;
+    }
+
+    .menu-expense{
+        padding:5px;
+        margin:10px;
+    }
+    .menu-mobile {
+        padding: 2px;
+        margin: 2px;
+    }
+
+    .mud-navmenu.mud-navmenu-default 
+    .mud-nav-link.active:not(.mud-nav-link-disabled),
+    .mud-nav-link-text {
+        color: var(--mud-palette-dark-text);
+    }
+</style>
+<MudAppBar Fixed="false" Elevation="0" DisableGutters="true" Class="muudstrap-navbar" Dense="true">
+    <div class="d-none d-md-flex align-center px-6">
+        <MudText Typo="Typo.h6" Class="ml-4 mr-12 pt-1 pb-2">Expense Tracker Pro</MudText>
+        <MudButton Color="Color.Inherit" Class="menu-expense" Link="/">Home</MudButton>
+        <MudMenu Color="Color.Inherit" Class="menu-expense" Label="Control" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+            <MudMenuItem Link="/AccountTypeOverview">Account Types</MudMenuItem>
+            <MudMenuItem Link="/ManageCategory">Categories</MudMenuItem>
+            <MudMenuItem Link="/CurrencyOverview">Currencies</MudMenuItem>
+            <MudMenuItem Link="/IncomeCategoryOverview">Income Categories</MudMenuItem>
+            <MudMenuItem Link="/InstitutionOverview">Institutions</MudMenuItem>
+        </MudMenu>
+        <MudButton Color="Color.Inherit" Class="menu-expense" Link="/ManageAccount">Account</MudButton>
+        <MudButton Color="Color.Inherit" Class="menu-expense" Link="/ManageExpense">Expense</MudButton>
+        <MudButton Color="Color.Inherit" Class="menu-expense" Link="/ManageIncome">Income</MudButton>
+        <MudButton Color="Color.Inherit" Class="menu-expense" Link="/ManageTransfer">Transfer</MudButton>
+    </div>
+    <div class="d-flex d-md-none relative mud-width-full mud-height-full">
+        <MudExpansionPanels Square="true" Elevation="0" Class="absolute mud-width-full mud-height-full" Style="top:0px;left:0; background-color:Inherit;">
+            <MudExpansionPanel HideIcon="true" Class="mud-width-full mud-height-full">
+                <TitleContent>
+                    <div class="d-flex justify-space-between mud-width-full align-center px-6">
+                        <div class="d-flex align-center">
+                            <MudText Typo="Typo.h6" Class="ml-4 mr-12 pt-1 pb-2">Expense Tracker Pro</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.Menu" />
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <div class="py-6 mx-n6 muudstrap-navbar-expand">
+                        <MudNavMenu>
+                            <MudNavLink Class="menu-mobile" Href="/">Home</MudNavLink>
+                            <MudNavLink Class="menu-mobile" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                                Control
+                                <MudNavMenu>
+                                    <MudNavLink Class="menu-mobile" Href="/AccountTypeOverview">Account Types</MudNavLink>
+                                    <MudNavLink Class="menu-mobile" Href="/ManageCategory">Categories</MudNavLink>
+                                    <MudNavLink Class="menu-mobile" Href="/CurrencyOverview">Currencies</MudNavLink>
+                                    <MudNavLink Class="menu-mobile" Href="/IncomeCategoryOverview">Income Categories</MudNavLink>
+                                    <MudNavLink Class="menu-mobile" Href="/InstitutionOverview">Institutions</MudNavLink>
+                                </MudNavMenu>
+                            </MudNavLink>
+                            <MudNavLink Class="menu-mobile" Href="/ManageAccount">Account</MudNavLink>
+                            <MudNavLink Class="menu-mobile" Href="/ManageExpense">Expense</MudNavLink>
+                            <MudNavLink Class="menu-mobile" Href="/ManageIncome">Income</MudNavLink>
+                            <MudNavLink Class="menu-mobile" Href="/ManageTransfer">Transfer</MudNavLink>
+                        </MudNavMenu>
+                    </div>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </div>
+</MudAppBar>
