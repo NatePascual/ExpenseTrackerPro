@@ -16,14 +16,14 @@ public static class ServiceCollectionExtension
         //services.AddDbContext<ApplicationDbContext>(options =>
         //            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-                     options.UseSqlServer(configuration.GetConnectionString("DevelopmentConnection")));
+        //services.AddDbContext<ApplicationDbContext>(options =>
+        //             options.UseSqlServer(configuration.GetConnectionString("DevelopmentConnection")));
 
         //services.AddDbContext<ApplicationDbContext>(options =>
         //           options.UseSqlServer(configuration.GetConnectionString("TestConnection")));
 
-        //services.AddDbContext<ApplicationDbContext>(options =>
-        //             options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")));
+        services.AddDbContext<ApplicationDbContext>(options =>
+                     options.UseSqlServer(configuration.GetConnectionString("ProductionConnection")));
 
 
         //services.AddDbContext<ApplicationDbContext>(options =>
