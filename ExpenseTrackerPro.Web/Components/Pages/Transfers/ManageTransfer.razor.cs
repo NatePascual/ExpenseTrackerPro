@@ -77,6 +77,9 @@ public partial class ManageTransfer
             case "note":
                 data = data.OrderByDirection(state.SortDirection, o => o.Note);
                 break;
+            default:
+                data = data.OrderByDirection(SortDirection.Descending, o => o.TransactionDate);
+                break;
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();

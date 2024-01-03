@@ -35,7 +35,8 @@ public class Account : BaseAuditableEntity
     public virtual ICollection<Transfer> Senders { get; set; }
     public virtual ICollection<Transfer> Receivers { get; set; }
     public virtual ICollection<JournalEntry> JournalEntries { get; set; }
-
+    public virtual ICollection<Expense> Expenses { get; set; }
+    public virtual ICollection<Income> Incomes { get; set; }
     public Account(int accountTypeId, 
                    int institutionId, 
                    int currencyId,

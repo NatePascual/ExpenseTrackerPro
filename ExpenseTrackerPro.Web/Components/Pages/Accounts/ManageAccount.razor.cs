@@ -147,4 +147,9 @@ public partial class ManageAccount
             //}
         }
     }
+
+    private async Task ViewAccount(int id)
+    {
+         NavManager.NavigateTo($"ViewAccount/{id}");
+    }
 }

@@ -6,6 +6,7 @@
 @inject IMediator _mediator
 @inject IDialogService _dialogService
 @inject ISnackbar _snackBar
+@inject NavigationManager NavManager
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -48,7 +49,8 @@
             <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                      IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
                     <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.Edit">Edit</MudMenuItem>
-                 <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>
+                    <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>
+                    <MudMenuItem @onclick="@(() => ViewAccount(@context.Id))" Icon="@Icons.Filled.GridView">View</MudMenuItem>
             </MudMenu>  
         </MudTd>
      </RowTemplate>
