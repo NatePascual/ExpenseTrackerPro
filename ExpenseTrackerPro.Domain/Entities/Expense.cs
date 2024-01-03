@@ -31,6 +31,7 @@ public class Expense : BaseAuditableEntity
     public Expense(int categoryId, 
                    int accountId, 
                    string provider,
+                   float amount,
                    DateTime? transactionDate,
                    string note,
                    string photo) 
@@ -38,6 +39,7 @@ public class Expense : BaseAuditableEntity
         CategoryId = categoryId;
         AccountId = accountId;
         Provider = provider;
+        Amount = amount;
         TransactionDate = transactionDate;
         Note = note;
         Photo = photo;

@@ -3,7 +3,6 @@ using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Extensions;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Enums;
-using ExpenseTrackerPro.Shared.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -55,7 +54,6 @@ public class CreateTransaction : ICreateTransaction
       
         return result;
     }
-
     public async Task<bool> CreateTransactionAccount(Account account, CancellationToken cancellationToken)
     {
         var result = true;
@@ -87,7 +85,6 @@ public class CreateTransaction : ICreateTransaction
 
         return result;
     }
-
     public async Task<bool> CreateTransactionTransfer(Transfer transfer, CancellationToken cancellationToken)
     {
         var result = true;
@@ -105,15 +102,12 @@ public class CreateTransaction : ICreateTransaction
             Message = $"Receiver {Messages.AccountDoesntExist.ToDescriptionString()}";
             return false;
         }
-
-        var transaction = new CreateTransactionCommand(transfer.TransactionDate.Value, $"Transfer from the account {senderAccount.Name} to account {receiverAccount.Name} has been made.");
-        transaction.Entries.AddRange(await CreateJournalEntries(transfer.SenderId, transfer.ReceiverId, transaction.Id, transfer.Amount));
-
+    
         try
-        {    
-            var entity = _mapper.Map<Transaction>(transaction);
-            await _unitOfWork.Repository<Transaction>().AddAsync(entity);
-            await _unitOfWork.Commit(cancellationToken);
+        {
+           var expense= await CreateTransactionExpense(await SetExpense(transfer, cancellationToken),cancellationToken,true);
+           var income = await CreateTransactionIncome(await SetIncome(transfer,cancellationToken),cancellationToken,true);
+            //await _unitOfWork.Commit(cancellationToken);
 
             result=true;
         }
@@ -124,19 +118,9 @@ public class CreateTransaction : ICreateTransaction
             result = false;
         }
      
-        var sender = await ComputeAccount(senderAccount.Id, transfer.Amount, true, cancellationToken);
-        var receiver = await ComputeAccount(receiverAccount.Id, transfer.Amount, false, cancellationToken);
-
-        if(sender && receiver)
-            result = true;
-
-        if (!sender || !receiver)
-            result = false;
-
         return result;
     }
-
-    public async Task<bool> CreateTransactionIncome(Income income, CancellationToken cancellationToken)
+    public async Task<bool> CreateTransactionIncome(Income income, CancellationToken cancellationToken,bool isTransfer = false)
     {
         var result = true;
         var incomeAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(Convert.ToInt32(DefaultAccount.Income));
@@ -157,6 +141,13 @@ public class CreateTransaction : ICreateTransaction
         {
             var entity = _mapper.Map<Transaction>(transaction);
             await _unitOfWork.Repository<Transaction>().AddAsync(entity);
+
+            if (isTransfer)
+            {
+                var entityIncome = _mapper.Map<Income>(income);
+                await _unitOfWork.Repository<Income>().AddAsync(entityIncome);
+            }
+
             await _unitOfWork.Commit(cancellationToken);
 
             result = true;
@@ -171,7 +162,7 @@ public class CreateTransaction : ICreateTransaction
 
         return result;
     }
-    public async Task<bool> CreateTransactionExpense(Expense expense, CancellationToken cancellationToken)
+    public async Task<bool> CreateTransactionExpense(Expense expense, CancellationToken cancellationToken, bool isTransfer = false)
     {
         var result = true;
         var expenseAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(Convert.ToInt32(DefaultAccount.Expense));
@@ -192,6 +183,13 @@ public class CreateTransaction : ICreateTransaction
         {
             var entity = _mapper.Map<Transaction>(transaction);
             await _unitOfWork.Repository<Transaction>().AddAsync(entity);
+            
+            if(isTransfer)
+            {
+                var entityExpense = _mapper.Map<Expense>(expense);
+                await _unitOfWork.Repository<Expense>().AddAsync(entityExpense);
+            }
+
             await _unitOfWork.Commit(cancellationToken);
             result = true;
         }
@@ -215,6 +213,25 @@ public class CreateTransaction : ICreateTransaction
         journalEntries.Add(new JournalEntry(creditAccountId, transactionId, amount, false));
 
         return await Task.FromResult(journalEntries);
+    }
+    private async Task<Expense> SetExpense(Transfer transfer,  CancellationToken cancellationToken)
+    {
+        var senderAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(transfer.SenderId);
+        var receiverAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(transfer.ReceiverId);
+
+        var expense = new Expense(22, senderAccount.Id, $"{senderAccount.Name}",
+                                     transfer.Amount, transfer.TransactionDate,
+                                     $"{ senderAccount.Name } sent amount to { receiverAccount.Name }", "");
+        return expense;
+    }
+    private async Task<Income> SetIncome(Transfer transfer, CancellationToken cancellationToken)
+    {
+        var receiverAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(transfer.ReceiverId);
+        var senderAccount = await _unitOfWork.Repository<Account>().GetByIdAsync(transfer.SenderId);
+
+        var income = new Income(18, receiverAccount.Id, transfer.Amount, transfer.TransactionDate, $"{ receiverAccount.Name } received amount from {senderAccount.Name}","");
+       
+        return income;
     }
 }
 public class CreateTransactionCommand

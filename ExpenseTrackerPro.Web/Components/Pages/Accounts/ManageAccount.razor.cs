@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackerPro.Application.Features.Accounts;
+using ExpenseTrackerPro.Application.Features.Expenses;
 using MudBlazor;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Accounts;
@@ -14,6 +15,15 @@ public partial class ManageAccount
 
     private int ImageHeight { get; } = 50;
     private int ImageWidth { get; } = 50;
+
+    private TableGroupDefinition<GetAccountResponse> _groupDefinition = new()
+    {
+        GroupName = "Type",
+        Indentation = false,
+        Expandable = true,
+        IsInitiallyExpanded = true,
+        Selector = (e) => e.AccountTypeName,
+    };
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
@@ -146,5 +156,10 @@ public partial class ManageAccount
             //    }
             //}
         }
+    }
+
+    private async Task ViewAccount(int id)
+    {
+         NavManager.NavigateTo($"ViewAccount/{id}");
     }
 }

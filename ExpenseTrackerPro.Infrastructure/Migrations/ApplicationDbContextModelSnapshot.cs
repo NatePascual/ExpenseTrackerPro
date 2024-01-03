@@ -83,7 +83,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
 
                     b.HasData(
                         new
@@ -168,7 +168,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountTypes");
+                    b.ToTable("AccountTypes", (string)null);
 
                     b.HasData(
                         new
@@ -346,7 +346,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -1211,7 +1211,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
 
                     b.HasData(
                         new
@@ -2276,7 +2276,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Income", b =>
@@ -2327,7 +2327,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("IncomeCategoryId");
 
-                    b.ToTable("Incomes");
+                    b.ToTable("Incomes", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.IncomeCategory", b =>
@@ -2363,7 +2363,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IncomeCategories");
+                    b.ToTable("IncomeCategories", (string)null);
 
                     b.HasData(
                         new
@@ -2561,7 +2561,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Institutions");
+                    b.ToTable("Institutions", (string)null);
 
                     b.HasData(
                         new
@@ -3158,7 +3158,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("JournalEntries");
+                    b.ToTable("JournalEntries", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transaction", b =>
@@ -3192,7 +3192,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.Transfer", b =>
@@ -3242,7 +3242,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Transfers");
+                    b.ToTable("Transfers", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerPro.Domain.Entities.UserProfile", b =>
@@ -3291,7 +3291,7 @@ namespace ExpenseTrackerPro.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
 
                     b.HasData(
                         new

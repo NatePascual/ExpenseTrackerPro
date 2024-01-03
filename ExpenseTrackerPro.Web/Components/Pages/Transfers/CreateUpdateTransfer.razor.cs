@@ -62,7 +62,7 @@ public partial class CreateUpdateTransfer
         var result = string.Empty;
         if(entity != null)
         {
-            result = $"( {entity.InstitutionName} ) {entity.AccountTypeName}  | { entity.Name } | {entity.CurrencySymbol } {entity.Balance}"; 
+            result = $"( {entity.InstitutionName} ) {entity.AccountTypeName}  | { entity.Name } | {entity.CurrencySymbol } {entity.Balance.ToString("#,###.00")}"; 
         }
 
         return result;
