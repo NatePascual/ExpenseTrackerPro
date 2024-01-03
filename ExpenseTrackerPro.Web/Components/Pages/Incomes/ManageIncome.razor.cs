@@ -75,6 +75,9 @@ public partial class ManageIncome
             case "amount":
                 data = data.OrderByDirection(state.SortDirection, o => o.Amount);
                 break;
+            default:
+                data = data.OrderByDirection(SortDirection.Descending, o => o.TransactionDate);
+                break;
         }
 
         pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();

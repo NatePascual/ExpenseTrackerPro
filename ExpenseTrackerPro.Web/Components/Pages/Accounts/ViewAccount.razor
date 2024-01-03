@@ -1,0 +1,19 @@
+﻿@page "/ViewAccount/{Id:int}"
+<PageTitle>Account</PageTitle>
+<MudGrid>
+    <MudItem xs="12">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+@code {
+    [Parameter] 
+    public int Id { get; set; }
+}
