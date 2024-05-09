@@ -1,19 +1,81 @@
-﻿@page "/ViewAccount/{Id:int}"
+﻿@using ExpenseTrackerPro.Shared.Enums
+@using ExpenseTrackerPro.Web.Components.Shared.Charts
+@using MudBlazor
+@using MediatR
+@inject IMediator _mediator
+@inject ISnackbar _snackBar
 <PageTitle>Account</PageTitle>
-<MudGrid>
-    <MudItem xs="12">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
-    </MudItem>
-    <MudItem xs="12">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
-    </MudItem>
-    <MudItem xs="12">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+<MudDialog >
+    <TitleContent>  
+        <MudText Typo="Typo.h6" Class="sticky-sm-top">
+            <MudIcon Icon="@Icons.Material.Filled.GridView" Class="mr-3 mb-n1" />
+            View Account Transactions
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid Model="@GetAccountByIdResponseModel">
+            <MudItem xs="12" Class="justify-content-start d-flex">
+                <MudPaper Class="d-block align-self-center justify-content-start py-2 mud-width-full" id="account-details">
+                    <div class="d-flex p-1 m-1">
+                        <div class="d-flex p-1 m-1">
+                            <MudImage Src="@(ImageLocation.Institution.ToString() + GetAccountByIdResponseModel.InstitutionImageUrl)"
+                                      Alt="@GetAccountByIdResponseModel.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                        </div>
+                        <div class="d-block p-1 m-1">
+                            <h2>@GetAccountByIdResponseModel.InstitutionName</h2>
+                            <h6 class="m-1">@Description</h6>
+                        </div>
+                    </div>
+                    <div class="p-1 m-1 d-flex justify-center align-center">
+                        <h3 class="m-1">@GetAccountByIdResponseModel.CurrencySymbol @GetAccountByIdResponseModel.Balance.ToString("#,###.00")</h3>
+                    </div>
+                    @if (TransactionDate != null)
+                    {
+                        <div class="p-1 m-1 d-flex justify-center align-center">
+                            <span class="m-1">@TransactionDate</span>
+                        </div>
+                    }
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-flex align-center justify-center mud-width-full py-2" id="chart-line">
+                    <ChartLine />
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-flex align-center justify-center mud-width-full py-2" id="chart-line">
+                    <ChartPie/>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+ </MudDialog>
 
-        </MudPaper>
-    </MudItem>
-</MudGrid>
 @code {
-    [Parameter] 
-    public int Id { get; set; }
+
 }
+       @* <div class="col-sm-12 col-md-6">
+            <MudPaper Class="d-block align-self-start justify-content-start py-2" Style="height:150px">
+                <div class="d-flex p-2 m-2">
+                    <MudImage Src="@(ImageLocation.Institution.ToString() + GetAccountByIdResponseModel.InstitutionImageUrl)"
+                                Alt="@GetAccountByIdResponseModel.Name" Elevation="25" Class="rounded-sm me-3" Height="@(ImageHeight)" Width="@(ImageWidth)" />
+                    <h2>@GetAccountByIdResponseModel.InstitutionName</h2>
+                    <span class="m-2">@Description</span>
+                </div>
+                <div class="p-2 m-2">
+                    <h4 class="m-2">@GetAccountByIdResponseModel.CurrencySymbol @GetAccountByIdResponseModel.Balance</h4>
+                </div>
+            </MudPaper>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <MudPaper Class="d-block align-center justify-center py-2" Style="height:150px">
+                <h5 class="p-2 m-2">Balance Time Line</h5>
+                <MudChart ChartType="ChartType.Line" Width="100%"></MudChart>
+            </MudPaper>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <MudPaper Class="d-block align-center justify-center py-2" Style="height:150px">
+                <h5 class="p-2 m-2">Expense By Category</h5>
+                <MudChart ChartType="ChartType.Donut" Width="100%"></MudChart>
+            </MudPaper>
+        </div> *@

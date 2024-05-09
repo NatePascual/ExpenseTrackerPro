@@ -1,6 +1,9 @@
 ﻿using ExpenseTrackerPro.Application.Features.Accounts;
 using ExpenseTrackerPro.Application.Features.Expenses;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MudBlazor;
+using Radzen;
 
 namespace ExpenseTrackerPro.Web.Components.Pages.Accounts;
 
@@ -111,10 +114,10 @@ public partial class ManageAccount
                 });
             }
         }
-        var options = new DialogOptions { 
+        var options = new MudBlazor.DialogOptions { 
                     CloseButton = true,
                     MaxWidth = MaxWidth.Small,
-                    Position = DialogPosition.Center,
+                    Position = MudBlazor.DialogPosition.Center,
                     FullWidth = true,
                     DisableBackdropClick = true
         };
@@ -126,15 +129,34 @@ public partial class ManageAccount
         }
     }
 
+    private async Task InvokeViewModal(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Id", id);
+        var options = new MudBlazor.DialogOptions
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            Position = MudBlazor.DialogPosition.Center,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
+        var dialog = _dialogService.Show<ViewAccount>("View Account", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            OnSearch("");
+        }
+    }
     private async Task Delete(int id)
     {
         string deleteContent = "Do you really want to delete this Account? This process cannot be undone.";
         var parameters = new DialogParameters<Shared.Dialogs.DeleteConfirmation>();
         parameters.Add(x => x.ContentText, deleteContent);
-        var options = new DialogOptions { 
+        var options = new MudBlazor.DialogOptions { 
                         CloseButton = true,
                         MaxWidth = MaxWidth.Small, 
-                        Position=DialogPosition.Center,
+                        Position= MudBlazor.DialogPosition.Center,
                         FullWidth = true, 
                         DisableBackdropClick = true };
         var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>("Delete", parameters, options);
@@ -158,8 +180,8 @@ public partial class ManageAccount
         }
     }
 
-    private async Task ViewAccount(int id)
-    {
-         NavManager.NavigateTo($"ViewAccount/{id}");
-    }
+    //private async Task ViewAccount(int id)
+    //{
+    //     NavManager.NavigateTo($"ViewAccount/{id}");
+    //}
 }

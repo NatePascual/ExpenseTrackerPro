@@ -17,8 +17,8 @@
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
          <MudSpacer />
         <div class="justify-center mud-text-align-right">
-                <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
-                <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
          </div>
     </ToolBarContent>
     <HeaderContent>
@@ -43,7 +43,7 @@
         </MudTd>
         <MudTd DataLabel="Amount"><span>@context.CurrencySymbol @context.Amount.ToString("#,###.00")</span></MudTd>
         <MudTd DataLabel="Actions" Class="ta-r">
-            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
+            <MudMenu Label="Actions" Variant="MudBlazor.Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                      IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
                 <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.Edit">Edit</MudMenuItem>
                 <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>

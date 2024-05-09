@@ -10,5 +10,6 @@ public class AccountProfile : Profile
     public AccountProfile()
     {
         CreateMap<CreateUpdateAccountCommand, Account>().ReverseMap();
+        CreateMap<GetAccountByIdResponse, Account>().ReverseMap();
     }
 }

@@ -58,7 +58,7 @@ public partial class CreateUpdateIncome
     }
     private async Task LoadAccounts()
     {
-        var list = await _mediator.Send(new GetAccountQuery(""));
+        var list = await _mediator.Send(new GetAccountQuery(null));
 
         if(list.Accounts.Succeeded)
         {

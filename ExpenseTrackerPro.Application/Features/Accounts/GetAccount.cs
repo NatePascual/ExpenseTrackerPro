@@ -1,12 +1,19 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Common.Mappings;
 using ExpenseTrackerPro.Application.Extensions;
+using ExpenseTrackerPro.Application.Specifications;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Radzen;
+using System;
 using System.ComponentModel;
+using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
@@ -30,10 +37,11 @@ public class GetAccountResponse : IMapFrom<Account>
 
 public class GetAccountQuery : IRequest<GetAccountView>
 {
+    public ITrackerFilter Filter { get; set; }
     public string SearchString { get; set; }
-
-    public GetAccountQuery(string searchString)
+    public GetAccountQuery(string searchString,ITrackerFilter filter=null)
     {
+        Filter = filter;
         SearchString = searchString;
     }
 }
@@ -56,12 +64,45 @@ internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, 
 
     public async Task<GetAccountView> Handle(GetAccountQuery request, CancellationToken cancellationToken)
     {
+
+        var filterSpec = new AccountSpecification(request.SearchString, await CreateFilter(request.Filter));
+
+        // if (request.Filter != null)
+        // {
+        //     specification.AddCondition(e => e.AccountType.Name, (Operators)request.Filter.FirstOperator, request.Filter.FilterValue);
+        // }
+        // else if (request.Filter.FilterValue != null)
+        // {
+        //     //spec.AddCondition(e => e.AccountType.Name, (Operators)request.Filter.FirstOperator, request.Filter.FilterValue);
+        //     //.AddCondition(e => e.AccountType.Name, (Operators)request.Filter.SecondOperator, request.Filter.SecondFilterValue)
+        //     //.CombineWith((LogicalOperators)request.Filter.LogicalOperator);
+        // }
+        //// var result = myEntities.Where(specification.Build());
+
+        var getAll = await _unitOfWork.Repository<Account>().Entities
+                  .Include(a=>a.AccountType)
+                  .Include(b=>b.Institution)
+                  .Include(c=>c.Currency)
+                  .Specify(filterSpec)
+                  .Select(await CreateExpression())
+                  .ToListAsync(cancellationToken);
+
+        var map = _mapper.Map<List<GetAccountResponse>>(getAll);
+
+        var result = new GetAccountView();
+        result.Accounts = await Result<List<GetAccountResponse>>.SuccessAsync(map); 
+
+        return result;
+    }
+
+    private async Task<Expression<Func<Account,GetAccountResponse>>> CreateExpression()
+    {
         Expression<Func<Account, GetAccountResponse>> expression = e => new GetAccountResponse()
         {
             Id = e.Id,
             AccountTypeId = e.AccountTypeId,
             AccountTypeName = e.AccountType != null ? e.AccountType.Name : e.Institution.Name,
-            AccountTypeImageUrl = e.AccountType != null ? e.AccountType.ImageUrl : e.Institution.ImageUrl ,
+            AccountTypeImageUrl = e.AccountType != null ? e.AccountType.ImageUrl : e.Institution.ImageUrl,
             InstitutionId = e.InstitutionId,
             InstitutionName = e.Institution.Name,
             InstitutionImageUrl = e.Institution.ImageUrl,
@@ -73,19 +114,26 @@ internal sealed class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, 
             IsIncludedBalance = e.IsIncludedBalance,
         };
 
-        var filterSpec = new AccountSpecification(request.SearchString);
+        return expression;
 
-        var getAll = await _unitOfWork.Repository<Account>().Entities
-                  .AsNoTracking()
-                  .Specify(filterSpec)
-                  .Select(expression)
-                  .ToListAsync(cancellationToken);
+    }
 
-        var map = _mapper.Map<List<GetAccountResponse>>(getAll);
+    private async Task<TrackerFilter> CreateFilter(ITrackerFilter filter)
+    {
+        TrackerFilter currentFilter = null;
+        if (filter != null)
+        {
+            currentFilter = new TrackerFilter()
+            {
+                Property = filter.Property,
+                FilterValue = filter.FilterValue,
+                FirstOperator = filter.FirstOperator,
+                LogicalOperator = filter.LogicalOperator,
+                SecondFilterValue = filter.SecondFilterValue,
+                SecondOperator = filter.SecondOperator,
+            };
+        }
 
-        var result = new GetAccountView();
-        result.Accounts = await Result<List<GetAccountResponse>>.SuccessAsync(map); 
-
-        return result;
+        return currentFilter;
     }
 }

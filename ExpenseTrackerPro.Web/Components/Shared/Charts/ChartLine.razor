@@ -1,0 +1,131 @@
+﻿@namespace ExpenseTrackerPro.Web.Components.Shared.Charts
+@using Radzen.Blazor
+@using System.Globalization
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 rz-p-0">
+            <RadzenChart Style="width:100%; height:280px; line-height:300px" >
+                <RadzenLineSeries Smooth="@smooth" Data="@revenue2020"
+                                  CategoryProperty="Date" Title="2020" 
+                                  ValueProperty="Revenue" StrokeWidth="3">
+                    <RadzenMarkers Visible="@showMarkers" MarkerType="MarkerType.Circle" />
+                    <RadzenSeriesDataLabels Visible="@showDataLabels" />
+                    <RadzenLegend Visible="false" Position="LegendPosition.Bottom"></RadzenLegend>
+                </RadzenLineSeries>
+                <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+                <RadzenValueAxis Formatter="@FormatMoney">
+                    <RadzenGridLines Visible="false" />
+@*                     <RadzenAxisTitle Text="Revenue in USD" /> *@
+                </RadzenValueAxis>
+            </RadzenChart>
+        </div>
+    </div>
+</div>
+
+@code {
+    bool smooth = false;
+    bool showDataLabels = false;
+    bool showMarkers = true;
+
+    class DataItem
+    {
+        public string Date { get; set; }
+        public float Revenue { get; set; }
+    }
+
+    string FormatMoney(object value)
+    {
+        return FormatFloat(Convert.ToSingle(value.ToString()));
+    }
+
+    string FormatAsMonth(object value)
+    {
+        if (value != null)
+        {
+            return Convert.ToDateTime(value).ToString("MM");
+        }
+
+        return string.Empty;
+    }
+
+    string FormatFloat(float value)
+    {
+        // Define the suffixes for each order of magnitude
+        string[] suffixes = { "", "k", "M", "B", "T" };
+
+        // Determine the order of magnitude (whether it's in thousands, millions, billions, etc.)
+        int order = 0;
+        while (value >= 1000.0f && order < suffixes.Length - 1)
+        {
+            order++;
+            value /= 1000.0f;
+        }
+
+        // Use custom formatting to include the suffix
+        return $"{value:0.#}{suffixes[order]}";
+    }
+
+    DataItem[] revenue2020 = new DataItem[] {
+        new DataItem
+        {
+            Date = ("2020-01-01"),
+            Revenue = 33400.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-02-01"),
+            Revenue = 36900.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-03-01"),
+            Revenue = 33300.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-04-01"),
+            Revenue = 34400.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-05-01"),
+            Revenue = 31400.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-06-01"),
+            Revenue = 35300.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-07-01"),
+            Revenue = 37400.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-08-01"),
+            Revenue = 38400.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-09-01"),
+            Revenue = 37300.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-10-01"),
+            Revenue = 38200.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-11-01"),
+            Revenue = 38900.0f
+        },
+        new DataItem
+        {
+            Date = ("2020-12-01"),
+            Revenue = 39400.0f
+        }
+    };
+}

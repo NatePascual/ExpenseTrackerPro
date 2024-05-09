@@ -9,7 +9,7 @@
 @inject NavigationManager NavManager
 
 <PageTitle>Manage Account</PageTitle>
-
+@* ServerData="@(new Func<TableState, Task<TableData<GetAccountResponse>>>(ServerReload))" *@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<GetAccountResponse>>>(ServerReload))"
           GroupBy="@_groupDefinition"  Dense="true" Hover="true" @ref="table" RowsPerPage="20" Breakpoint="Breakpoint.Sm">
     <ToolBarContent>
@@ -19,8 +19,8 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>  
         <MudSpacer />
         <div class="d-flex justify-content-between mud-text-align-right">
-            <MudButton Variant="Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
-            <MudButton Variant="Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" @onclick="@(() => InvokeModal(0))" Color="Color.Primary" StartIcon="@Icons.Filled.Add"></MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="@(() => OnSearch(""))" Color="Color.Error" StartIcon="@Icons.Filled.Refresh"></MudButton>
         </div>
      </ToolBarContent>
     <HeaderContent>
@@ -48,11 +48,11 @@
         <MudTd DataLabel="Account Number">@context.AccountNumber</MudTd>   
         <MudTd DataLabel="Balance">@context.CurrencySymbol @context.Balance.ToString("#,###.00")</MudTd>
          <MudTd DataLabel="Actions" Style="text-align: right">
-            <MudMenu Label="Actions" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
+            <MudMenu Label="Actions" Variant="MudBlazor.Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown"
                      IconColor="Color.Secondary" AnchorOrigin="Origin.BottomCenter">
                     <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))" Icon="@Icons.Filled.Edit">Edit</MudMenuItem>
                     <MudMenuItem @onclick="@(() => Delete(@context.Id))" Icon="@Icons.Filled.DeleteForever">Delete</MudMenuItem>
-                    <MudMenuItem @onclick="@(() => ViewAccount(@context.Id))" Icon="@Icons.Filled.GridView">View</MudMenuItem>
+                    <MudMenuItem @onclick="@(() => InvokeViewModal(@context.Id))" Icon="@Icons.Filled.GridView">View</MudMenuItem>
             </MudMenu>  
         </MudTd>
      </RowTemplate>
@@ -69,3 +69,4 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+ 

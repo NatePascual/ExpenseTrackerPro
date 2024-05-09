@@ -1,0 +1,116 @@
+﻿@page "/ManageAccounts"
+@using ExpenseTrackerPro.Application.Features.Accounts
+@using ExpenseTrackerPro.Shared.Enums
+@using MudBlazor
+@using MediatR
+@using System.Linq.Expressions
+@using ExpenseTrackerPro.Application.Specifications
+
+@inject IMediator _mediator
+@inject IDialogService _dialogService
+@inject ISnackbar _snackBar
+@inject NavigationManager NavManager
+
+<PageTitle>Manage Accounts</PageTitle>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" 
+                AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                @ref="grid" IsLoading=@isLoading Count="@count" Data="@data" LoadData="@LoadData"
+                TItem="GetAccountResponse" ColumnWidth="300px" LogicalFilterOperator="Radzen.LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="GetAccountResponse" Property="Id" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+      @*   <RadzenDataGridColumn TItem="GetAccountResponse" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
+        <Template Context="data">
+        <RadzenImage Path="@data.Photo" class="rz-gravatar" AlternateText="@(data.FirstName + " " + data.LastName)" />
+        </Template>
+        </RadzenDataGridColumn>  *@
+        <RadzenDataGridColumn TItem="GetAccountResponse" Property="AccountTypeName" Title="AccountType" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="GetAccountResponse" Property="InstitutionName" Title="Institution" Width="160px" />
+        <RadzenDataGridColumn TItem="GetAccountResponse" Property="Name" Title="Account" Width="200px" />
+        <RadzenDataGridColumn TItem="GetAccountResponse" Property="AccountNumber" Title="AccountNumber" Width="120px" />
+        <RadzenDataGridColumn TItem="GetAccountResponse" Property="Balance" Title="Balance" FormatString="{0:f}" Width="160px" />
+    </Columns>
+</RadzenDataGrid>
+@code {
+    RadzenDataGrid<GetAccountResponse> grid;
+    private IEnumerable<GetAccountResponse> data;
+    int count;
+    bool isLoading = false;
+
+    async Task Reset()
+    {
+        grid.Reset(true);
+        await grid.FirstPage(true);
+    }
+
+    async Task LoadData(LoadDataArgs args)
+    {
+        isLoading = true;
+
+        await Task.Yield();
+
+        TrackerFilter trackerFilter = null;
+
+        if (args.Filters.Count() > 0)
+        {
+            FilterDescriptor? descriptor = args.Filters.FirstOrDefault();
+
+            trackerFilter = new TrackerFilter();
+
+            trackerFilter.Property = descriptor.Property;
+            trackerFilter.FilterValue = descriptor.FilterValue.ToString();
+
+            trackerFilter.FirstOperator = (Operators)(int)descriptor.FilterOperator;
+            trackerFilter.LogicalOperator = (LogicalOperators)(int)descriptor.LogicalFilterOperator;
+            trackerFilter.SecondFilterValue = descriptor.SecondFilterValue != null ? descriptor.SecondFilterValue.ToString() :  null;
+
+            if(descriptor.SecondFilterOperator.ToString() != null)
+                trackerFilter.SecondOperator = (Operators)(int)descriptor.SecondFilterOperator;
+
+        }
+
+        var list = await _mediator.Send(new GetAccountQuery("",trackerFilter));
+        var query = list.Accounts.Data.AsQueryable();
+
+        if (!string.IsNullOrEmpty(args.Filter))
+        {
+            // Expression<Func<GetAccountResponse, bool>> Criteria = p => (p.AccountTypeName.Contains(args.Filter)
+            //                                                         || p.Name.Contains(args.Filter)
+            //                                                         || p.InstitutionName.Contains(args.Filter)
+            //                                                         || p.AccountTypeName.Contains(args.Filter));
+            // Filter via the Where method
+            //args.Filter
+            //var filter = new RadzenDataFilter<GetAccountResponse>();
+            // await filter.AddFilter(new CompositeFilterDescriptor() { FilterValue = args.Filter });
+
+            // FilterDescriptor? filter = args.Filters.FirstOrDefault();
+
+            // filter.
+
+            // filter.FilterOperator = Radzen.FilterOperator.
+
+         //   query = query.Where();
+           
+        }
+
+        if (!string.IsNullOrEmpty(args.OrderBy))
+        {
+            // Sort via the OrderBy method
+            query = query.OrderBy(x => x.AccountTypeName == args.OrderBy
+                                    || x.Name == args.OrderBy
+                                    || x.AccountNumber == args.OrderBy
+                                    || x.InstitutionName == args.OrderBy);
+        }
+
+        // Important!!! Make sure the Count property of RadzenDataGrid is set.
+        count = query.Count();
+
+        // Perform paging via Skip and Take.
+        data = query.Skip(args.Skip.Value).Take(args.Top.Value).ToList();
+
+        isLoading = false;
+    }
+
+
+}
+
+

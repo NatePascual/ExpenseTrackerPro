@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using ExpenseTrackerPro.Application.Common.Interfaces;
 using ExpenseTrackerPro.Application.Common.Mappings;
-using ExpenseTrackerPro.Application.Extensions;
-using ExpenseTrackerPro.Application.Features.Expenses;
-using ExpenseTrackerPro.Application.Features.Incomes;
 using ExpenseTrackerPro.Domain.Entities;
 using ExpenseTrackerPro.Shared.Wrappers;
 using MediatR;
@@ -13,10 +9,24 @@ using System.Linq.Expressions;
 
 namespace ExpenseTrackerPro.Application.Features.Accounts;
 
-public  class GetAccountByIdResponse : GetAccountResponse, IMapFrom<Account>
+public  class GetAccountByIdResponse : IMapFrom<Account>
 {
-    public IList<GetExpenseResponse> OutgoingTransactions { get; set; }
-    public IList<GetIncomeResponse> IncomingTransactions { get; set; }
+    public int Id { get; set; }
+    public int AccountTypeId { get; set; }
+    public string AccountTypeName { get; set; }
+    public string AccountTypeImageUrl { get; set; }
+    public int InstitutionId { get; set; }
+    public string InstitutionName { get; set; }
+    public string InstitutionImageUrl { get; set; }
+    public int CurrencyId { get; set; }
+    public string CurrencySymbol { get; set; }
+    public string Name { get; set; }
+    public string AccountNumber { get; set; }
+    public float Balance { get; set; }
+    public bool IsIncludedBalance { get; set; } = false;
+    public DateTime? LastModified { get; set; }
+    public IList<Expense> Expenses { get; set; } = new List<Expense>();
+    public IList<Income> Incomes { get; set; } = new List<Income>();
 }
 public class GetAccountByIdQuery : IRequest<GetAccountByIdView>
 {
@@ -59,14 +69,18 @@ internal sealed class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByI
             CurrencyId = e.CurrencyId,
             CurrencySymbol = e.Currency.Symbol,
             Balance = e.Balance,
-            IncomingTransactions = GetIncome(e.Id).Result,
-            OutgoingTransactions = GetExpense(e.Id).Result
+            LastModified = e.LastModified
         };
-        var getAccount = _unitOfWork.Repository<Account>().Entities
+        var getAccount = await _unitOfWork.Repository<Account>().Entities
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+                    .Where(x => x.Id == request.Id)
+                    .Select(expression)
+                    .FirstOrDefaultAsync();
+                   
 
         var map = _mapper.Map<GetAccountByIdResponse>(getAccount);
+        map.Expenses = await GetExpense(request.Id);
+        map.Incomes = await GetIncome(request.Id);
 
         var result = new GetAccountByIdView();
         result.Account = await Result<GetAccountByIdResponse>.SuccessAsync(map);
@@ -74,23 +88,23 @@ internal sealed class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByI
         return result;
     }
 
-    private async Task<IList<GetExpenseResponse>> GetExpense(int accountId)
+    private async Task<IList<Expense>> GetExpense(int accountId)
     {
         var getExpenses = await _unitOfWork.Repository<Expense>().Entities
                           .AsNoTracking()
                           .Where(x=> x.AccountId == accountId)
                           .ToListAsync();
 
-        return  _mapper.Map<IList<GetExpenseResponse>>(getExpenses);
+        return getExpenses;
     }
 
-    private async Task<IList<GetIncomeResponse>> GetIncome(int accountId)
+    private async Task<IList<Income>> GetIncome(int accountId)
     {
         var getIncome = await _unitOfWork.Repository<Income>().Entities
                           .AsNoTracking()
                           .Where(x => x.AccountId == accountId)
                           .ToListAsync();
 
-        return _mapper.Map<IList<GetIncomeResponse>>(getIncome);
+        return getIncome;
     }
 }
